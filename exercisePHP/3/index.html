@@ -1,0 +1,74 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/main.css">
+    
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+</head>
+<body>
+
+    <div class="content">
+        <div class="sideContent">
+            
+            <ul class="mainMenu">
+                <li><button onclick="refreshMainContent(0)" class="mainButton">Red</button></li>
+                <li><button onclick="refreshMainContent(1)" class="mainButton">Green</button></li>
+                <li><button onclick="refreshMainContent(2)" class="mainButton">Yellow</button></li>
+                <li><button onclick="refreshMainContent(3)" class="mainButton">Blue</button></li>
+                <li><button onclick="refreshMainContent(4)" class="mainButton">Purple</button></li>
+            </ul>
+                
+        </div>
+
+        <div class="mainContent" id="contentToRefresh">
+
+            <!-- The initial value here will determine what color the server sends back -->
+            <p id="theNumber">0</p>
+
+        </div>
+    </div>
+
+
+    <script>
+
+        // Posts the current number to the server. In PHP it will increment the value and send it back with a color.
+        // On success it will refresh the right side of the page.
+        // On failure it will alert the user and reset the number value to 0.
+        function refreshMainContent(selection)
+        {
+            const errorMsg = "Something went wrong."
+            const errorMsg2 = "";
+            let contentToRefesh = document.getElementById("contentToRefresh");
+            let theNumber = selection;
+                $.ajax({
+                url: "process.php",
+                type: "get",
+                dataType: "json",
+                data: {num: theNumber},
+                success: function(result){
+                    console.log(result.success + " " + result.newNumber + " " + result.color);
+
+                    if (result.success){
+                        document.getElementById("theNumber").innerHTML = result.newNumber;
+                        contentToRefesh.style.backgroundColor = result.color;
+                    }
+  
+                }
+                
+            }).fail(function(){
+                alert(errorMsg + " Resetting now.\n\n" + errorMsg2);
+                        document.getElementById("theNumber").innerHTML = 0;
+            })
+
+        }    
+
+    </script>
+
+</body>
+</html>

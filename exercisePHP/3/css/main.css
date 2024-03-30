@@ -1,0 +1,79 @@
+.errorMsg {
+    color: red;
+}
+
+.content {
+
+    width: 99vw;
+    height: 99vh;
+    border: black solid 10px;
+
+}
+
+.sideContent {
+
+    height: 100%;
+    width: 25%;
+    float: left;
+    display: table;
+
+}
+
+.mainContent {
+
+    height: 100%;
+    width: 75%;
+    float: left;
+    display: inline;
+    background-color: beige;
+
+}
+
+.mainButton {
+    background-color: black;
+    border: black solid 1px;
+    color: white;
+    padding: 15px 20%;
+    margin: 3px 0;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 9px;
+}
+
+.mainMenu {
+
+  display: table-cell;
+  vertical-align: middle;
+    /* padding:10px;
+    background-color: #aa041a;
+    border: red solid 10px;
+    color: rgb(110, 31, 31); */
+
+}
+
+
+.mainButton:hover {
+    background-color: #042baa;
+}
+
+.mainButton:active {
+    background-color: #868b89;
+}
+
+
+.big {
+    color: red;
+    font-size: 70px;
+}
+
+#theNumber {
+    display: none;
+}
+

@@ -1,0 +1,124 @@
+
+
+h1 {
+    font-size: 80px;
+    margin: 50px 15px;
+}
+
+p {
+    font-size: large;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 15px;
+    line-height: 25px;
+    text-indent: 15px;
+}
+
+a:hover {
+    cursor:pointer;
+}
+
+
+.primaryBackground > a:focus {
+    border-bottom: solid #35424E 5px;
+}
+
+.primaryBackground{
+    background-color: #3A6FA0;
+    color: white;
+}
+
+.primaryBackground > a:hover {
+    background-color: #7E90A1;
+    color: white;
+}
+
+.secondaryBackground{
+    background-color: #FFFFFF;
+    color: black;
+}
+.tertiaryBackground{
+    background-color: #35424E;
+    color: white;
+}
+.quaternaryBackground{
+    background-color: #7E90A1;
+    color: white;
+}
+
+
+.errorMsg {
+    color: red;
+}
+
+.navBar  {
+    z-index: 2;
+    top: 0;
+    position: fixed;
+}
+
+.navButton {
+    margin-top: 40px;
+}
+
+
+.dropdownContent {
+    position: fixed;
+}
+
+.content {
+    margin-top: 120px;
+    width: 100%;
+    height: 85%;
+    position: absolute;
+}
+
+.mainContent {
+    height: 100%;
+}
+
+.mainContentToRight {
+    margin-left: 350px;
+}
+
+.sideContent {
+    padding-top: 20px;
+    padding-bottom: 200px;
+    width: 350px;
+}
+
+.sideButton {
+    border-radius: 10px;
+    text-align: left;
+    padding: 0;
+    margin: 20px auto;
+    width: 90%;
+    height: 75px;
+    word-wrap: break-word;
+}
+
+.caret {
+    color: black;
+    width: 38px;
+    height: 100%;
+    padding: 30px 20px;
+    margin: 0;
+}
+
+.accordian {
+    margin: -10px 0 0 30px;
+    z-index: -1;
+    overflow: hidden;
+}
+
+
+
+
+
+@media screen and (min-width: 1865px){
+    .bioContainer {
+        float: right;
+        padding-right: 15%;
+    }
+}
+
+
