@@ -1,62 +1,11 @@
 <?php
 
-    // require "Builder/htmlBuilder.php";
-    // require "Builder/navBarBuilder.php";
-    // require "Builder/sideBarBuilder.php";
-    // require "Builder/mainContentBuilder.php";
-    // require "Builder/layoutBuilder.php";
-
-    // require "viewModel.php";
-
-    // require "../Model/select.php";
-
     class lessonViewModel extends viewModel{
 
-        public $navBarLinks = array();
-        public $sideBarLinks = array();
-        public $mainContentData = array();
-
-        public $getData = true;
-        public $renderNavBar = true;
-        public $renderSideBar = true;
-        public $renderMainContent = true;
-        public $renderLayout = true;
-
         public $navBar = '';
-        public $sideBar = '';
-        public $mainContent = '';
         public $layout = '';
+        public $page = '';
         
-        function __construct()
-        {
-
-            if ($this->getData){
-               
-                $this->navBarLinks  = $this->getData('navLinks');
-                $this->sideBarLinks  = $this->getData('sideBarLinks');
-                $this->mainContentData  = $this->getData('mainContent');
-
-            }
-            if ($this->renderNavBar){
-                $this->navBar = $this->renderNavBar();
-            }
-            if ($this->renderSideBar){
-                $this->sideBar = $this->renderSideBar().$this->animateContent();
-            }
-            if ($this->renderMainContent){
-                if ($this->renderSideBar){
-                    $this->mainContent = $this->renderMainContent().$this->animateContent();
-                }
-                else{
-                    $this->mainContent = $this->renderMainContent();
-                }
-            }
-            if ($this->renderLayout){
-                $this->layout = $this->renderLayout($this->navBar.$this->sideBar.$this->mainContent);
-            }
-
-        }
-
         public function getData($table){
 
             // Error handle the db connection
@@ -69,6 +18,7 @@
 
         public function renderMainContent()
         {
+            $mainContentData = $this->getData('mainContent');
             $mainContentBuilder = new mainContentBuilder();
         
             $mainContent = $mainContentBuilder->createMainContent();
@@ -76,36 +26,38 @@
             return $mainContent;
         }
 
-        public function renderNavBar()
-        {
-            $navBarBuilder = new navBarBuilder();
-
-            $navBar = $navBarBuilder->createNavBar($this->navBarLinks, '../resources/logo.png');
-            return $navBar;
-        }
-
         public function renderSideBar()
         {
+            $sideBarLinks = $this->getData('sideBarLinks');
             $sideBarBuilder = new sideBarBuilder();
 
-            $sideBar = $sideBarBuilder->createSideBar($this->sideBarLinks);
-
-            return $sideBar;
+            return $sideBarBuilder->createSideBar($sideBarLinks);
         }
 
-        public function renderLayout($content){
+        public function renderNavBar()
+        {
+            $navBarLinks = $this->getData('navLinks');
+            $navBarBuilder = new navBarBuilder();
+
+            $this->navBar = $navBarBuilder->createNavBar($navBarLinks, 'resources/logo.png');
+
+            $this->page .= $this->navBar;
+        }
+
+
+
+        public function renderLayout()
+        {
             $layoutBuilder = new layoutBuilder();
+            $this->layout = $layoutBuilder->createHomeLayout($this->renderSideBar() . $this->renderMainContent());
 
-            $layout = $layoutBuilder->createHomeLayout($content);
-
-            return $layout;
+            $this->page .= $this->layout;
         }
 
 
         public function animateContent(){
-            return '<script type="text/javascript">mainContentShiftRight()</script>';
+            $this->page .= '<script type="text/javascript">mainContentShiftRight()</script>';
         }
 
     }
-
 

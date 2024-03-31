@@ -23,12 +23,15 @@
 
 <?php 
 
-
-// require_once "ViewModel/curriculumViewModel.php";
 require_once('Autoloader.php');
 
 $curriculum = new curriculumViewModel();
-echo $curriculum->layout;
+
+$curriculum->renderNavBar();
+$curriculum->renderLayout();
+$curriculum->animateContent();
+
+echo $curriculum->page;
 
 ?>
 

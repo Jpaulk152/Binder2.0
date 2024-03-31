@@ -31,7 +31,10 @@ require_once('Autoloader.php');
 
 $home = new homeViewModel();
 
-echo $home->layout;
+$home->renderNavBar();
+$home->renderLayout();
+
+echo $home->page;
 
 ?>
 

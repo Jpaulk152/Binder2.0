@@ -1,7 +1,7 @@
 // COMMENTS!!!
 
 function attachSideBar(_viewModel){
-    var task = new Task({functionName : 'attachSideBar', viewModel : _viewModel}, 'Controller/apiController.php', function(result){
+    var task = new Task({functionName : 'attachSideBar', viewModel : _viewModel}, 'ViewModel/lessonViewModel.php', function(result){
 
         var mainContent = document.getElementById("mainContent");
         var sideBar = document.getElementById("sideContent")

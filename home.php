@@ -23,11 +23,14 @@
 
 <?php 
 
-// require_once "ViewModel/homeViewModel.php";
 require_once('Autoloader.php');
 
 $home = new homeViewModel();
 
+$home->renderNavBar();
+$home->renderLayout();
+
+echo $home->page;
 
 ?>
 

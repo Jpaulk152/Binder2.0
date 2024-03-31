@@ -2,50 +2,9 @@
 
     class homeViewModel extends viewModel{
 
-        public $navBarLinks = array();
-        public $sideBarLinks = array();
-        public $mainContentData = array();
-
-        public $getData = true;
-        public $renderNavBar = true;
-        public $renderSideBar = false;
-        public $renderMainContent = true;
-        public $renderLayout = true;
-
         public $navBar = '';
-        public $sideBar = '';
-        public $mainContent = '';
         public $layout = '';
-        
-        function __construct()
-        {
-
-            if ($this->getData){
-
-                $this->navBarLinks  = $this->getData('navLinks');
-                // $this->sideBarLinks  = $this->getData('sideBarLinks');
-                $this->mainContentData  = $this->getData('mainContent');
-
-            }
-            if ($this->renderNavBar){
-                $this->navBar = $this->renderNavBar();
-            }
-            if ($this->renderSideBar){
-                $this->sideBar = $this->renderSideBar().$this->animateContent();
-            }
-            if ($this->renderMainContent){
-                if ($this->renderSideBar){
-                    $this->mainContent = $this->renderMainContent().$this->animateContent();
-                }
-                else{
-                    $this->mainContent = $this->renderMainContent();
-                }
-            }
-            if ($this->renderLayout){
-                $this->layout = $this->renderLayout($this->navBar.$this->sideBar.$this->mainContent);
-            }
-     
-        }
+        public $page = '';
 
         public function getData($table){
 
@@ -58,55 +17,51 @@
 
         public function renderMainContent()
         {
+            $mainContentData = $this->getData('mainContent');
             $mainContentBuilder = new mainContentBuilder();
 
             $panelWelcome = $mainContentBuilder->buildElement('div')
                                                ->classList('greeting secondaryBackground w3-panel w3-padding-16')
-                                               ->content("<h3>".$this->mainContentData['welcome']."</h3>")
+                                               ->content("<h3>".$mainContentData['welcome']."</h3>")
                                                ->create();
 
-            $imageCard = $mainContentBuilder->createImageCard($this->mainContentData['imagePath'], $this->mainContentData['b1'], $this->mainContentData['b2'], $this->mainContentData['b3']);
+            $imageCard = $mainContentBuilder->createImageCard($mainContentData['imagePath'], $mainContentData['b1'], $mainContentData['b2'], $mainContentData['b3']);
 
-            $panel1 = $mainContentBuilder->createPanelContent($this->mainContentData['p1']);
-            $panel2 = $mainContentBuilder->createPanelContent($this->mainContentData['p2']);
+            $panel1 = $mainContentBuilder->createPanelContent($mainContentData['p1']);
+            $panel2 = $mainContentBuilder->createPanelContent($mainContentData['p2']);
         
-            $mainContent = $mainContentBuilder->createMainContent($panelWelcome.$imageCard.$panel1.$panel2);
-            
-            return $mainContent;
+            return $mainContentBuilder->createMainContent($panelWelcome.$imageCard.$panel1.$panel2);
         }
-
-
-        public function renderNavBar()
-        {
-            $navBarBuilder = new navBarBuilder();
-
-            $navBar = $navBarBuilder->createNavBar($this->navBarLinks, 'resources/logo.png');
-            
-            return $navBar;
-        }
-
 
         public function renderSideBar()
         {
+            $sideBarLinks = $this->getData('sideBarLinks');
             $sideBarBuilder = new sideBarBuilder();
 
-            $sideBar = $sideBarBuilder->createSideBar($this->sideBarLinks);
-
-            return $sideBar;
+            return $sideBarBuilder->createSideBar($sideBarLinks);
         }
 
+        public function renderNavBar()
+        {
+            $navBarLinks = $this->getData('navLinks');
+            $navBarBuilder = new navBarBuilder();
 
-        public function renderLayout($content){
-            $containerBuilder = new layoutBuilder();
+            $this->navBar = $navBarBuilder->createNavBar($navBarLinks, 'resources/logo.png');
 
-            $layout = $containerBuilder->createHomeLayout($content);
+            $this->page .= $this->navBar;
+        }
 
-            return $layout;
+        public function renderLayout()
+        {
+            $layoutBuilder = new layoutBuilder();
+            $this->layout = $layoutBuilder->createHomeLayout($this->renderMainContent());
+
+            $this->page .= $this->layout;
         }
 
 
         public function animateContent(){
-            return '<script type="text/javascript">mainContentShiftRight()</script>';
+            $this->page .= '<script type="text/javascript">mainContentShiftRight()</script>';
         }
 
     }

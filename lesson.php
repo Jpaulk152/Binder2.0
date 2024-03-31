@@ -25,13 +25,15 @@
 
 <?php 
 
-
-// require_once "ViewModel/lessonViewModel.php";
 require_once('Autoloader.php');
 
 $lesson = new lessonViewModel();
 
-echo $lesson->layout;
+$lesson->renderNavBar();
+$lesson->renderLayout();
+$lesson->animateContent();
+
+echo $lesson->page;
 
 ?>
 

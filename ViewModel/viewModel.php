@@ -11,6 +11,6 @@ abstract class viewModel
 
     abstract public function renderMainContent();
 
-    abstract public function renderLayout($content);
+    abstract public function renderLayout();
 
 }

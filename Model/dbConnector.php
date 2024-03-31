@@ -137,12 +137,12 @@
         
             array("name" => "Regular Accordian", "link" => "#",
                 "menuItems" => array(
-                    array("name" => "PHP Exercise 1", "link" => "javascript:changeContent('http://joey.dev.holmcenter.com/exercisePHP/1/index.php', 'iframe')"),
-                    array("name" => "PHP Exercise 2", "link" => "javascript:changeContent('http://joey.dev.holmcenter.com/exercisePHP/2/index.html', 'iframe')"),
-                    array("name" => "PHP Exercise 3", "link" => "javascript:changeContent('http://joey.dev.holmcenter.com/exercisePHP/3/index.html', 'iframe')"),
-                    array("name" => "PHP Exercise 4", "link" => "javascript:changeContent('http://joey.dev.holmcenter.com/exercisePHP/4/index.html', 'iframe')"),
-                    array("name" => "PHP Exercise 5", "link" => "javascript:changeContent('http://joey.dev.holmcenter.com/exercisePHP/5/index.php', 'iframe')"),
-                    array("name" => "PHP Exercise 6", "link" => "javascript:changeContent('http://joey.dev.holmcenter.com/exercisePHP/6/index.php', 'iframe')"),
+                    array("name" => "PHP Exercise 1", "link" => "javascript:changeContent('../exercisePHP/1/index.php', 'iframe')"),
+                    array("name" => "PHP Exercise 2", "link" => "javascript:changeContent('../exercisePHP/2/index.html', 'iframe')"),
+                    array("name" => "PHP Exercise 3", "link" => "javascript:changeContent('../exercisePHP/3/index.html', 'iframe')"),
+                    array("name" => "PHP Exercise 4", "link" => "javascript:changeContent('../exercisePHP/4/index.html', 'iframe')"),
+                    array("name" => "PHP Exercise 5", "link" => "javascript:changeContent('../exercisePHP/5/index.php', 'iframe')"),
+                    array("name" => "PHP Exercise 6", "link" => "javascript:changeContent('../exercisePHP/6/index.php', 'iframe')"),
                     array("name" => "PHP Exercise 7", "link" => "javascript:changeContent('../exercisePHP/7/index.php', 'iframe')"),
                     )
                 ),

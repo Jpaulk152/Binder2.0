@@ -20,10 +20,8 @@ if ($_SERVER["REQUEST_METHOD"] == "GET"){
     
                 switch($viewModel){
                     case 'lesson':
-                            $viewModel = new lessonViewModel();
-                            $data = $viewModel->sideBarLinks;
-                            $sideBarBuilder = new sideBarBuilder();
-                            $aResult['result'] = $sideBarBuilder->createSideBar($data); 
+                            $lessonViewModel = new lessonViewModel();
+                            $aResult['result'] = $lessonViewModel->renderSideBar(); 
                             $success = true;
                         break;
 
