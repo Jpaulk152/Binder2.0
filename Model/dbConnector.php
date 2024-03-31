@@ -96,11 +96,7 @@
         
                     array("name" => "Random Text", "link" => "javascript:changeContent('#')"),
         
-                    array("name" => "getBio", "link" => "javascript:getBio()"),
-        
-                    array("name" => "getBody", "link" => "javascript:getBody()"),
-        
-                    array("name" => "getFooter", "link" => "javascript:getFooter()"),
+                    array("name" => "getHomeContent", "link" => "javascript:getHomeContent()"),
                     
                     array("name" => "addButton", "link" => "javascript:addButton()"),
         

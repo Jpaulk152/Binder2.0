@@ -33,8 +33,6 @@ class navBarBuilder extends htmlBuilder{
                 }
                 else { // else the item becomes an anchor tag
 
-                    // $anchor = $this->createAnchor("", $this->navAnchorClasses, "", $item["name"], $item["link"]);
-
                     $anchor = $this->buildElement('a')
                                    ->classList($this->navAnchorClasses)
                                    ->href($item["link"])
@@ -47,7 +45,6 @@ class navBarBuilder extends htmlBuilder{
                 }
             }
 
-            // $logo = $this->createImage("", $this->navLogoClasses, "", "resources/logo.png", "Could not find Image", "70", "70");
             $logo = $this->buildElement('img')
                          ->classList($this->navLogoClasses)
                          ->src($logoSource)
@@ -56,14 +53,12 @@ class navBarBuilder extends htmlBuilder{
                          ->height('70')
                          ->create();
 
-            // $homeAnchor = $this->createAnchor("", $this->navLogoAnchorClasses, "", $logo, $barItems[0]["link"]);
             $homeAnchor = $this->buildElement('a')
                                ->classList($this->navLogoAnchorClasses)
                                ->href($barItems[0]['link'])
                                ->content($logo)
                                ->create();
 
-            // $navContainer = $this->createDiv("", $this->navContainerClasses, "", $homeAnchor . $content);
             $navContainer = $this->buildElement('div')
                                  ->classList($this->navContainerClasses)
                                  ->content($homeAnchor.$content)
@@ -95,8 +90,6 @@ class navBarBuilder extends htmlBuilder{
                 }
                 else { // else the item becomes an anchor tag
 
-                    // $anchor = $this->createAnchor("", $this->ddAnchorClasses, "", $ddItems[$i]["name"], $ddItems[$i]["link"]);
-
                     $anchor = $this->buildElement('a')
                         ->classList($this->ddAnchorClasses)
                         ->href($ddItems[$i]['link'])
@@ -108,32 +101,21 @@ class navBarBuilder extends htmlBuilder{
                 }
             }
 
-            // $ddContent = $this->createDiv("", $this->ddContentClasses, "", $ddAnchorTags);
             $ddContent = $this->buildElement('div')
                               ->classList($this->ddContentClasses)
                               ->content($ddAnchorTags)
                               ->create();
 
-            // $caret =  $this->createITag("", $this->ddITagClasses, "");
             $caret = $this->buildElement('i')
                           ->classList($this->ddITagClasses)
                           ->create();
-            
-            // $ddButton = $this->createButton("", $this->ddButtonClasses, "", $ddName . " " . $caret, "location.href='". $ddLink ."'");
-            // $ddButton = $this->buildElement('button')
-            //                  ->classList($this->ddButtonClasses)
-            //                  ->onclick("location.href='". $ddLink ."'")
-            //                  ->content($ddName . " " . $caret)
-            //                  ->create();
 
             $ddButton = $this->buildElement('button')
-            ->classList($this->ddButtonClasses)
-            ->onclick("location.href='". $ddLink ."'")
-            ->content($ddName . " " . $caret)
-            ->create();
+                             ->classList($this->ddButtonClasses)
+                             ->onclick("location.href='". $ddLink ."'")
+                             ->content($ddName . " " . $caret)
+                             ->create();
                              
-            
-            // $ddContainer = $this->createDiv("", $this->ddContainerClasses, "", $ddButton . $ddContent);
             $ddContainer = $this->buildElement('div')
                                 ->classList($this->ddContainerClasses)
                                 ->content($ddButton.$ddContent)

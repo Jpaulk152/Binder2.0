@@ -1,36 +1,5 @@
 // COMMENTS!!!
 
-function attachSideBar(_viewModel){
-    var task = new Task({functionName : 'attachSideBar', viewModel : _viewModel}, 'Controller/apiController.php', function(result){
-
-        var mainContent = document.getElementById("mainContent");
-        var sideBar = document.getElementById("sideContent")
-    
-        if (sideBar == null){
-
-            sideBar = result;
-            mainContentShiftRight();
-            mainContent.insertAdjacentHTML("beforebegin", sideBar);
-        }
-        
-    })
-
-    // var buffer = new Buffer(ajaxTaskHandler);
-    buffer.append(task);
-}
-
-
-function removeSideBar() {
-
-    var sideBar = document.getElementById("sideContent")
-
-    sideBar.remove();
-    document.getElementById("sideContentButton").remove();
-    mainContentShiftLeft();
-
-}
-
-
 function accordian(id) {
 
     var accordian = document.getElementById(id);  

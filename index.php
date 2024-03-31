@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,7 +18,8 @@
     <script src="js/buffer.js"></script>
     <script src="js/taskHandler.js"></script>
     <script src="js/sideBar.js"></script>
-    <script src="js/mainContent.js"></script>
+    <script src="js/home.js"></script>
+    <script src="js/lesson.js"></script>
     
 </head>
 <body>

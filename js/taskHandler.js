@@ -28,7 +28,7 @@ function ajaxTaskHandler(task, callback){
         dataType: 'json',
         data: task.item,
         success: function(response){
-            if(task.callback) task.callback(response.result);
+            if(task.callback) task.callback(response);
             callback();
         }
         
