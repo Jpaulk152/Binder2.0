@@ -17,7 +17,9 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="js/buffer.js"></script>
     <script src="js/taskHandler.js"></script>
+    <script src="js/layout.js"></script>
     <script src="js/sideBar.js"></script>
+    <script src="js/mainContent.js"></script>
     <script src="js/home.js"></script>
     <script src="js/lesson.js"></script>
     
@@ -28,12 +30,16 @@
 
 require_once('Autoloader.php');
 
+config::baseURL();
+
 $home = new homeViewModel();
 
-$home->renderNavBar();
 $home->renderLayout();
 
 echo $home->page;
+
+// echo var_dump(utilities::getDataFromCSV2('nav_bar.csv', 'Model/navContent2/'));
+
 
 ?>
 

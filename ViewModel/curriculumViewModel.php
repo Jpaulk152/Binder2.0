@@ -40,7 +40,7 @@
 
             $this->navBar = $navBarBuilder->createNavBar($navBarLinks, 'resources/logo.png');
 
-            $this->page .= $this->navBar;
+            return $this->navBar;
         }
 
 
@@ -48,7 +48,7 @@
         public function renderLayout()
         {
             $layoutBuilder = new layoutBuilder();
-            $this->layout = $layoutBuilder->createHomeLayout($this->renderSideBar() . $this->renderMainContent());
+            $this->layout = $layoutBuilder->createHomeLayout($this->renderNavBar() . $this->renderSideBar() . $this->renderMainContent());
 
             $this->page .= $this->layout;
         }

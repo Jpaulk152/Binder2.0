@@ -2,71 +2,76 @@
 
 require_once('../Autoloader.php');
 
-// Holds data like $baseUrl etc.
-// include '../config.php';
+$homeController = new homeController();
 
-$requestURL = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-// echo $requestURL;
-
-echo config::baseURL();
-
-// $requestString = trim(substr($requestURL, strlen(config::baseURL())), 'Controller/homeController.php/');
-// // echo $requestString;
-
-// $urlParams = explode('/', $requestString);
-// // echo var_dump($urlParams);
-
-// // TODO: Consider security (see comments)
-// $controllerName = ucfirst(array_shift($urlParams)).'Controller';
-// $actionName = strtolower(array_shift($urlParams)).'Action';
-
-// echo $controllerName . '<br>';
-// echo $actionName;
-
-// // Here you should probably gather the rest as params
-
-// // Call the action
-// $controller = new $controllerName;
-// $controller->$actionName();
+$homeController->parseRequest();
 
 
+class homeController {
 
+    public homeViewModel $homeViewModel;
 
+    public function getLayout(){
+        return $this->homeViewModel->renderLayout(); 
+    }
 
+    public function getSideContent(){
+        return $this->homeViewModel->renderSideBar(); 
+    }
 
+    public function getMainContent(){
+        return $this->homeViewModel->renderMainContent(); 
+    }
 
+    public function parseRequest(){
 
+        if ($_SERVER["REQUEST_METHOD"] == "GET"){
+            header('Content-Type: application/json');
+        
+            $function = filter_input(INPUT_GET, 'functionName', FILTER_SANITIZE_URL);
+            $aResult = array();
+        
+            $success = false;
+        
+            if( !isset($function) ) { $aResult['error'] = 'No function name!'; }
+            
+            if( !isset($aResult['error']) ) {
 
-// if ($_SERVER["REQUEST_METHOD"] == "GET"){
-//     header('Content-Type: application/json');
+                $this->homeViewModel = new homeViewModel();
+            
+                switch($function) {
 
-//     $function = filter_input(INPUT_GET, 'functionName', FILTER_SANITIZE_URL);
-//     $aResult = array();
+                    case 'getLayout':
+                        $aResult['result'] = $this->getLayout(); 
+                        $success = true;
+                        
+                        break;
 
-//     $success = false;
+                    case 'getSideContent':
+            
+                        $aResult['result'] = $this->getSideContent(); 
+                        $success = true;
+                    
+                       break;
 
-//     if( !isset($function) ) { $aResult['error'] = 'No function name!'; }
-    
-//     if( !isset($aResult['error']) ) {
-    
-//         switch($function) {
-//             case 'getMainContent':
-    
-//                 $homeViewModel = new homeViewModel();
-//                 $aResult['result'] = $homeViewModel->renderMainContent();
+                    case 'getMainContent':
+        
+                        $aResult['result'] = $this->getMainContent(); 
+                        $success = true;
                 
-//                 $success = true;
+                    break;
+            
+                    default:
+                       $aResult['error'] = 'Not found function '.$_GET['functionName'].'!';
+                       break;
+                }
+            
+            }
 
-//                break;
-    
-//             default:
-//                 $aResult['error'] = 'Not found function '.$_GET['functionName'].'!';
-//         }
-    
-//     }
-
-//     $aResult['success'] = $success;
-    
-//     echo json_encode($aResult);
-
-// }
+            $aResult['success'] = $success;
+            
+            echo json_encode($aResult);
+        
+        }
+    }
+}

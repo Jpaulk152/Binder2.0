@@ -10,16 +10,30 @@ require_once('config.php');
 
 class Autoloader
 {
+
+    public static $testing = false;
+
     static function load($path, $className){
 
         $path = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, config::doc_root().$path);
 
         $file = $path.$className.'.php';
 
-        // echo $file.' checked... <br>';
+        if (self::$testing)
+        {
+            echo $file.' checked... <br>';
+        }
+        
 
         if(file_exists($file)){
-            // echo 'it exists.. <br>';
+
+
+            if (self::$testing)
+            {
+                echo 'it exists.. <br>';
+            }
+
+            
             require($file);
         }
     }
@@ -54,7 +68,7 @@ class Autoloader
 
     public static function loadConfig($className){
 
-        $path = '';
+        $path = '/';
         self::load($path, $className);
     }
 

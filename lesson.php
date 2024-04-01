@@ -17,8 +17,11 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="js/buffer.js"></script>
     <script src="js/taskHandler.js"></script>
+    <script src="js/layout.js"></script>
     <script src="js/sideBar.js"></script>
     <script src="js/mainContent.js"></script>
+    <script src="js/home.js"></script>
+    <script src="js/lesson.js"></script>
     
 </head>
 <body>
@@ -29,11 +32,8 @@ require_once('Autoloader.php');
 
 $lesson = new lessonViewModel();
 
-$lesson->renderNavBar();
-$lesson->renderLayout();
-$lesson->animateContent();
+echo $lesson->renderLayout();
 
-echo $lesson->page;
 
 ?>
 

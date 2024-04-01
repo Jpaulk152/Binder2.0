@@ -20,15 +20,27 @@
             $mainContentData = $this->getData('mainContent');
             $mainContentBuilder = new mainContentBuilder();
 
+            // $panelWelcome = $mainContentBuilder->buildElement('div')
+            //                                    ->classList('greeting secondaryBackground w3-panel w3-padding-16')
+            //                                    ->content("<h3>".$mainContentData['welcome']."</h3>")
+            //                                    ->create();
+
+            // $imageCard = $mainContentBuilder->createImageCard($mainContentData['imagePath'], $mainContentData['b1'], $mainContentData['b2'], $mainContentData['b3']);
+
+            // $panel1 = $mainContentBuilder->createPanelContent($mainContentData['p1']);
+            // $panel2 = $mainContentBuilder->createPanelContent($mainContentData['p2']);
+
+
+            
             $panelWelcome = $mainContentBuilder->buildElement('div')
                                                ->classList('greeting secondaryBackground w3-panel w3-padding-16')
-                                               ->content("<h3>".$mainContentData['welcome']."</h3>")
+                                               ->content("<h3>".$mainContentData[0]['welcome']."</h3>")
                                                ->create();
 
-            $imageCard = $mainContentBuilder->createImageCard($mainContentData['imagePath'], $mainContentData['b1'], $mainContentData['b2'], $mainContentData['b3']);
+            $imageCard = $mainContentBuilder->createImageCard($mainContentData[1]['imagePath'], $mainContentData[4]['b1'], $mainContentData[5]['b2'], $mainContentData[6]['b3']);
 
-            $panel1 = $mainContentBuilder->createPanelContent($mainContentData['p1']);
-            $panel2 = $mainContentBuilder->createPanelContent($mainContentData['p2']);
+            $panel1 = $mainContentBuilder->createPanelContent($mainContentData[2]['p1']);
+            $panel2 = $mainContentBuilder->createPanelContent($mainContentData[3]['p2']);
         
             return $mainContentBuilder->createMainContent($panelWelcome.$imageCard.$panel1.$panel2);
         }
@@ -48,13 +60,13 @@
 
             $this->navBar = $navBarBuilder->createNavBar($navBarLinks, 'resources/logo.png');
 
-            $this->page .= $this->navBar;
+            return $this->navBar;
         }
 
         public function renderLayout()
         {
             $layoutBuilder = new layoutBuilder();
-            $this->layout = $layoutBuilder->createHomeLayout($this->renderMainContent());
+            $this->layout = $layoutBuilder->createHomeLayout($this->renderNavBar() . $this->renderMainContent());
 
             $this->page .= $this->layout;
         }

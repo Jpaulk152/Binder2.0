@@ -41,22 +41,20 @@
 
             $this->navBar = $navBarBuilder->createNavBar($navBarLinks, 'resources/logo.png');
 
-            $this->page .= $this->navBar;
+            return $this->navBar;
         }
-
-
 
         public function renderLayout()
         {
             $layoutBuilder = new layoutBuilder();
-            $this->layout = $layoutBuilder->createHomeLayout($this->renderSideBar() . $this->renderMainContent());
+            $this->layout = $layoutBuilder->createLessonLayout($this->renderNavBar() . $this->renderSideBar() . $this->renderMainContent() . $this->animateContent());
 
-            $this->page .= $this->layout;
+            return $this->layout;
         }
 
 
         public function animateContent(){
-            $this->page .= '<script type="text/javascript">mainContentShiftRight()</script>';
+            return '<script type="text/javascript">mainContentShiftRight()</script>';
         }
 
     }

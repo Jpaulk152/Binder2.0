@@ -57,3 +57,13 @@ function openSideBar() {
 function closeSideBar() {
     document.getElementById("sideContent").style.display = "none";
 }
+
+function removeSideBar() {
+
+    var sideBar = document.getElementById("sideContent")
+
+    sideBar.remove();
+    document.getElementById("sideContentButton").remove();
+    mainContentShiftLeft();
+
+}

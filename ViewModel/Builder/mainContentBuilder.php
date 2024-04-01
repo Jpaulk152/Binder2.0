@@ -20,7 +20,7 @@ class mainContentBuilder extends htmlBuilder{
     public $mainContent;
 
 
-    public function createMainContent($content=''){
+    public function createMainContent($content=""){
 
         $mainContent = $this->buildElement('div')
                                     ->id('mainContent')
@@ -32,7 +32,7 @@ class mainContentBuilder extends htmlBuilder{
     }
 
 
-    public function createDivContent($content, $id="", $style="", $tabIndex="") {
+    public function createDivContent($content="", $id="", $style="", $tabIndex="") {
 
         $div = $this->buildElement('div')
                                     ->id($id)
@@ -46,7 +46,7 @@ class mainContentBuilder extends htmlBuilder{
     }
 
 
-    public function createAnchorContent($content, $link, $id="", $style="", $tabIndex="") {
+    public function createAnchorContent($content="", $link="", $id="", $style="", $tabIndex="") {
 
         $anchor = $this->buildElement('a')
                                     ->id($id)
@@ -61,7 +61,7 @@ class mainContentBuilder extends htmlBuilder{
     }
 
 
-    public function createButtonContent($content, $onclick="", $id="", $style="", $tabIndex="") {
+    public function createButtonContent($content="", $onclick="", $id="", $style="", $tabIndex="") {
 
         $button = $this->buildElement('button')
                                     ->id($id)
@@ -77,7 +77,7 @@ class mainContentBuilder extends htmlBuilder{
     }
 
 
-    public function createImageCard($source, $caption1="", $caption2="", $caption3="", $alt="Could not find image", $id="", $style="", $width="", $height="", $tabIndex=""){
+    public function createImageCard($source="", $caption1="", $caption2="", $caption3="", $alt="Could not find image", $id="", $style="", $width="", $height="", $tabIndex=""){
 
         $caption1 = '<h4><b>'.$caption1.'</b></h4>';
         $caption2 = $this->createPanelContent($caption2);
@@ -110,7 +110,7 @@ class mainContentBuilder extends htmlBuilder{
     }
 
 
-    public function createImageContent($source, $alt="Could not find image", $id="", $style="", $width="", $height="", $tabIndex=""){
+    public function createImageContent($source="", $alt="Could not find image", $id="", $style="", $width="", $height="", $tabIndex=""){
 
         $image = $this->buildElement('img')
             ->classList($this->contentImageClasses)
@@ -133,7 +133,7 @@ class mainContentBuilder extends htmlBuilder{
     }
 
 
-    public function createPanelContent($content, $id="", $style="", $tabIndex="") {
+    public function createPanelContent($content="", $id="", $style="", $tabIndex="") {
 
         $panel = $this->buildElement('p')
                              ->id($id)

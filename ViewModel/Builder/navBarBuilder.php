@@ -60,6 +60,7 @@ class navBarBuilder extends htmlBuilder{
                                ->create();
 
             $navContainer = $this->buildElement('div')
+                                 ->id('navBar')
                                  ->classList($this->navContainerClasses)
                                  ->content($homeAnchor.$content)
                                  ->create();

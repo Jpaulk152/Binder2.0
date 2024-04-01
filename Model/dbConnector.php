@@ -13,6 +13,7 @@
 
         private $sqlQuery;
 
+
         // Fields should be required when not mocking
         function __construct(array $_fields = [])
         {
@@ -30,6 +31,7 @@
                     $this->sqlQuery .= $f . ', ';
                 }
             }
+
         }
 
         function __destruct()
@@ -60,15 +62,24 @@
             switch($table){
 
                 case 'navLinks':
-                        return $this->navLinks;
+                        return  utilities::getDataFromCSV('nav_bar.csv', 'Model/navContent/');
+                        // return utilities::getDataFromCSV('AFJROTC_Curriculum.csv', 'Model/navContent/');
+                        // return utilities::getDataFromCSV('Curriculum Guidance.csv', 'Model/navContent/');
+
                     break;
     
                 case 'sideBarLinks':
+                        // return utilities::getDataFromCSV('side_bar.csv', 'Model/sideContent/');
+
                         return $this->sideBarLinks;
+
                     break;
     
                 case 'mainContent';
-                        return $this->mainContent;
+                        return  utilities::getDataFromCSV('main_content.csv', 'Model/mainContent/');
+
+                        // return $this->mainContent;
+
                     break;
     
                 default:
@@ -79,42 +90,6 @@
 
         }
 
-
-        private $navLinks = array(
-
-            array("name" => "Holm Center", "link" => "index.php"), 
-        
-            array("name" => "Testing Functions", "link" => "#Testing", 
-        
-            "menuItems" => array(
-
-                    array("name" => "Curriculum Page", "link" => "curriculum.php"),
-
-                    array("name" => "Lesson Page", "link" => "lesson.php"),
-        
-                    array("name" => "PHP Exercise 6", "link" => "javascript:changeContent('../exercisePHP/6/index.php', 'iframe')"),
-        
-                    array("name" => "Random Text", "link" => "javascript:changeContent('#')"),
-        
-                    array("name" => "getHomeContent", "link" => "javascript:getHomeContent()"),
-                    
-                    array("name" => "addButton", "link" => "javascript:addButton()"),
-        
-                    array("name" => "Flush Main Content", "link" => "javascript:flushMainContent()"),
-        
-                )), 
-        
-            array("name" => "Side Bar", "link" => "#Testing", 
-        
-            "menuItems" => array(
-        
-                    array("name" => "Attach Lesson SideBar", "link" => "javascript:attachSideBar('lesson')"),
-        
-                    array("name" => "Remove SideBar", "link" => "javascript:removeSideBar()"),
-        
-                )), 
-                
-        );
         
     
         private $mainContent = array(
@@ -143,7 +118,7 @@
                     )
                 ),
         
-                array("name" => "Content with no Accordian", "link" => "#"), 
+            array("name" => "Content with no Accordian", "link" => "#"), 
         
             array("name" => "Two Tier Accordian", "link" => "#", 
         
@@ -257,5 +232,8 @@
         );
 
     }
+
+
+
 
 ?>
