@@ -1,0 +1,6 @@
+name,Curriculum Page,link,curriculum.php
+name,Lesson Page,link,lesson.php
+name,PHP Exercise 6,link,"javascript:changeContent('../exercisePHP/6/index.php', 'iframe')"
+name,Random Text,link,javascript:changeContent('#')
+name,addButton,link,javascript:addButton()
+name,Flush Main Content,link,javascript:flushMainContent()
