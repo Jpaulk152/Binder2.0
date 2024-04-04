@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Models\Journal;
+use Models\DB\Select;
 use ViewModels\HomeViewModel;
 use Views\View;
 
@@ -34,7 +35,12 @@ class HomeController extends Controller
 
         // $elements = $homeViewModel->renderLayout();
 
-        $view = new View('Curriculum');
+        $select = new Select();
+        $pageData = $select->from('AFJROTC_Curriculum');
+
+        
+
+        $view = new View('SideContent', $pageData);
 
         // $this->render('index', ['page' => $page->render()]);
 

@@ -8,35 +8,26 @@ class MenuBuilder extends HtmlBuilder{
 
     public $menuHtml;
 
+    public function createMenu($menuItems) {
 
-    public function createSideBar($barItems) {
+        if (is_array($menuItems) && count($menuItems) > 0){
 
-        if (is_array($barItems) && count($barItems) > 0){
-
-            // internal element
-            // sidebars need to have this close button at the top
-            // $content = $this->buildElement('button')
-            //                 ->classList($this->sbCloseBtnClasses)
-            //                 ->onclick('closeSideBar()')
-            //                 ->content('Close &times;')
-            //                 ->create();
-
-            $content = '';
+            $menu = '';
 
             $i = 0;
-            foreach ($barItems as $item)
+            foreach ($menuItems as $item)
             {
                 
                 // If there is a nested array, it is sent to create an accordian
                 if (array_key_exists("menuItems", $item)) {
 
-                    $accordian = $this->createAccordian($item["name"], $item["link"], $item["menuItems"], "accordian-".$i);
-                    $content .= $accordian;
+                    $subMenu = $this->createSubMenu($item["name"], $item["link"], $item["menuItems"], "subMenu-".$i);
+                    $menu .= $subMenu;
                     
                 }
-                else { // else the item becomes an anchor tag, this also means we are at the top level
+                else { // else the item becomes a button, this also means we are at the top level
 
-                    $anchorTag = $this->buildElement('a')
+                    $button = $this->buildElement('a')
                                     ->classList($this->sbAnchorClasses)
                                     ->href($item['link'])
                                     ->tabindex($i)
@@ -44,26 +35,36 @@ class MenuBuilder extends HtmlBuilder{
                                     ->create();
 
 
-                    $content .= $anchorTag;
+                    $menu .= $button;
                     
                 }
                 $i++;
             }
             
-            // adjacent element
+
+            // adjacent element for sidebar (rendered to the left or right using return)
             $sbOpenButton = $this->buildElement('button')
-                                ->id('sideContentButton')
-                                ->classList($this->sbOpenBtnClasses)
-                                ->style('float:left')
-                                ->onclick('openSideBar()')
-                                ->content('&#9776')
-                                ->create();
+                                 ->id('sideContentButton')
+                                 ->classList($this->sbOpenBtnClasses)
+                                 ->style('float:left')
+                                 ->onclick('openSideBar()')
+                                 ->content('&#9776')
+                                 ->create();
             // ###################################
+
+            // internal element for sidebar (rendered to the left or right of menu inside container)
+            $sbCloseButton = $this->buildElement('button')
+                            ->classList($this->sbCloseBtnClasses)
+                            ->onclick('closeSideBar()')
+                            ->content('Close &times;')
+                            ->create();
+            // ###################################
+
 
             $sbContainer = $this->buildElement('div')
                                 ->id('sideContent')
                                 ->classList($this->sbContainerClasses)
-                                ->content($content)
+                                ->content($sbCloseButton . $menu)
                                 ->create();
 
             return $sbOpenButton . $sbContainer;
@@ -75,30 +76,31 @@ class MenuBuilder extends HtmlBuilder{
     }
 
 
-    public function createAccordian($acName, $acLink, $acItems, $index) {
-        if (count($acItems) > 0){
+    public function createSubMenu($menuName, $menuLink, $menuItems, $index) {
+        if (is_array($menuItems) && count($menuItems) > 0){
 
-            $accordianAnchorTags = "";
+            $menu = '';
 
-            for ($i = 0; $i < count($acItems); $i++){
+            for ($i = 0; $i < count($menuItems); $i++){
 
                 // If the current item is not an error there is a problem
-                if(!is_array($acItems[$i])){
-                    $anchor = $this->buildElement('a')
+                if(!is_array($menuItems[$i])){
+
+                    $button = $this->buildElement('a')
                                 ->classList($this->sbAnchorClasses)
                                 ->href('#')
                                 ->tabindex($i)
                                 ->content('This resource was not found')
                                 ->create();
 
-                    $accordianAnchorTags .= $anchor;
+                    $menu .= $button;
                 }
 
                 // If there is a nested array, it is sent to create an accordian
-                else if (array_key_exists("menuItems", $acItems[$i])) {
+                else if (array_key_exists("menuItems", $menuItems[$i])) {
 
-                    $accordian = $this->createAccordian($acItems[$i]["name"], $acItems[$i]["link"], $acItems[$i]["menuItems"], $index.'-'.$i);
-                    $accordianAnchorTags .= $accordian;
+                    $subMenu = $this->createSubMenu($menuItems[$i]["name"], $menuItems[$i]["link"], $menuItems[$i]["menuItems"], $index.'-'.$i);
+                    $menu .= $subMenu;
 
                 }
                 else { // else the item becomes an anchor tag
@@ -107,40 +109,50 @@ class MenuBuilder extends HtmlBuilder{
                     // EDIT LATER: this id here will just be from the iteration number
                     $anchor = $this->buildElement('a')
                                 ->classList($this->sbAnchorClasses)
-                                ->href($acItems[$i]['link'])
+                                ->href($menuItems[$i]['link'])
                                 ->tabindex($i)
-                                ->content($acItems[$i]['name'])
+                                ->content($menuItems[$i]['name'])
                                 ->create();
 
 
-                    $accordianAnchorTags .= $anchor;
+                    $menu .= $anchor;
 
                 }
 
             }
 
-            $caret = $this->buildElement('i')
-                        ->id($index.'-caret')
-                        ->classList($this->sbITagClasses)
-                        ->create();
 
-            $acButton = $this->buildElement('button')
+            $caret = $this->buildElement('i')
+                          ->id($index.'-caret')
+                          ->classList($this->sbITagClasses)
+                          ->create();
+
+            $subMenuButton = $this->buildElement('button')
                             ->classList($this->sbButtonClasses)
-                            ->onclick("accordian('" .$index . "');location.href='".$acLink."'")
-                            ->content($caret . '   ' . $acName)
+                            ->onclick("accordian('" .$index . "');location.href='".$menuLink."'")
+                            ->content($caret . '   ' . $menuName)
                             ->create();
 
-            $acContainer = $this->buildElement('div')
+            $subMenu = $this->buildElement('div')
                                 ->id($index)
                                 ->classList($this->sbAccordianClasses)
-                                ->content($accordianAnchorTags)
+                                ->content($menu)
                                 ->create();
 
 
-            return $acButton . $acContainer;
+            $subMenuContainer = $this->buildElement('div')
+            ->classList('subMenuContainer')
+            ->content($subMenuButton . $subMenu)
+            ->create();
+
+            return $subMenuContainer;
+
         }
         else{
             return false;
         }
     }
+
 }
+
+

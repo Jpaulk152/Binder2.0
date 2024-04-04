@@ -72,10 +72,10 @@
                     default:
 
                         $data = array(
-                            'sideContent'=> utilities::getDataFromCSV('content.csv', 'Models/DB/mockTables/Test/side/'),
-                            'navContent'=> utilities::getDataFromCSV('content.csv', 'Models/DB/mockTables/Navigation/Test/'),
+                            'sideContent'=> utilities::getDataFromCSV('content.csv', '../src/Models/DB/mockTables/Test/side/'),
+                            'navContent'=> utilities::getDataFromCSV('content.csv', '../src/Models/DB/mockTables/Navigation/Test/'),
                             'logoPath' => '../src/resources/logo.png',
-                            'mainContent'=> utilities::getDataFromCSV('content.csv', 'Models/DB/mockTables/Test/main/')
+                            'mainContent'=> utilities::getDataFromCSV('content.csv', '../src/Models/DB/mockTables/Test/main/')
                         );
                 
                 }

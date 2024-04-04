@@ -18,11 +18,11 @@ class config{
   }
 
   public static function app_root(){
-    return utilities::switchSlash(self::doc_root() . '/MVC/src');
+    return utilities::switchSlash(self::doc_root() . '/Binder2.0/src');
   }
 
   public static function public_root(){
-    return utilities::switchSlash(self::doc_root() . '/MVC/public');
+    return utilities::switchSlash(self::doc_root() . '/Binder2.0/public');
   }
 }
 

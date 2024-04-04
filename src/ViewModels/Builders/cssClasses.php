@@ -4,9 +4,7 @@ namespace ViewModels\Builders;
 
 trait cssClasses
 {
-
     public $sbContainerClasses = "sideContent primaryBackground w3-container w3-sidebar w3-border w3-bar-block w3-collapse w3-animate-left w3-card";
-    // public $sbContainerClasses = "sideContent primaryBackground w3-container w3-sidebar w3-border w3-bar-block w3-animate-left w3-card";
     public $sbButtonClasses = "sideButton secondaryBackground w3-button w3-block w3-border w3-card-4";
     public $sbAnchorClasses = "w3-bar-item";
 

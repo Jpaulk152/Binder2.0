@@ -33,16 +33,16 @@ class View
 
     public $viewModel;
 
-    public function __construct($pageName)
+    public function __construct($pageName, $pageData)
     {
         $viewModel = '\ViewModels\\'.$pageName.'ViewModel';
 
-        $this->viewModel = new $viewModel('AFJROTC_Curriculum');
+        $this->viewModel = new $viewModel($pageData);
     }
 
     public function render()
     {
-        $this->body = $this->viewModel->renderLayout();
+        $this->body = $this->viewModel->renderSideBar();
 
         $viewData = array($this->docType, $this->htmlTop, $this->head, $this->body, $this->htmlBottom);
 
