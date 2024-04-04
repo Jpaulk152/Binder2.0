@@ -1,2 +1,0 @@
-name,Attach Lesson SideBar,link,javascript:getLessonSideContent()
-name,Remove SideBar,link,javascript:removeSideBar()
