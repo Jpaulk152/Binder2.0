@@ -6,45 +6,83 @@ use DB\Select;
 
 class Menu
 {
-    protected static $testPath = '../src/Models/DB/mockTables';
+    protected static $testPath = '..\src\Models\DB\mockTables';
 
-    protected function get($name)
+    public function get($name)
     {
-        $menu = \utilities::getDataFromCSV($name, $this->testPath);
+        // $menu = \utilities::getDataFromCSV($name, $this->testPath);
 
-        return $menu;
+
+
+        $it = new \RecursiveDirectoryIterator(self::$testPath);
+
+        // Loop through files
+        foreach(new \RecursiveIteratorIterator($it) as $table) {
+            if ($table->getExtension() == 'csv' && $table->getFileName() == $name) {
+
+                $tableName = $table->getPath() . '\\' . $table->getFileName();
+                $rows = array();
+
+                $open = $table->openFile('r');
+
+                while($row = $open->fgetcsv())
+                {
+                    array_push($rows, $row);
+                }
+
+                return array($tableName => $rows);
+            } 
+        }
+
+
+
+        // return $menu;
     }
 
     public function getAll()
     {
 
-        $allArray = array();
+        // $allMenuTables = array();
 
-        $it = new \RecursiveDirectoryIterator(self::$testPath);
+        // // array(
+        // //     array(
+        // //         'fileName' => 'derp',
+        // //         array()
+        // //     ),
+        // //     array(
+        // //         'fileName' => 'derp',
+        // //         array()
+        // //     ),
+        // //     etc...
+        // // )
 
-        // Loop through files
-        foreach(new \RecursiveIteratorIterator($it) as $file) {
-            if ($file->getExtension() == 'csv') {
+        // $it = new \RecursiveDirectoryIterator(self::$testPath);
 
-                // echo $file->getPath() . '/' . $file->getFileName() . '<br>';
-                // $file->openFile('r');
+        // // Loop through files
+        // foreach(new \RecursiveIteratorIterator($it) as $menu) {
+        //     if ($menu->getExtension() == 'csv') {
 
-                $open = $file->openFile('r');
-                $array = $open->fgetcsv();
+        //         $menuName = $menu->getPath() . '\\' . $menu->getFileName();
+        //         // $fileArray = array('fileName' => $fileName);
+        //         // echo $fileName . '<br>';
 
-                array_push($allArray, $array);
- 
-                // array_walk_recursive($array, function($item, $key)
-                // {
-                //     echo "$key => $item <br>";
-                // });
+        //         $open = $menu->openFile('r');
 
-                // echo '<br>';
-            } 
-        }
+                
+        //         while($row = $open->fgetcsv())
+        //         {
+                    
 
-        
-        return $allArray;
+
+        //             array_push($fileArray, $row);
+        //             array_push($allMenuTables, $fileArray);
+        //         }
+
+        //     } 
+        // }
+
+        // // die(var_dump($allArray));
+        // return $allFilesArray;
     }
 
     protected function set()

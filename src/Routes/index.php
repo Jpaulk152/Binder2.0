@@ -7,10 +7,11 @@ use Routes\Router;
 
 $router = new Router();
 
+// echo config::public_root();
 
-$router->get('/', HomeController::class, 'index');
-$router->get('/index.php', HomeController::class, 'home');
-$router->get('/index.php/home', HomeController::class, 'home');
-$router->get('/index.php/journal', HomeController::class, 'journal');
+$router->get(\config::public_root(), HomeController::class, 'index');
+$router->get(\config::public_root(). '/index.php', HomeController::class, 'home');
+$router->get(\config::public_root(). '/index.php/home', HomeController::class, 'home');
+$router->get(\config::public_root(). '/index.php/journal', HomeController::class, 'journal');
 
 $router->dispatch();
