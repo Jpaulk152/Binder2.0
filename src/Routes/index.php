@@ -8,7 +8,7 @@ use Routes\Router;
 $router = new Router();
 
 
-$router->get('/', HomeController::class, 'home');
+$router->get('/', HomeController::class, 'index');
 $router->get('/index.php', HomeController::class, 'home');
 $router->get('/index.php/home', HomeController::class, 'home');
 $router->get('/index.php/journal', HomeController::class, 'journal');

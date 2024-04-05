@@ -72,10 +72,10 @@
                     default:
 
                         $data = array(
-                            'sideContent'=> utilities::getDataFromCSV('content.csv', '../src/Models/DB/mockTables/Test/side/'),
-                            'navContent'=> utilities::getDataFromCSV('content.csv', '../src/Models/DB/mockTables/Navigation/Test/'),
+                            'sideContent'=> utilities::getDataFromCSV('content.csv', '../src/Models/DB/mockTables/sideTables/Test/'),
+                            'navContent'=> utilities::getDataFromCSV('content.csv', '../src/Models/DB/mockTables/navTables/Test/'),
                             'logoPath' => '../src/resources/logo.png',
-                            'mainContent'=> utilities::getDataFromCSV('content.csv', '../src/Models/DB/mockTables/Test/main/')
+                            'mainContent'=> utilities::getDataFromCSV('content.csv', '../src/Models/DB/mockTables/mainTables/Test/')
                         );
                 
                 }
@@ -90,9 +90,9 @@
                     case 'home':
                         $data = array(
                             'sideContent'=> '',
-                            'navContent'=> \utilities::getDataFromCSV('menu0.csv', '../src/Models/DB/mockTables/Navigation/Primary/'),
+                            'navContent'=> \utilities::getDataFromCSV('menu0.csv', '../src/Models/DB/mockTables/navTables/Primary/'),
                             'logoPath' => '../src/resources/logo.png',
-                            'mainContent'=> \utilities::getDataFromCSV('content.csv', '../src/Models/DB/mockTables/Primary/main/')
+                            'mainContent'=> \utilities::getDataFromCSV('content.csv', '../src/Models/DB/mockTables/mainTables/Primary/')
                         );
 
                         
@@ -100,17 +100,17 @@
 
                     case 'AFJROTC_Curriculum':
                         $data = array(
-                            'sideContent'=> utilities::getDataFromCSV('menu0.csv', '../src/Models/DB/mockTables/AFJROTC_Curriculum/side/primary/'),
-                            'navContent'=> utilities::getDataFromCSV('menu0.csv', '../src/Models/DB/mockTables/Navigation/Primary/'),
+                            'sideContent'=> utilities::getDataFromCSV('menu0.csv', '../src/Models/DB/mockTables/sideTables/AFJROTC_Curriculum/'),
+                            'navContent'=> utilities::getDataFromCSV('menu0.csv', '../src/Models/DB/mockTables/navTables/Primary/'),
                             'logoPath' => '../src/resources/logo.png',
-                            'mainContent'=> \utilities::getDataFromCSV('content.csv', '../src/Models/DB/mockTables/Primary/main/')
+                            'mainContent'=> \utilities::getDataFromCSV('content.csv', '../src/Models/DB/mockTables/mainTables/Primary/')
                         );
                         break;
 
                     case 'Faculty_and_Staff_Development':
                         $data = array(
-                            'sideContent'=> utilities::getDataFromCSV('content.csv', '../src/Models/DB/mockTables/Faculty_and_Staff_Development/side/primary/'),
-                            'navContent'=> utilities::getDataFromCSV('content.csv', '../src/Models/DB/mockTables/Navigation/Primary/'),
+                            'sideContent'=> utilities::getDataFromCSV('content.csv', '../src/Models/DB/mockTables/sideTables/Faculty_and_Staff_Development/'),
+                            'navContent'=> utilities::getDataFromCSV('content.csv', '../src/Models/DB/mockTables/navTables/Primary/'),
                             'logoPath' => '../src/resources/logo.png',
                             'mainContent'=> ''
                         );
@@ -118,8 +118,8 @@
     
                     case 'OTS_Curriculum':
                         $data = array(
-                            'sideContent'=> utilities::getDataFromCSV('content.csv', '../src/Models/DB/mockTables/OTS_Curriculum/side/primary/'),
-                            'navContent'=> utilities::getDataFromCSV('content.csv', '../src/Models/DB/mockTables/Navigation/Primary/'),
+                            'sideContent'=> utilities::getDataFromCSV('content.csv', '../src/Models/DB/mockTables/sideTables/OTS_Curriculum/'),
+                            'navContent'=> utilities::getDataFromCSV('content.csv', '../src/Models/DB/mockTables/navTables/Primary/'),
                             'logoPath' => '../src/resources/logo.png',
                             'mainContent'=> ''
                         );
@@ -127,8 +127,8 @@
 
                     case 'AFROTC_Materials':
                         $data = array(
-                            'sideContent'=> utilities::getDataFromCSV('content.csv', '../src/Models/DB/mockTables/AFROTC_Materials/side/primary/'),
-                            'navContent'=> utilities::getDataFromCSV('content.csv', '../src/Models/DB/mockTables/Navigation/Primary/'),
+                            'sideContent'=> utilities::getDataFromCSV('content.csv', '../src/Models/DB/mockTables/sideTables/AFROTC_Materials/'),
+                            'navContent'=> utilities::getDataFromCSV('content.csv', '../src/Models/DB/mockTables/navTables/Primary/'),
                             'logoPath' => '../src/resources/logo.png',
                             'mainContent'=> ''
                         );
@@ -136,8 +136,8 @@
 
                     case 'OTS_Pre-Course_Assignments':
                         $data = array(
-                            'sideContent'=> utilities::getDataFromCSV('content.csv', '../src/Models/DB/mockTables/OTS_Pre-Course_Assignments/side/primary/'),
-                            'navContent'=> utilities::getDataFromCSV('content.csv', '../src/Models/DB/mockTables/Navigation/Primary/'),
+                            'sideContent'=> utilities::getDataFromCSV('content.csv', '../src/Models/DB/mockTables/sideTables/OTS_Pre-Course_Assignments/'),
+                            'navContent'=> utilities::getDataFromCSV('content.csv', '../src/Models/DB/mockTables/navTables/Primary/'),
                             'logoPath' => '../src/resources/logo.png',
                             'mainContent'=> ''
                         );

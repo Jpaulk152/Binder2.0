@@ -18,11 +18,8 @@ class CurriculumController extends Controller
        
         // pull data to be sent to the view
         $select = new Select();
-        // $pageData = $select->from('AFJROTC_Curriculum');
-
         $pageData = $select->from('AFJROTC_Curriculum');
-
-        // die(var_dump($this->navClasses()));
+        
 
         // decide how it will be displayed: 
         // ViewModels, 
