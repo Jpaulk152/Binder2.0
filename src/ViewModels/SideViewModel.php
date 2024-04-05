@@ -18,6 +18,11 @@ class SideViewModel extends HtmlBuilder implements ViewModel{
 
     public function render($classList)
     {
+        if (!is_array($this->pageData) || count($this->pageData) == 0)
+        {
+            return '';
+        }
+
         $menuBuilder = new Builders\MenuBuilder();
         $menu = $menuBuilder->createMenu($this->pageData, $classList);
 

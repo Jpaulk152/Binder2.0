@@ -19,6 +19,11 @@ class NavViewModel extends HtmlBuilder implements ViewModel{
     public function render($classList)
     {
 
+        if (!is_array($this->pageData) || count($this->pageData) == 0)
+        {
+            return '';
+        }
+
 
         $logo = $this->buildElement('img')
                     ->classList($classList['logo'])

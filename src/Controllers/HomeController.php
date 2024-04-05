@@ -16,7 +16,8 @@ class HomeController extends Controller
 
     public function index()
     {
-        $this->render('index');
+        $view = new View([], '', 'index');
+        $view->render();
     }
 
 
@@ -24,7 +25,9 @@ class HomeController extends Controller
     {
         // pull data to be sent to the view
         $select = new Select();
-        $pageData = $select->from('AFJROTC_Curriculum');
+        // $pageData = $select->from('AFJROTC_Curriculum');
+
+        $pageData = $select->from('home');
 
         // die(var_dump($this->navClasses()));
 

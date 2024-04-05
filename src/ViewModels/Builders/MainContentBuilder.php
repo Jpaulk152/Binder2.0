@@ -22,7 +22,7 @@ class MainContentBuilder extends HtmlBuilder{
     public $mainContent;
 
 
-    public function createMainContent($content=""){
+    public function createMainContent($content="", $classList=""){
 
         $mainContent = $this->buildElement('div')
                                     ->id('mainContent')

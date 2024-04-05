@@ -43,24 +43,7 @@ a:hover {
 }
 
 
-.errorMsg {
-    color: red;
-}
 
-.navBar  {
-    z-index: 2;
-    top: 0;
-    position: fixed;
-}
-
-.navButton {
-    margin-top: 40px;
-}
-
-
-.dropdownContent {
-    position: fixed;
-}
 
 .homeLayout {
     margin-top: 90px;
@@ -76,22 +59,75 @@ a:hover {
     position: absolute;
 }
 
-.mainContent {
+.curriculumLayout {
+    margin-top: 90px;
+    width: 100%;
     height: 100%;
+    position: absolute;
 }
 
 
 
-.sideContent {
+
+.navMenuContainer  {
+    z-index: 2;
+    top: 0;
+    position: fixed;
+}
+
+.navMenuButton {
+    margin-top: 40px;
+}
+
+.navSubMenu {
+    position: fixed;
+}
+
+.navSubMenuContainer {
+    margin-top: 40px;
+}
+
+.navSubMenuButton {
+
+}
+
+.w3-bar-block .navMenuButton {
+    margin-top: 0;
+}
+
+.w3-bar-block .navSubMenuContainer {
+    
+}
+
+.navCaret {
+
+}
+
+.navLogo {
+
+}
+
+.navLogoContainer {
+    
+}
+
+
+
+
+
+
+.sideMenuButton {
+
+}
+
+.sideMenuContainer {
     font-size: small;
     padding-top: 20px;
     padding-bottom: 200px;
-    width: 400px;
+    width: 300px;
 }
 
-
-.sideButton {
-    
+.sideSubMenuButton{
     display: flex;
     justify-content: left;
     align-items: center;
@@ -101,6 +137,36 @@ a:hover {
     white-space: normal;
     min-height: 75px;
 }
+
+.sideSubMenuContainer {
+
+}
+
+.sideSubMenu {
+
+}
+
+
+.sideCaret {
+
+}
+
+.sideOpenButton {
+
+}
+
+.sideCloseButton {
+
+}
+
+.sideLogo {
+
+}
+
+.sideLogoContainer {
+    
+}
+
 
 .caret {
     color: black;
@@ -116,6 +182,12 @@ a:hover {
 
 
 
+.mainContent {
+    height: 100%;
+}
+
+
+
 @media screen and (min-width: 840px){
     .bioInfo {
         float: right;
@@ -124,12 +196,18 @@ a:hover {
 
 @media screen and (min-width: 922px){
     .mainContentToRight {
-        margin-left: 400px;
+        margin-left: 300px;
     }
 }
 
-@media screen and (max-width: 578px){
-    .contentContainer {
+/* @media screen and (max-width: 578px){
+    #layout {
+        margin-top: 300px;
+    }
+} */
+
+@media screen and (max-width: 1310px){
+    #layout {
         margin-top: 170px;
     }
 }

@@ -23,16 +23,12 @@ class config{
     return utilities::switchSlash(self::doc_root() . self::$currentPath, false);
   }
 
-  public static function app_root(){
-    return utilities::switchSlash(self::doc_root() . self::$currentPath . '/src');
-  }
-
   public static function src_root(){
-    return utilities::switchSlash(self::$currentPath . '/src');
+    return utilities::switchSlash(self::doc_root() . '/../src', false);
   }
 
   public static function public_root(){
-    return utilities::switchSlash(self::$currentPath . '/public', false);
+    return utilities::switchSlash(self::$currentPath, false);
   }
 }
 

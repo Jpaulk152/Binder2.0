@@ -23,7 +23,7 @@ class Autoloader
 
         // $path = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, config::app_root().$path);
 
-        $path = utilities::switchSlash((config::app_root().$path));
+        $path = utilities::switchSlash((config::src_root().$path));
 
         $file = $path.$className.'.php';
 

@@ -90,7 +90,7 @@
                     case 'home':
                         $data = array(
                             'sideContent'=> '',
-                            'navContent'=> \utilities::getDataFromCSV('content.csv', '../src/Models/DB/mockTables/Navigation/Primary/'),
+                            'navContent'=> \utilities::getDataFromCSV('menu0.csv', '../src/Models/DB/mockTables/Navigation/Primary/'),
                             'logoPath' => '../src/resources/logo.png',
                             'mainContent'=> \utilities::getDataFromCSV('content.csv', '../src/Models/DB/mockTables/Primary/main/')
                         );
@@ -100,10 +100,10 @@
 
                     case 'AFJROTC_Curriculum':
                         $data = array(
-                            'sideContent'=> utilities::getDataFromCSV('content.csv', '../src/Models/DB/mockTables/AFJROTC_Curriculum/side/primary/'),
-                            'navContent'=> utilities::getDataFromCSV('content.csv', '../src/Models/DB/mockTables/Navigation/Primary/'),
+                            'sideContent'=> utilities::getDataFromCSV('menu0.csv', '../src/Models/DB/mockTables/AFJROTC_Curriculum/side/primary/'),
+                            'navContent'=> utilities::getDataFromCSV('menu0.csv', '../src/Models/DB/mockTables/Navigation/Primary/'),
                             'logoPath' => '../src/resources/logo.png',
-                            'mainContent'=> ''
+                            'mainContent'=> \utilities::getDataFromCSV('content.csv', '../src/Models/DB/mockTables/Primary/main/')
                         );
                         break;
 
