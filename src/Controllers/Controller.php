@@ -4,10 +4,10 @@ namespace Controllers;
 
 class Controller
 {
-    protected function render($view, $data = [])
-    {
-        extract($data);
+    // protected function render($view, $data = [])
+    // {
+    //     extract($data);
 
-        include 'Views/'.$view.'.php';
-    }
+    //     include 'Views/'.$view.'.php';
+    // }
 }

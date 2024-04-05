@@ -4,6 +4,8 @@ require_once('utilities.php');
 
 class config{
 
+  public static $currentPath = '/Binder2.0';
+
   public static function baseURL(){
     return sprintf(
         "%s://%s",
@@ -17,12 +19,20 @@ class config{
     return $_SERVER['DOCUMENT_ROOT'];
   }
 
+  public static function site_root(){
+    return utilities::switchSlash(self::doc_root() . self::$currentPath, false);
+  }
+
   public static function app_root(){
-    return utilities::switchSlash(self::doc_root() . '/Binder2.0/src');
+    return utilities::switchSlash(self::doc_root() . self::$currentPath . '/src');
+  }
+
+  public static function src_root(){
+    return utilities::switchSlash(self::$currentPath . '/src');
   }
 
   public static function public_root(){
-    return utilities::switchSlash(self::doc_root() . '/Binder2.0/public');
+    return utilities::switchSlash(self::$currentPath . '/public', false);
   }
 }
 

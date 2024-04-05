@@ -1,22 +1,17 @@
 // COMMENTS!!!
 
-function accordian(id) {
 
-    var accordian = document.getElementById(id);  
-    var caret = document.getElementById(id + "-caret");
+function expand(element){
+    
+    accordian = element.nextSibling;
 
-    // console.log(accordian);
+    var caret = document.getElementById(element.id + '-caret');
 
     if(accordian.className.indexOf("w3-show") == -1) {
 
         accordian.className = accordian.className.replace("w3-hide", "w3-show");
         caret.className = caret.className.replace("fa-caret-right", "fa-caret-down");
-
-        // fix animate closing accordian
-        // setTimeout(function() {
-        //     accordian.className = accordian.className.replace("w3-animate-zoom-out", "w3-animate-zoom-in");
-        // }, 0)
-                
+    
     }
     else {
 
@@ -25,9 +20,28 @@ function accordian(id) {
         accordian.className = accordian.className.replace("w3-show", "w3-hide");
         caret.className = caret.className.replace("fa-caret-down", "fa-caret-right");
 
-        // setTimeout(function() {
-        //     accordian.className = accordian.className.replace("w3-animate-zoom-in", "w3-animate-zoom-out");
-        // }, 0)
+    }
+}
+
+
+function accordian(element) {
+
+    accordian = element.nextSibling;
+
+    var caret = document.getElementById(element.id + '-caret');
+
+    if(accordian.className.indexOf("w3-show") == -1) {
+
+        accordian.className = accordian.className.replace("w3-hide", "w3-show");
+        caret.className = caret.className.replace("fa-caret-right", "fa-caret-down");
+    
+    }
+    else {
+
+        recursiveClose(accordian);
+
+        accordian.className = accordian.className.replace("w3-show", "w3-hide");
+        caret.className = caret.className.replace("fa-caret-down", "fa-caret-right");
 
     }
 }

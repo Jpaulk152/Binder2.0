@@ -4,151 +4,109 @@ namespace ViewModels\Builders;
 
 class MenuBuilder extends HtmlBuilder{
 
-    use cssClasses;
-
-    public $menuHtml;
-
-    public function createMenu($menuItems) {
-
+    public function createMenu($menuItems, $classList=[], $expandFunction='', $internalElements=[], $adjacentElements=[], $tabIndex=0) {
         if (is_array($menuItems) && count($menuItems) > 0){
 
             $menu = '';
-
-            $i = 0;
+            $i = $tabIndex;
             foreach ($menuItems as $item)
             {
                 
-                // If there is a nested array, it is sent to create an accordian
-                if (array_key_exists("menuItems", $item)) {
+                // If the item is a menu build a submenu
+                if ($this->isMenu($item)) {
 
-                    $subMenu = $this->createSubMenu($item["name"], $item["link"], $item["menuItems"], "subMenu-".$i);
-                    $menu .= $subMenu;
+                    $subMenu = $this->createMenu($item['menuItems'], $classList, $expandFunction, $internalElements, $adjacentElements, $tabIndex);
+
+                    $caret = $this->buildElement('i')
+                                  ->id('menu-'. $i .'-caret')
+                                  ->classList($classList['caret'])
+                                  ->create();
+
+                    $subMenuButton = $this->buildElement('button')
+                                          ->id('menu-'. $i)
+                                          ->classList($classList['subMenuButton'])
+                                          ->onclick("expand(this);location.href='" .$item['link']. "'")
+                                          ->content($caret . '   ' . $item['name'])
+                                          ->create();
+
+                    $subMenu = $this->buildElement('div')
+                                     ->classList($classList['subMenu'])
+                                     ->content($subMenu)
+                                     ->create();
+
+                    $subMenuContainer = $this->buildElement('div')
+                                            ->classList($classList['subMenuContainer'])
+                                            ->content($subMenuButton . $subMenu)
+                                            ->create();
+
+
+                    $menu .= $subMenuContainer;
                     
                 }
-                else { // else the item becomes a button, this also means we are at the top level
+                // else, if the item is a button build a button, this also means we are at the top level
+                else if ($this->isButton($item))
+                { 
 
-                    $button = $this->buildElement('a')
-                                    ->classList($this->sbAnchorClasses)
+                    $menuButton = $this->buildElement('a')
+                                    ->classList($classList['menuButton'])
                                     ->href($item['link'])
                                     ->tabindex($i)
                                     ->content($item['name'])
                                     ->create();
 
 
-                    $menu .= $button;
+                    $menu .= $menuButton;
                     
                 }
+                // otherwise the item retrieved doesn't fit, so log it and build a placeholder that says 'resource not found'
+                else
+                {
+
+                    $menuButton = $this->buildElement('a')
+                                    ->classList($classList['menuButton'])
+                                    ->href('#')
+                                    ->tabindex($i)
+                                    ->content('This resource was not found')
+                                    ->create();
+
+                     $menu .= $menuButton;
+                }
+
                 $i++;
             }
-            
 
-            // adjacent element for sidebar (rendered to the left or right using return)
-            $sbOpenButton = $this->buildElement('button')
-                                 ->id('sideContentButton')
-                                 ->classList($this->sbOpenBtnClasses)
-                                 ->style('float:left')
-                                 ->onclick('openSideBar()')
-                                 ->content('&#9776')
-                                 ->create();
-            // ###################################
-
-            // internal element for sidebar (rendered to the left or right of menu inside container)
-            $sbCloseButton = $this->buildElement('button')
-                            ->classList($this->sbCloseBtnClasses)
-                            ->onclick('closeSideBar()')
-                            ->content('Close &times;')
-                            ->create();
-            // ###################################
-
-
-            $sbContainer = $this->buildElement('div')
-                                ->id('sideContent')
-                                ->classList($this->sbContainerClasses)
-                                ->content($sbCloseButton . $menu)
-                                ->create();
-
-            return $sbOpenButton . $sbContainer;
-        }
-        else {
-            return false;
-        }
-    
-    }
-
-
-    public function createSubMenu($menuName, $menuLink, $menuItems, $index) {
-        if (is_array($menuItems) && count($menuItems) > 0){
-
-            $menu = '';
-
-            for ($i = 0; $i < count($menuItems); $i++){
-
-                // If the current item is not an error there is a problem
-                if(!is_array($menuItems[$i])){
-
-                    $button = $this->buildElement('a')
-                                ->classList($this->sbAnchorClasses)
-                                ->href('#')
-                                ->tabindex($i)
-                                ->content('This resource was not found')
-                                ->create();
-
-                    $menu .= $button;
-                }
-
-                // If there is a nested array, it is sent to create an accordian
-                else if (array_key_exists("menuItems", $menuItems[$i])) {
-
-                    $subMenu = $this->createSubMenu($menuItems[$i]["name"], $menuItems[$i]["link"], $menuItems[$i]["menuItems"], $index.'-'.$i);
-                    $menu .= $subMenu;
-
-                }
-                else { // else the item becomes an anchor tag
-
-                    
-                    // EDIT LATER: this id here will just be from the iteration number
-                    $anchor = $this->buildElement('a')
-                                ->classList($this->sbAnchorClasses)
-                                ->href($menuItems[$i]['link'])
-                                ->tabindex($i)
-                                ->content($menuItems[$i]['name'])
-                                ->create();
-
-
-                    $menu .= $anchor;
-
-                }
-
-            }
-
-
-            $caret = $this->buildElement('i')
-                          ->id($index.'-caret')
-                          ->classList($this->sbITagClasses)
-                          ->create();
-
-            $subMenuButton = $this->buildElement('button')
-                            ->classList($this->sbButtonClasses)
-                            ->onclick("accordian('" .$index . "');location.href='".$menuLink."'")
-                            ->content($caret . '   ' . $menuName)
-                            ->create();
-
-            $subMenu = $this->buildElement('div')
-                                ->id($index)
-                                ->classList($this->sbAccordianClasses)
-                                ->content($menu)
-                                ->create();
-
-
-            $subMenuContainer = $this->buildElement('div')
-            ->classList('subMenuContainer')
-            ->content($subMenuButton . $subMenu)
-            ->create();
-
-            return $subMenuContainer;
+            return $menu;
 
         }
         else{
+            return false;
+        }
+    }
+
+
+    public function isMenu($item)
+    {
+        if(is_array($item) && array_key_exists('name', $item) && array_key_exists('link', $item) && array_key_exists('menuItems', $item) && is_array($item['menuItems']) && count($item['menuItems']) > 0)
+        {
+            return true;
+        }
+        else
+        {
+            // \utilities::consoleLog('Item is not a menu: ', $item);
+            return false;
+        }
+    }
+
+
+    public function isButton($item)
+    {
+        if(is_array($item) && array_key_exists('name', $item) && array_key_exists('link', $item))
+        {
+            return true;
+        }
+        else
+        {
+            // \utilities::consoleLog('Item is not a button', $item);
             return false;
         }
     }

@@ -7,9 +7,11 @@ use Routes\Router;
 
 $router = new Router();
 
-$router->get('/Binder2.0/public/', HomeController::class, 'index');
-$router->get('/Binder2.0/public/index.php', HomeController::class, 'home');
-$router->get('/Binder2.0/public/index.php/welcome', HomeController::class, 'welcome');
-$router->get('/Binder2.0/public/index.php/journal', HomeController::class, 'journal');
+echo \config::public_root();
+
+$router->get(\config::public_root().'/', HomeController::class, 'index');
+$router->get(\config::public_root() . '/index.php', HomeController::class, 'home');
+$router->get(\config::public_root() . '/index.php/welcome', HomeController::class, 'welcome');
+$router->get(\config::public_root() . '/index.php/journal', HomeController::class, 'journal');
 
 $router->dispatch();

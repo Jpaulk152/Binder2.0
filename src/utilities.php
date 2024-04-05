@@ -10,7 +10,7 @@ class utilities {
         if (!file_exists($path . $file))
         {
             // echo 'file: ' . $path.$file . ' not found.<br>';
-            return false;
+            return array('menuItems' => null);
         }
 
         $open = fopen($path . $file, 'r');
@@ -73,9 +73,24 @@ class utilities {
     }
 
 
-    public static function switchSlash($path)
+    public static function switchSlash($path, $switch=true)
     {
-        return str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $path);
+        if ($switch)
+        {
+            return str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $path);
+        }
+        else
+        {
+            return str_replace(array('/', '\\'), '/', $path);
+        }
+    }
+
+    public static function consoleLog($message, $data=[])
+    {
+        // echo $message;
+
+        array_unshift($data, $message);
+        echo "<script>console.log('". json_encode($data) ."');</script>";
     }
     
 }

@@ -2,6 +2,8 @@
 
 namespace Views;
 
+use \ViewModels\Builders\HtmlBuilder;
+
 class View
 {
     public $docType = '<!DOCTYPE html>';
@@ -31,34 +33,56 @@ class View
 
     public $body = '';
 
-    public $viewModel;
+    public $elements = [];
+    public $layoutClasses = '';
 
-    public function __construct($pageName, $pageData)
+    public function __construct($elements = [], $layoutClasses='')
     {
-        $viewModel = '\ViewModels\\'.$pageName.'ViewModel';
+        // $viewModel = '\ViewModels\\'.$pageName.'ViewModel';
 
-        $this->viewModel = new $viewModel($pageData);
+        // $this->viewModel = new $viewModel($pageData);
+
+        // if(is_array($elements) && count($elements) > 0)
+        // {
+        //     foreach($elements as $element)
+        //     {
+        //         $this->body .= $element;
+        //     }
+        // }
+
+        // if(is_array($viewModels) && count($viewModels) > 0)
+        // {
+        //     foreach($viewModels as $viewModel)
+        //     {
+        //         $this->body .= $viewModel->render();
+        //     }
+        // }
+
+        $this->elements = $elements;
+        $this->layoutClasses = $layoutClasses;
     }
+
 
     public function render()
     {
-        $this->body = $this->viewModel->renderSideBar();
+        $htmlBuilder = new HtmlBuilder();
+
+        $content = '';
+
+        foreach($this->elements as $element)
+        {
+            $content .= $element;
+        }
+
+        $this->body .= $htmlBuilder->buildElement('div')
+                                    ->id('layout')
+                                    ->classList($this->layoutClasses)
+                                    ->content($content)
+                                    ->create();
+
 
         $viewData = array($this->docType, $this->htmlTop, $this->head, $this->body, $this->htmlBottom);
 
-        $view = new Renderer();
-
-        echo $view->render($viewData);
-    }
-}
-
-
-
-class Renderer
-{
-    
-    public function render($viewData=[])
-    {
         $view = '';
         if (count($viewData) > 0)
         {   
@@ -72,7 +96,7 @@ class Renderer
             $view = ob_get_clean();
         }
 
-        return $view;
-    }
+        echo $view;
 
+    }
 }

@@ -1,3 +1,1 @@
-<?php
-
-echo $page;
+<h1>This is the index page!</h1>
