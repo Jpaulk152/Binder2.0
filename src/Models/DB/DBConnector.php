@@ -35,6 +35,8 @@
                 }
             }
 
+            return $this;
+
         }
 
         function __destruct()

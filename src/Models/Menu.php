@@ -4,98 +4,31 @@ namespace Models;
 
 use DB\Select;
 
-class Menu
+class Menu extends Model
 {
-    protected static $testPath = '..\src\Models\DB\mockTables';
-
-    public function get($name)
+    public function get($name='menu.csv')
     {
-        // $menu = \utilities::getDataFromCSV($name, $this->testPath);
-
-
-
-        $it = new \RecursiveDirectoryIterator(self::$testPath);
-
-        // Loop through files
-        foreach(new \RecursiveIteratorIterator($it) as $table) {
-            if ($table->getExtension() == 'csv' && $table->getFileName() == $name) {
-
-                $tableName = $table->getPath() . '\\' . $table->getFileName();
-                $rows = array();
-
-                $open = $table->openFile('r');
-
-                while($row = $open->fgetcsv())
-                {
-                    array_push($rows, $row);
-                }
-
-                return array($tableName => $rows);
-            } 
-        }
-
-
-
-        // return $menu;
+        $select = new Select();
+        return $select()->from($name);
     }
 
     public function getAll()
     {
-
-        // $allMenuTables = array();
-
-        // // array(
-        // //     array(
-        // //         'fileName' => 'derp',
-        // //         array()
-        // //     ),
-        // //     array(
-        // //         'fileName' => 'derp',
-        // //         array()
-        // //     ),
-        // //     etc...
-        // // )
-
-        // $it = new \RecursiveDirectoryIterator(self::$testPath);
-
-        // // Loop through files
-        // foreach(new \RecursiveIteratorIterator($it) as $menu) {
-        //     if ($menu->getExtension() == 'csv') {
-
-        //         $menuName = $menu->getPath() . '\\' . $menu->getFileName();
-        //         // $fileArray = array('fileName' => $fileName);
-        //         // echo $fileName . '<br>';
-
-        //         $open = $menu->openFile('r');
-
-                
-        //         while($row = $open->fgetcsv())
-        //         {
-                    
-
-
-        //             array_push($fileArray, $row);
-        //             array_push($allMenuTables, $fileArray);
-        //         }
-
-        //     } 
-        // }
-
-        // // die(var_dump($allArray));
-        // return $allFilesArray;
+        $select = new Select();
+        return $select->fetchAll();
     }
 
-    protected function set()
+    protected function set($id, $values)
     {
 
     }
 
-    protected function add()
+    protected function add($values)
     {
 
     }
 
-    protected function remove()
+    protected function remove($id)
     {
 
     }

@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Models\Journal;
+use Models\Menu;
 use Models\DB\Select;
 use ViewModels\SideViewModel;
 use ViewModels\NavViewModel;
@@ -54,6 +55,35 @@ class HomeController extends Controller
         // $this->render('index', ['page' => $page->render()]);
 
         $view->render();
+    }
+
+    public function menus()
+    {
+
+        $menu = new Menu();
+
+        // $tableName = 'content2.csv';
+        // $tableName = 'navmenu.csv';
+        // $tableName = 'sidemenu.csv';
+        // $tableName = 'menu2.csv';
+
+
+        $select = new Select();
+
+        // $tables = $select->from('navmenu.csv')
+        //                   ->exec();
+
+        $tables = $select->fetchAll();
+
+        // die(var_dump($tables));
+
+        if (!$tables)
+        {
+            echo 'data not found';
+            return;
+        }
+
+        include '../src/Views/menus.php';
     }
 
 
