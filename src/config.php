@@ -5,7 +5,7 @@ require_once('utilities.php');
 class config{
 
   // public static $currentPath = '/Binder2.0';
-  public static $currentPath = '';
+  public static $currentPath = '/Binder2.0';
 
   public static function baseURL(){
     return sprintf(

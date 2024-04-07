@@ -35,7 +35,7 @@ class NavViewModel extends HtmlBuilder implements ViewModel{
 
         $homeAnchor = $this->buildElement('a')
                         ->classList($classList['logoContainer'])
-                        ->href('index.php')
+                        ->href('../index.php/home')
                         ->content($logo)
                         ->create();
 

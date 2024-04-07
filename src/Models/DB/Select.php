@@ -9,7 +9,7 @@ namespace Models\DB;
 
 class Select extends DBConnector implements DBInterface {
 
-    protected static $testPath = '..\src\Models\DB\mockTables\Test\\';
+    protected static $testPath = '..\src\Models\DB\mockTables\Primary\\';
 
     protected $table=null;
 
@@ -157,6 +157,7 @@ class Select extends DBConnector implements DBInterface {
 
             if((isset($indexRow[0]) && str_contains($indexRow[0], '#')) || !isset($indexRow[0]))
             {
+                // var_dump($indexRow);
                 continue;
             }
 
@@ -176,7 +177,7 @@ class Select extends DBConnector implements DBInterface {
                     {
                         if ($headerField == $key)
                         {
-                            if(!in_array($rowField, $constraints))
+                            if(!in_array($rowField, $constraints) && !empty($constraints))
                             {
                                 $rowAdd = false;
                             }

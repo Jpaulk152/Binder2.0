@@ -96,6 +96,7 @@ class MenuBuilder extends HtmlBuilder{
         }
         else
         {
+           
             // \utilities::consoleLog('Item is not a menu: ', $item);
             return false;
         }
@@ -110,6 +111,7 @@ class MenuBuilder extends HtmlBuilder{
         }
         else
         {
+            
             // \utilities::consoleLog('Item is not a button', $item);
             return false;
         }

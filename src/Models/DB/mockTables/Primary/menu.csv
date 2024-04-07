@@ -1,0 +1,77 @@
+id,title,has_parent,name,link,parent
+
+
+# ENTRIES FOR THE NAV BAR
+
+# AFJROTC CURRICULUM NAV BUTTON
+1,home,false,AFJROTC Curriculum,../index.php/curriculum?menu=AFJROTC_Curriculum,null
+
+# AFJROTC CURRICULUM SIDE MENU
+2,AFJROTC_Curriculum,false,Curriculum Guide,#,null
+3,AFJROTC_Curriculum,false,Current Curriculum for AY 23/24,download.php?f=JROTC_Curriculum%2FCurriculumGuide%2FCurrent+Curriculum+2024.pdf,null
+4,AFJROTC_Curriculum,false,How Curriculum Works,#openSCO,null
+5,AFJROTC_Curriculum,false,Directors Curriculum Policy Letter,download.php?f=JROTC_Curriculum%2FCurriculumGuide%2FAFJROTC_Curriculum_Policy_Letter.pdf,null
+6,AFJROTC_Curriculum,false,Directors Policy Letter on LDRs in the classroom,download.php?f=JROTC_Curriculum%2FCurriculumGuide%2FLDRs+in+the+Classroom+Policy.pdf,null
+7,AFJROTC_Curriculum,false,Define Unit Course in WINGS,#openSCO,null
+8,AFJROTC_Curriculum,false,Manage Academic Year,#openSCO,null
+9,AFJROTC_Curriculum,false,E-books and Companion Website Quick Reference,download.php?f=JROTC_Curriculum%2FEbooksQRef%2FCompWebsite-EbookQuickRef.pdf,null
+10,AFJROTC_Curriculum,false,Cognia Accreditation Certificate,download.php?f=JROTC_Curriculum%2FCogniaCert22%2FCognia+Cert.pdf,null
+
+
+# FACULTY AND STAFF DEVELOPMENT BUTTON
+11,home,false,Faculty and Staff Development,../index.php/curriculum?menu=Faculty_and_Staff_Development,null
+
+
+# FACULTY AND STAFF DEVELOPMENT SIDE MENU
+# CHILD OF 12 IS menu2-1.csv
+12,Faculty_and_Staff_Development,false,AFJROTC LE 100,#,null
+13,Faculty_and_Staff_Development,false,AFJROTC LE 200,#,null
+14,Faculty_and_Staff_Development,false,AFJROTC LE 300,#,null
+15,Faculty_and_Staff_Development,false,AFJROTC LE 400,#,null
+16,Faculty_and_Staff_Development,false,AFJROTC LE 600 Drill,#,null
+17,Faculty_and_Staff_Development,false,Drill & Ceremoinies,#,null
+18,Faculty_and_Staff_Development,false,LE Electives,#,null
+
+
+# OTS CURRICULUM BUTTON
+19,home,false,OTS Curriculum,../index.php/curriculum?menu=OTS_Curriculum,null
+
+# AFJROTC MATERIALS BUTTON
+20,home,false,AFROTC Materials,../index.php/curriculum?menu=AFROTC_Materials,null
+
+# OTS PRE-COURSE ASSIGNMENTS BUTTON
+21,home,false,OTS Pre-Course Assignments,../index.php/curriculum?menu=OTS_Pre-Course_Assignments,null
+
+######################################################################################
+
+
+34,null,true,Chapter 1: Introduction to JROTC Programs,#,12
+35,null,true,Chapter 2: Personal Behavior,#,12
+36,null,true,Chapter 3: Be Health Smart,#,12
+37,null,true,"Chapter 4: Making Safe, Drug-Free Decisions",#,12
+38,null,true,Chapter 5: Foundations of United States Citizenship,#,12
+
+39,null,true,third tier menu,#,38
+
+40,null,true,fourth tier menu,#,39
+
+41,null,true,fifth tier menu,#,40
+
+
+
+# ENTRIES FOR THE SIDE BAR
+
+22,sideTest,false,Regular Accordian,#,null
+23,null,true,PHP Exercise 1,"javascript:changeContent('../exercisePHP/1/index.php', 'iframe')",1
+24,null,true,PHP Exercise 2,"javascript:changeContent('../exercisePHP/2/index.html', 'iframe')",1
+25,null,true,PHP Exercise 3,"javascript:changeContent('../exercisePHP/3/index.html', 'iframe')",1
+26,null,true,PHP Exercise 4,"javascript:changeContent('../exercisePHP/4/index.html', 'iframe')",11
+27,null,true,PHP Exercise 5,"javascript:changeContent('../exercisePHP/5/index.php', 'iframe')",19
+28,null,true,PHP Exercise 6,"javascript:changeContent('../exercisePHP/6/index.php', 'iframe')",19
+29,null,true,PHP Exercise 7,"javascript:changeContent('../exercisePHP/7/index.php', 'iframe')",21
+30,sideTest,false,Another Accordian,#,null
+31,null,true,another item 1,#,null
+32,null,true,another item 2,#,null
+33,null,true,another item 3,#,null
+
+######################################################################################

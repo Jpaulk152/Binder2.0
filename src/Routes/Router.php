@@ -27,6 +27,7 @@ class Router
 
         // echo $uri;
 
+
         $method = $_SERVER['REQUEST_METHOD'];
 
         if (array_key_exists($uri, $this->routes[$method]))

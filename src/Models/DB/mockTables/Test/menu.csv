@@ -4,7 +4,7 @@ id,title,has_parent,name,link,parent
 
 # ENTRIES FOR THE NAV BAR
 
-1,navTest,false,Holm Center,index.php,null
+1,navTest,false,Holm Center,home,null
 2,navTest,false,Testing Functions,#Testing,null
 3,navTest,false,Side Bar,#Testing,null
 4,null,true,Curriculum Page,curriculum.php,2

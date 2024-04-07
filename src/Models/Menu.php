@@ -37,19 +37,28 @@ class Menu extends Model
     {
         $menuItems = current($menu);
 
-        $menu = [];
+        $completedMenu = [];
         foreach($menuItems as &$itemFields)
         {
             $parentId = $itemFields['id'];
 
-            $submenu = $this->get($table, ['parent'=>[$parentId]]);
+            $menu = $this->get($table, ['parent'=>[$parentId]]);
 
-            // var_dump($submenu);
+            if($menu == false)
+            {
+                var_dump($itemFields);
+                $itemFields['submenu'] = [];
+            }
+            else
+            {
+                $menu = $this->addSubMenus($menu, $table);
+                $itemFields['submenu'] = reset($menu);
+            }
 
-            $itemFields['submenu'] = reset($submenu);
+           
         }
-        array_push($menu, $menuItems);
+        array_push($completedMenu, $menuItems);
 
-        return $menu;
+        return $completedMenu;
     }
 }

@@ -4,7 +4,6 @@ namespace Controllers;
 
 use Models\Journal;
 use Models\Menu;
-use Models\DB\Select;
 use ViewModels\SideViewModel;
 use ViewModels\NavViewModel;
 use ViewModels\MainViewModel;
@@ -25,18 +24,13 @@ class HomeController extends Controller
     public function home()
     {
         // pull data to be sent to the view
-        $select = new Select();
         $menu = new Menu();
-        // $pageData = $select->from('AFJROTC_Curriculum');
 
-        $navItems = $menu->get('menu.csv', ['title' => ['navTest']]);
+        $navItems = $menu->get('menu.csv', ['title' => ['home']]);
         $navItems = $menu->addSubMenus($navItems, 'menu.csv');
-
-
         
-        $sideMenu = $menu->get('menu.csv', ['title' => ['sideTest']]);
+        $sideMenu = $menu->get('menu.csv', ['title' => ['home']]);
         $sideMenu = $menu->addSubMenus($sideMenu, 'menu.csv');
-
 
 
         // decide how it will be displayed: 
@@ -54,7 +48,7 @@ class HomeController extends Controller
         $elements = array();
 
         array_push($elements, $navContent->render($navClasses));
-        array_push($elements, $sideContent->render($sideClasses));
+        // array_push($elements, $sideContent->render($sideClasses));
         // array_push($elements, $mainContent->render($mainClasses));
 
         $view = new View($elements, $this->layoutClasses()['homeLayout']);
@@ -69,8 +63,8 @@ class HomeController extends Controller
     
         $menu = new Menu();
 
-        $tables = $menu->getAll();
-        // $tables = $menu->get('sideTest2.csv', ['title' => ['sideTest']]);
+        // $tables = $menu->getAll();
+        $tables = $menu->get('menu.csv', ['parent' => [12]]);
         $menuItems = reset($tables);
 
 
