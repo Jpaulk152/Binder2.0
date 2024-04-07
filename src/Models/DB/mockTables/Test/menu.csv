@@ -1,4 +1,39 @@
-id,has_parent,name,link,submenu
-1,false,Holm Center,index.php,null
-2,false,Testing Functions,#Testing,dropDown/testing_functions.csv
-3,false,Side Bar,#Testing,dropDown/side_bar.csv
+id,title,has_parent,name,link,parent
+
+
+
+# ENTRIES FOR THE NAV BAR
+
+1,navTest,false,Holm Center,index.php,null
+2,navTest,false,Testing Functions,#Testing,null
+3,navTest,false,Side Bar,#Testing,null
+4,null,true,Curriculum Page,curriculum.php,2
+5,null,true,Lesson Page,lesson.php,2
+6,null,true,PHP Exercise 6,"javascript:changeContent('../exercisePHP/6/index.php', 'iframe')",2
+7,null,true,Random Text,javascript:changeContent('#'),2
+8,null,true,addButton,javascript:addButton(),2
+9,null,true,Flush Main Content,javascript:flushMainContent(),2
+10,null,true,Attach Lesson SideBar,javascript:getLessonSideContent(),3
+11,null,true,Remove SideBar,javascript:removeSideBar(),3
+
+######################################################################################
+
+
+
+
+# ENTRIES FOR THE SIDE BAR
+
+12,sideTest,false,Regular Accordian,#,null
+13,null,true,PHP Exercise 1,"javascript:changeContent('../exercisePHP/1/index.php', 'iframe')",12
+14,null,true,PHP Exercise 2,"javascript:changeContent('../exercisePHP/2/index.html', 'iframe')",12
+15,null,true,PHP Exercise 3,"javascript:changeContent('../exercisePHP/3/index.html', 'iframe')",12
+16,null,true,PHP Exercise 4,"javascript:changeContent('../exercisePHP/4/index.html', 'iframe')",12
+17,null,true,PHP Exercise 5,"javascript:changeContent('../exercisePHP/5/index.php', 'iframe')",12
+18,null,true,PHP Exercise 6,"javascript:changeContent('../exercisePHP/6/index.php', 'iframe')",12
+19,null,true,PHP Exercise 7,"javascript:changeContent('../exercisePHP/7/index.php', 'iframe')",12
+20,sideTest,false,Another Accordian,#,null
+21,null,true,another item 1,#,20
+22,null,true,another item 2,#,20
+23,null,true,another item 3,#,20
+
+######################################################################################

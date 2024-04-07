@@ -2,14 +2,14 @@
 
 namespace Models;
 
-use DB\Select;
+use Models\DB\Select;
 
 class Menu extends Model
 {
-    public function get($name='menu.csv')
+    public function get($name='menu.csv', $match=[])
     {
         $select = new Select();
-        return $select()->from($name);
+        return $select->from($name)->match($match)->exec();
     }
 
     public function getAll()
@@ -31,5 +31,25 @@ class Menu extends Model
     protected function remove($id)
     {
 
+    }
+
+    public function addSubMenus($menu, $table)
+    {
+        $menuItems = current($menu);
+
+        $menu = [];
+        foreach($menuItems as &$itemFields)
+        {
+            $parentId = $itemFields['id'];
+
+            $submenu = $this->get($table, ['parent'=>[$parentId]]);
+
+            // var_dump($submenu);
+
+            $itemFields['submenu'] = reset($submenu);
+        }
+        array_push($menu, $menuItems);
+
+        return $menu;
     }
 }

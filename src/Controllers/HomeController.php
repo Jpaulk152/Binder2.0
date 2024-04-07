@@ -26,17 +26,24 @@ class HomeController extends Controller
     {
         // pull data to be sent to the view
         $select = new Select();
+        $menu = new Menu();
         // $pageData = $select->from('AFJROTC_Curriculum');
 
-        $pageData = $select->from('home');
+        $navItems = $menu->get('menu.csv', ['title' => ['navTest']]);
+        $navItems = $menu->addSubMenus($navItems, 'menu.csv');
 
-        // die(var_dump($this->navClasses()));
+
+        
+        $sideMenu = $menu->get('menu.csv', ['title' => ['sideTest']]);
+        $sideMenu = $menu->addSubMenus($sideMenu, 'menu.csv');
+
+
 
         // decide how it will be displayed: 
         // ViewModels, 
-        $navContent = new NavViewModel($pageData['navContent']);
-        $sideContent = new SideViewModel($pageData['sideContent']);
-        $mainContent = new MainViewModel($pageData['mainContent']);
+        $navContent = new NavViewModel(reset($navItems));
+        $sideContent = new SideViewModel(reset($sideMenu));
+        // $mainContent = new MainViewModel($pageData['mainContent']);
 
         // Classes, etc..
         $navClasses = $this->navClasses();
@@ -48,7 +55,7 @@ class HomeController extends Controller
 
         array_push($elements, $navContent->render($navClasses));
         array_push($elements, $sideContent->render($sideClasses));
-        array_push($elements, $mainContent->render($mainClasses));
+        // array_push($elements, $mainContent->render($mainClasses));
 
         $view = new View($elements, $this->layoutClasses()['homeLayout']);
 
@@ -59,23 +66,13 @@ class HomeController extends Controller
 
     public function menus()
     {
-
+    
         $menu = new Menu();
 
-        // $tableName = 'content2.csv';
-        // $tableName = 'navmenu.csv';
-        // $tableName = 'sidemenu.csv';
-        // $tableName = 'menu2.csv';
+        $tables = $menu->getAll();
+        // $tables = $menu->get('sideTest2.csv', ['title' => ['sideTest']]);
+        $menuItems = reset($tables);
 
-
-        $select = new Select();
-
-        // $tables = $select->from('navmenu.csv')
-        //                   ->exec();
-
-        $tables = $select->fetchAll();
-
-        // die(var_dump($tables));
 
         if (!$tables)
         {

@@ -11,11 +11,11 @@ class Select extends DBConnector implements DBInterface {
 
     protected static $testPath = '..\src\Models\DB\mockTables\Test\\';
 
-    protected $table='';
+    protected $table=null;
 
-    protected $match=[];
+    protected $match=null;
 
-    protected $unMatch=[];
+    protected $unMatch=null;
 
     public function from($table)
     {
@@ -147,13 +147,21 @@ class Select extends DBConnector implements DBInterface {
     function CSVtoArray($file)
     {
         $rows = array();
-
+        $rowAdd = true;
         $index = 1;
         $open = $file->openFile('r');
         $header = $open->fgetcsv();
         
         while($indexRow = $open->fgetcsv())
         {
+
+            if((isset($indexRow[0]) && str_contains($indexRow[0], '#')) || !isset($indexRow[0]))
+            {
+                continue;
+            }
+
+            // var_dump($indexRow);
+
             $row = array();
             for($i=0;$i<count($header);$i++)
             {
@@ -162,15 +170,29 @@ class Select extends DBConnector implements DBInterface {
                 $rowField = $this->validate($i, $indexRow, $index);
 
                 // if we are matching, check for match
-                if (count($this->match)>0 && !in_array($headerField, $this->match))
+                if (isset($this->match) && count($this->match)>0 )
                 {
-                    continue;
+                    foreach($this->match as $key => $constraints)
+                    {
+                        if ($headerField == $key)
+                        {
+                            if(!in_array($rowField, $constraints))
+                            {
+                                $rowAdd = false;
+                            }
+                        }
+                    }
                 }
-
                 $row[$headerField] = $rowField;
             }
-            array_push($rows, $row);
 
+
+            if($rowAdd)
+            {
+                array_push($rows, $row);
+            }
+            
+            $rowAdd = true;
             $index++;
         }
 
