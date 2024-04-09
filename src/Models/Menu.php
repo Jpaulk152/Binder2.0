@@ -6,10 +6,10 @@ use Models\DB\Select;
 
 class Menu extends Model
 {
-    public function get($name='menu.csv', $match=[])
+    public function get($match=[])
     {
         $select = new Select();
-        return $select->from($name)->match($match)->exec();
+        return $select->from('menu.csv')->match($match)->exec();
     }
 
     public function getAll()
@@ -33,7 +33,7 @@ class Menu extends Model
 
     }
 
-    public function addSubMenus($menu, $table)
+    public function addSubMenus($menu)
     {
         $menuItems = current($menu);
 
@@ -42,7 +42,7 @@ class Menu extends Model
         {
             $parentId = $itemFields['id'];
 
-            $menu = $this->get($table, ['parent'=>[$parentId]]);
+            $menu = $this->get(['parent'=>[$parentId]]);
 
             if($menu == false)
             {
@@ -51,7 +51,7 @@ class Menu extends Model
             }
             else
             {
-                $menu = $this->addSubMenus($menu, $table);
+                $menu = $this->addSubMenus($menu);
                 $itemFields['submenu'] = reset($menu);
             }
 

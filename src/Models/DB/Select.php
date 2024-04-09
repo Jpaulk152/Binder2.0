@@ -155,18 +155,16 @@ class Select extends DBConnector implements DBInterface {
         while($indexRow = $open->fgetcsv())
         {
 
-            if((isset($indexRow[0]) && str_contains($indexRow[0], '#')) || !isset($indexRow[0]))
+            if((isset($indexRow[0]) && \strpos($indexRow[0], '#') !== false) || !isset($indexRow[0]))
             {
                 // var_dump($indexRow);
                 continue;
             }
 
-            // var_dump($indexRow);
 
             $row = array();
             for($i=0;$i<count($header);$i++)
             {
-
                 $headerField = $this->validate($i, $header,$index);
                 $rowField = $this->validate($i, $indexRow, $index);
 
@@ -184,6 +182,7 @@ class Select extends DBConnector implements DBInterface {
                         }
                     }
                 }
+
                 $row[$headerField] = $rowField;
             }
 

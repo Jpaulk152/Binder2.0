@@ -1,109 +1,103 @@
 <?php
 
 namespace Views;
+use ViewModels\SideViewModel;
+use ViewModels\NavViewModel;
 
 use \ViewModels\Builders\HtmlBuilder;
 
+
+// responsible for displaying data; expects page data and decides how to display it
 class View
 {
-    public $docType = '<!DOCTYPE html>';
-    public $htmlTop = '<html lang="en">';
-    public $htmlBottom = '</html>';
-    public $head = '<head>
-    <title>Document</title>
-
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <meta charset="UTF-8">
-
-    <link rel="stylesheet" href="../css/reset.css">
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-win8.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="../css/main.css">
-
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    <script src="../js/buffer.js"></script>
-    <script src="../js/taskHandler.js"></script>
-    <script src="../js/layout.js"></script>
-    <script src="../js/sideBar.js"></script>
-    <script src="../js/mainContent.js"></script>
-    <script src="../js/home.js"></script>
-    <script src="../js/lesson.js"></script>
-    </head>';
-
-    public $body = '<body>';
-
+    public $body = '';
     public $elements = [];
-    public $layoutClasses = null;
+
     public $template = null;
+    public $data = null;
+    public $classes = null;
 
-    public function __construct($elements = [], $layoutClasses=null, $template=null)
+    public function __construct($data=null)
     {
-        // $viewModel = '\ViewModels\\'.$pageName.'ViewModel';
-
-        // $this->viewModel = new $viewModel($pageData);
-
-        // if(is_array($elements) && count($elements) > 0)
-        // {
-        //     foreach($elements as $element)
-        //     {
-        //         $this->body .= $element;
-        //     }
-        // }
-
-        // if(is_array($viewModels) && count($viewModels) > 0)
-        // {
-        //     foreach($viewModels as $viewModel)
-        //     {
-        //         $this->body .= $viewModel->render();
-        //     }
-        // }
-
-        $this->elements = $elements;
-        $this->layoutClasses = $layoutClasses;
-        $this->template = $template;
+        $this->data = $data;
     }
 
 
     public function render()
     {
-        if(isset($this->template))
+        include 'top.php';
+
+        $htmlBuilder = new HtmlBuilder();
+
+        $content = '';
+
+        // expand viewModels with their data and classes
+        if(isset($this->data['viewModels']))
         {
-            include $this->template .'.php';
+            foreach($this->data['viewModels'] as $vm)
+            {
+                $viewModel = 'ViewModels\\' . $vm['viewModel'];
+                $viewModel = new $viewModel(current($vm['data']));
+                $content .= $viewModel->render($vm['classes']);
+            } 
+        }
+
+
+        // die(var_dump($this->data));
+
+        // add templates to the mainContent
+        if(isset($this->data['template']['page']) && isset($this->data['template']['data']))
+        {
+            // die('HERE');
+            $this->template = new Template($this->data['template']['page'], $this->data['template']['data']);
+            $content .= $this->template->render();
+        }
+
+
+        if(isset($this->data['layout']))
+        {
+            $this->body .= $htmlBuilder->buildElement('div')
+                                        ->id('layout')
+                                        ->classList($this->data['layout'])
+                                        ->content($content)
+                                        ->create();   
         }
         else
         {
-
-            $htmlBuilder = new HtmlBuilder();
-
-            $content = '';
-    
-            foreach($this->elements as $element)
-            {
-                $content .= $element;
-            }
-
-            $this->body .= $htmlBuilder->buildElement('div')
-                                        ->id('layout')
-                                        ->classList($this->layoutClasses)
-                                        ->content($content)
-                                        ->create();
-    
-            $viewData = array($this->docType, $this->htmlTop, $this->head, $this->body, $this->htmlBottom);
-    
-            $view = '';
-            if (count($viewData) > 0)
-            {   
-                ob_start();
-                foreach($viewData as $data)
-                {
-                    echo $data;
-                }
-                $view = ob_get_clean();
-            }
-    
-            echo $view;
+            $this->body .= $content;
         }
+
+
+        echo $this->body;
+
+        include 'bottom.php';
+    }
+}
+
+
+
+
+class Template{
+
+    public $page;
+    public $data;
+
+    public function __construct($page, $data)
+    {
+        $this->page = $page;
+        $this->data = $data;
+    }
+
+    public function render()
+    {
+        if (!$this->data)
+        {
+            return 'data not found';
+        }
+
+        ob_start();
+        extract($this->data);
+        include($this->page);
+        return ob_get_clean();
     }
 }

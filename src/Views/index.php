@@ -1,4 +1,5 @@
-<h1>Welcome to the index page!</h1>
+
+<h1><?php echo $message ?></h1>
 
 
 
