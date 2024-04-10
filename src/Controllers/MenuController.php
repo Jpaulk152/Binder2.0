@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Models\Menu;
+use Models\File;
 use Views\View;
 
 class MenuController extends Controller
@@ -15,7 +16,7 @@ class MenuController extends Controller
         $data = $this->getData();
  
         // add an html template
-        $data['template']['page'] = 'menus.php';
+        $data['template']['page'] = 'templates\tables.php';
 
         // add data to be displayed in template
         $menu = new Menu();
@@ -27,15 +28,15 @@ class MenuController extends Controller
     }
 
 
-    public function allMenus()
+    public function allTables()
     {
          // pull common data to be sent to the view
          $data = $this->getData();
 
-        $data['template']['page'] = 'menus.php';
+        $data['template']['page'] = 'templates\tables.php';
 
-        $menu = new Menu();
-        $data['template']['data'] = ['menus' => $menu->getAll()];
+        $file = new File();
+        $data['template']['data'] = ['menus' => $file->getAll()];
         // $tables = $menu->get('menu.csv', ['parent' => [12]]);
 
         $view = new View($data);

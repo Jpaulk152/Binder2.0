@@ -2,7 +2,6 @@
 
 namespace Controllers;
 
-use Models\Menu;
 use Views\View;
 
 class HomeController extends Controller
@@ -11,7 +10,7 @@ class HomeController extends Controller
 
     public function index()
     {
-        $data['template']['page'] = 'index.php';
+        $data['template']['page'] = 'templates\index.php';
         $data['template']['data'] = ['title' => 'index', 'message' => 'Welcome to the Index Page!'];
         $view = new View($data);
         $view->render();
@@ -20,11 +19,11 @@ class HomeController extends Controller
 
     public function home()
     {
-        $data = $this->getData();
+        // pull common data to be sent to the view
+        $data = $this->getData('main_content');
 
         $view = new View($data);
 
         $view->render();
     }
-
 }

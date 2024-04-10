@@ -2,13 +2,10 @@
 
 namespace Models;
 
-use DB\Select;
+use Models\DB\Select;
 
 class File extends Model
 {
-    
-
-
     public function getFile($name)
     {
 
@@ -16,7 +13,8 @@ class File extends Model
 
     public function getAll()
     {
-
+        $select = new Select();
+        return $select->fetchAll();
     }
 
     protected function set()

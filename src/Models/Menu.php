@@ -14,8 +14,7 @@ class Menu extends Model
 
     public function getAll()
     {
-        $select = new Select();
-        return $select->fetchAll();
+        
     }
 
     protected function set($id, $values)

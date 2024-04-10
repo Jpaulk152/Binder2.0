@@ -3,13 +3,14 @@
 namespace Controllers;
 
 use Models\Menu;
+use Models\Content;
 
 // responsible for gathering data and sending it to a view
 class Controller
 {
     use \ViewModels\Builders\ClassList;
 
-    public function getData($sideMenu=null, $content=null, $navMenu='home')
+    public function getData($mainContent=null, $sideMenu=null, $navMenu='home')
     {
         $menu = new Menu();
 
@@ -28,13 +29,15 @@ class Controller
             $viewModels[1] = ['data' => $sideData, 'classes' => $sideClasses, 'viewModel' => 'SideViewModel'];
         }
 
-        if(isset($content))
+        if(isset($mainContent))
         {
-            // get menu data for side navigation
-            $sideData = $menu->get(['title' => [$content]]);
-            // $sideData = $menu->addSubMenus($sideData);
-            $sideClasses = $this->sideClasses();
-            $viewModels[2] = ['data' => $sideData, 'classes' => $sideClasses, 'viewModel' => 'MainViewModel'];
+            $content = new Content();
+            
+            // get content data for main content area
+            $match = ['title' => [$mainContent]];
+            $mainData = $content->get($match);
+            $mainClasses = $this->mainClasses();
+            $viewModels[2] = ['data' => $mainData, 'classes' => $mainClasses, 'viewModel' => 'MainViewModel'];
         }
 
 

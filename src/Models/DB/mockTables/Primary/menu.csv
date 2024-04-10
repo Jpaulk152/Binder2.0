@@ -64,7 +64,8 @@ id,title,has_parent,name,link,parent
 30,home,false,Tables,#,null
 
 31,null,true,Menus,../index.php/menus,30
-50,null,true,All Menus,../index.php/allMenus,30
+49,null,true,Content,../index.php/content,30
+50,null,true,All Tables,../index.php/allTables,30
 
 ####################################################################################################################################################################
 
