@@ -3,18 +3,26 @@
 namespace Models;
 
 use Models\DB\Select;
+use Models\DB\File;
 
 class Menu extends Model
 {
     public function get($match=[])
     {
-        $select = new Select();
-        return $select->from('menu.csv')->match($match)->exec();
+        // $select = new Select();
+        // return $select->from('menu.csv')->match($match)->exec();
+
+        $file = new File('menu.csv');
+        return $file->from('..\src\Models\DB\mockTables\Primary\\')->match($match)->exec();
     }
 
     public function getAll()
     {
-        
+        // $select = new Select();
+        // return $select->fetchAll();
+
+        $file = new File('..\src\Models\DB\mockTables\\');
+        return $file->fetchAll();
     }
 
     protected function set($id, $values)

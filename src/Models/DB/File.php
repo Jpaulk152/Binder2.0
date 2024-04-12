@@ -2,45 +2,32 @@
 
 namespace Models\DB;
 
-class Select extends DBConnector implements DBInterface {
+class File {
 
-    protected static $testPath = '..\src\Models\DB\mockTables\Primary\\';
+    protected $path=null;
 
-    protected $table=null;
+    protected $name=null;
 
     protected $match=null;
 
     protected $unMatch=null;
 
-    public function from($table)
+
+    public function __construct($name)
     {
-        // This switch is a placeholder for something like:
-        /*
-            [FROM __construct on the dbInterface class]
-            $totalFields = count($this->fields); $i = 0;
-            $this->sqlQuery = 'SELECT ';
-            foreach ($this->fields as $f){
-                if (++$i === $totalFields){
-                    $this->sqlQuery .= $f . ' FROM';
-                }
-                else{
-                    $this->sqlQuery .= $f . ', ';
-                }
-            }
-
-            $this->sqlQuery .= $table;
-        */
-
-        // return $this->mockExec($table);
-
-
-        $this->table = $table;
-
+        $this->name = $name;
         return $this;
     }
 
 
-    public function addFilter(string $filter, string $field){
+    public function from($path='..\src\Models\DB\mockTables\Test\\')
+    {
+        $this->path = $path;
+        return $this;
+    }
+
+
+    public static function addFilter(string $filter, string $field){
 
     }
 
@@ -49,7 +36,7 @@ class Select extends DBConnector implements DBInterface {
         $tableName = '';
 
         // $menu = \utilities::getDataFromCSV($name, $this->testPath);
-        $it = new \RecursiveDirectoryIterator(self::$testPath);
+        $it = new \RecursiveDirectoryIterator($this->path);
 
         // Loop through files
         foreach(new \RecursiveIteratorIterator($it) as $file) {
@@ -73,6 +60,7 @@ class Select extends DBConnector implements DBInterface {
         }
     }
 
+
     public function match(array $range){
 
         $this->match = $range;
@@ -88,20 +76,16 @@ class Select extends DBConnector implements DBInterface {
     }
 
 
-
-
-
     public function exec(){
         $tables = array();
         $tableName = '';
-        $rows = null;
 
         // $menu = \utilities::getDataFromCSV($name, $this->testPath);
-        $it = new \RecursiveDirectoryIterator(self::$testPath);
+        $it = new \RecursiveDirectoryIterator($this->path);
 
         // Loop through files
         foreach(new \RecursiveIteratorIterator($it) as $file) {
-            if ($file->getExtension() == 'csv' && $file->getFileName() == $this->table) {
+            if ($file->getExtension() == 'csv' && $file->getFileName() == $this->name) {
 
                 $tableName = $file->getPath() . '\\' . $file->getFileName();
 
@@ -123,10 +107,7 @@ class Select extends DBConnector implements DBInterface {
 
 
 
-
-
-
-    function validate($key,$array, $index)
+    function validate($key, $array)
     {
         if(array_key_exists($key, $array) && isset($array[$key]) && !empty($array[$key]))
         {
@@ -137,6 +118,8 @@ class Select extends DBConnector implements DBInterface {
             return '<p style="color: red">missing_field</p>';
         }
     }
+
+
 
     function CSVtoArray($file)
     {

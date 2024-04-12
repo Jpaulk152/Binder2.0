@@ -6,15 +6,17 @@ use ViewModels\Builders\HtmlBuilder;
 
 class MainViewModel extends HtmlBuilder implements ViewModel{
 
-    use Builders\ClassList;
+    // use Builders\ClassList;
 
     public $pageData;
+    public $tabIndex;
     public $content;
 
-    public function __construct($pageData)
+    public function __construct($pageData, &$tabIndex=1)
     {
         // TODO: error handle if pageData not array
         $this->pageData = $pageData;
+        $this->tabIndex = &$tabIndex;
     }
 
     public function render($classList)
@@ -58,7 +60,7 @@ class MainViewModel extends HtmlBuilder implements ViewModel{
 
                     break;
                 default:
-                    continue;
+                    
             }
         }
 

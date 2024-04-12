@@ -6,12 +6,13 @@ use Models\Menu;
 use Models\File;
 use Models\Page;
 use Views\View;
+use Views\View2;
 
-class MenuController extends Controller
+class TestController extends Controller
 {
     use \ViewModels\Builders\ClassList;
 
-    public function menus()
+    public function test1()
     {
          // pull common data to be sent to the view
         $data = $this->getData();
@@ -20,8 +21,8 @@ class MenuController extends Controller
         $data['template']['page'] = 'templates\tables.php';
 
         // add data to be displayed in template
-        $menu = new Menu();
-        $data['template']['data'] = ['menus' => $menu->get()];
+        $page = new Page();
+        $data['template']['data'] = ['menus' => $page->get()];
 
         $view = new View($data);
 
@@ -29,15 +30,15 @@ class MenuController extends Controller
     }
 
 
-    public function allTables()
+    public function test2()
     {
          // pull common data to be sent to the view
          $data = $this->getData();
 
         $data['template']['page'] = 'templates\tables.php';
 
-        $file = new File();
-        $data['template']['data'] = ['menus' => $file->getAll()];
+        $page = new Page();
+        $data['template']['data'] = ['menus' => $page->getAll()];
         // $tables = $menu->get('menu.csv', ['parent' => [12]]);
 
         $view = new View($data);
@@ -45,18 +46,24 @@ class MenuController extends Controller
         $view->render();
     } 
 
-    public function allPages()
+    public function test3()
     {
         // pull common data to be sent to the view
         $data = $this->getData();
 
-        $data['template']['page'] = 'templates\tables.php';
+        // $data['test']['data'] = 'this is a test';
 
-        $file = new Page();
-        $data['template']['data'] = ['menus' => $file->getAll()];
-        // $tables = $menu->get('menu.csv', ['parent' => [12]]);
+        $page = new Page();
 
-        $view = new View($data);
+        $page->title = 'home';
+        $page->inMenu = false;
+        $page->parent = null;
+
+        $info = $page->get();
+
+        $data['test']['data'] = $info;
+
+        $view = new View2($data);
 
         $view->render();
     }

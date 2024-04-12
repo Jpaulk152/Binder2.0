@@ -6,14 +6,14 @@ use ViewModels\Builders\HtmlBuilder;
 
 class NavViewModel extends HtmlBuilder implements ViewModel{
 
-    // use Builders\ClassList;
-
     public $pageData;
+    public $tabIndex;
 
-    public function __construct($pageData)
+    public function __construct($pageData, &$tabIndex=1)
     {
         // TODO: error handle if pageData not array
         $this->pageData = $pageData;
+        $this->tabIndex = &$tabIndex;
     }
 
     public function render($classList)
@@ -42,7 +42,7 @@ class NavViewModel extends HtmlBuilder implements ViewModel{
 
         $menuBuilder = new Builders\MenuBuilder();
 
-        $menu = $menuBuilder->createMenu($this->pageData, $classList);
+        $menu = $menuBuilder->createMenu($this->pageData, $classList, $this->tabIndex);
 
 // die(var_dump($this->classList));
 

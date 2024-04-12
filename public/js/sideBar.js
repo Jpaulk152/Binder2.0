@@ -7,6 +7,8 @@ function expand(element){
 
     var caret = document.getElementById(element.id + '-caret');
 
+    console.log(caret);
+
     if(accordian.className.indexOf("w3-show") == -1) {
 
         accordian.className = accordian.className.replace("w3-hide", "w3-show");
@@ -29,6 +31,8 @@ function accordian(element) {
     accordian = element.nextSibling;
 
     var caret = document.getElementById(element.id + '-caret');
+
+    
 
     if(accordian.className.indexOf("w3-show") == -1) {
 

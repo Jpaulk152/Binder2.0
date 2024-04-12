@@ -4,21 +4,24 @@ namespace ViewModels\Builders;
 
 class MenuBuilder extends HtmlBuilder{
 
-    public function createMenu($menuItems, $classList=[], $expandFunction='', $internalElements=[], $adjacentElements=[], $tabIndex=0) {
+    public function createMenu($menuItems, $classList=[], &$tabIndex=1, $expandFunction='', $internalElements=[], $adjacentElements=[]) {
         if (is_array($menuItems) && count($menuItems) > 0){
 
             // echo var_dump($menuItems) . '<br><br>';
 
             
             $menu = '';
-            $i = $tabIndex;
+            $tabIndex;
             foreach ($menuItems as $item)
             {
                 
                 // If the item is a menu build a submenu
                 if ($this->isMenu($item)) {
 
-                    $subMenu = $this->createMenu($item['submenu'], $classList, $expandFunction, $internalElements, $adjacentElements, $tabIndex);
+                    $i = $tabIndex;
+                    $tabIndex++;
+
+                    $subMenu = $this->createMenu($item['submenu'], $classList, $tabIndex, $expandFunction, $internalElements, $adjacentElements);
 
                     $caret = $this->buildElement('i')
                                   ->id('menu-'. $i .'-caret')
@@ -39,7 +42,7 @@ class MenuBuilder extends HtmlBuilder{
 
                     $subMenuContainer = $this->buildElement('div')
                                             ->classList($classList['subMenuContainer'])
-                                            ->tabindex($tabIndex+1)
+                                            ->tabindex($i)
                                             ->content($subMenuButton . $subMenu)
                                             ->create();
 
@@ -54,7 +57,7 @@ class MenuBuilder extends HtmlBuilder{
                     $menuButton = $this->buildElement('a')
                                     ->classList($classList['menuButton'])
                                     ->href($item['link'])
-                                    ->tabindex($tabIndex+1)
+                                    ->tabindex($tabIndex++)
                                     ->content($item['name'])
                                     ->create();
 
@@ -69,14 +72,14 @@ class MenuBuilder extends HtmlBuilder{
                     $menuButton = $this->buildElement('a')
                                     ->classList($classList['menuButton'])
                                     ->href('#')
-                                    ->tabindex($tabIndex+1)
+                                    ->tabindex($tabIndex++)
                                     ->content('This resource was not found')
                                     ->create();
 
                      $menu .= $menuButton;
                 }
 
-                $i++;
+                // $tabIndex++;
             }
 
             return $menu;

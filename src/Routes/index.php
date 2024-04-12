@@ -6,6 +6,8 @@ use Controllers\HomeController;
 use Controllers\CurriculumController;
 use Controllers\MenuController;
 use Controllers\ContentController;
+use Controllers\TestController;
+
 use Routes\Router;
 
 $router = new Router();
@@ -25,8 +27,13 @@ $router->get(\config::public_root(). 'index.php/curriculum/home', CurriculumCont
 // Menus
 $router->get(\config::public_root(). 'index.php/menus', MenuController::class, 'menus');
 $router->get(\config::public_root(). 'index.php/allTables', MenuController::class, 'allTables');
+$router->get(\config::public_root(). 'index.php/allPages', MenuController::class, 'allPages');
 
 // Content
 $router->get(\config::public_root(). 'index.php/content', ContentController::class, 'content');
+
+$router->get(\config::public_root(). 'index.php/test1', TestController::class, 'test1');
+$router->get(\config::public_root(). 'index.php/test2', TestController::class, 'test2');
+$router->get(\config::public_root(). 'index.php/test3', TestController::class, 'test3');
 
 $router->dispatch();

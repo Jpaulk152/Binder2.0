@@ -1,39 +1,45 @@
-id,title,has_parent,name,link,parent
+id,title,name,link,parent,isLive,inMenu,sideContent,mainContent
 
 
 
 # ENTRIES FOR THE NAV BAR
 
-1,navTest,false,Holm Center,home,null
-2,navTest,false,Testing Functions,#Testing,null
-3,navTest,false,Side Bar,#Testing,null
-4,null,true,Curriculum Page,curriculum.php,2
-5,null,true,Lesson Page,lesson.php,2
-6,null,true,PHP Exercise 6,"javascript:changeContent('../exercisePHP/6/index.php', 'iframe')",2
-7,null,true,Random Text,javascript:changeContent('#'),2
-8,null,true,addButton,javascript:addButton(),2
-9,null,true,Flush Main Content,javascript:flushMainContent(),2
-10,null,true,Attach Lesson SideBar,javascript:getLessonSideContent(),3
-11,null,true,Remove SideBar,javascript:removeSideBar(),3
+1,home,Holm Center,home,null,true,false,null,null
+2,home,Testing Functions,#Testing,null,true,false,null,null
+3,home,Side Bar,#Testing,null,true,false,null,null
+4,null,Curriculum Page,curriculum.php,2,true,false,null,null
+5,null,Lesson Page,lesson.php,2,true,false,null,null
+6,null,PHP Exercise 6,"javascript:changeContent('../exercisePHP/6/index.php', 'iframe')",2,true,false,null,null
+7,null,Random Text,javascript:changeContent('#'),2,true,false,null,null
+8,null,addButton,javascript:addButton(),2,true,false,null,null
+9,null,Flush Main Content,javascript:flushMainContent(),2,true,false,null,null
+10,null,Attach Lesson SideBar,javascript:getLessonSideContent(),3,true,false,null,null
+11,null,Remove SideBar,javascript:removeSideBar(),3,true,false,null,null
 
 ######################################################################################
 
+# TABLES NAV BAR BUTTON ############################################################################################################################################
+30,home,Tables,#,null,true,false,null,null
 
+31,null,Menus,../index.php/menus,30,true,false,null,null
+49,null,Content,../index.php/content,30,true,false,null,null
+50,null,All Tables,../index.php/allTables,30,true,false,null,null
+51,null,All Pages,../index.php/allPages,30,true,false,null,null
 
 
 # ENTRIES FOR THE SIDE BAR
 
-12,sideTest,false,Regular Accordian,#,null
-13,null,true,PHP Exercise 1,"javascript:changeContent('../exercisePHP/1/index.php', 'iframe')",12
-14,null,true,PHP Exercise 2,"javascript:changeContent('../exercisePHP/2/index.html', 'iframe')",12
-15,null,true,PHP Exercise 3,"javascript:changeContent('../exercisePHP/3/index.html', 'iframe')",12
-16,null,true,PHP Exercise 4,"javascript:changeContent('../exercisePHP/4/index.html', 'iframe')",12
-17,null,true,PHP Exercise 5,"javascript:changeContent('../exercisePHP/5/index.php', 'iframe')",12
-18,null,true,PHP Exercise 6,"javascript:changeContent('../exercisePHP/6/index.php', 'iframe')",12
-19,null,true,PHP Exercise 7,"javascript:changeContent('../exercisePHP/7/index.php', 'iframe')",12
-20,sideTest,false,Another Accordian,#,null
-21,null,true,another item 1,#,20
-22,null,true,another item 2,#,20
-23,null,true,another item 3,#,20
+12,sideTest,Regular Accordian,#,null,true,false,null,null
+13,null,PHP Exercise 1,"javascript:changeContent('../exercisePHP/1/index.php', 'iframe')",12,true,false,null,null
+14,null,PHP Exercise 2,"javascript:changeContent('../exercisePHP/2/index.html', 'iframe')",12,true,false,null,null
+15,null,PHP Exercise 3,"javascript:changeContent('../exercisePHP/3/index.html', 'iframe')",12,true,false,null,null
+16,null,PHP Exercise 4,"javascript:changeContent('../exercisePHP/4/index.html', 'iframe')",12,true,false,null,null
+17,null,PHP Exercise 5,"javascript:changeContent('../exercisePHP/5/index.php', 'iframe')",12,true,false,null,null
+18,null,PHP Exercise 6,"javascript:changeContent('../exercisePHP/6/index.php', 'iframe')",12,true,false,null,null
+19,null,PHP Exercise 7,"javascript:changeContent('../exercisePHP/7/index.php', 'iframe')",12,true,false,null,null
+20,sideTest,Another Accordian,#,null,true,false,null,null
+21,null,another item 1,#,20,true,false,null,null
+22,null,another item 2,#,20,true,false,null,null
+23,null,another item 3,#,20,true,false,null,null
 
 ######################################################################################

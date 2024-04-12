@@ -8,7 +8,7 @@ use \ViewModels\Builders\HtmlBuilder;
 
 
 // responsible for displaying data; expects page data and decides how to display it
-class View
+class View2
 {
     public $body = '';
     public $elements = [];

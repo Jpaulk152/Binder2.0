@@ -6,7 +6,15 @@ use Models\DB\Select;
 
 class File extends Model
 {
-    public function getFile($name)
+    protected $path = '..\src\Models\DB\mockTables\Primary\\';
+
+    protected $name=null;
+
+    protected $match=null;
+
+    protected $unMatch=null;
+
+    public function get($name)
     {
 
     }

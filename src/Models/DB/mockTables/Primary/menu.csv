@@ -5,7 +5,7 @@ id,title,has_parent,name,link,parent
 1,home,false,AFJROTC Curriculum,../index.php/curriculum?menu=AFJROTC_Curriculum,null
 
 # AFJROTC CURRICULUM SIDE MENU #######################################################################################################################################
-2,AFJROTC_Curriculum,false,Curriculum Guide,#,null
+2,AFJROTC_Curriculum,false,Curriculum Guide,"javascript:changeContent('../resources/Materials/2023_Curriculum_Guide.pdf', 'iframe')",null
 3,AFJROTC_Curriculum,false,Current Curriculum for AY 23/24,download.php?f=JROTC_Curriculum%2FCurriculumGuide%2FCurrent+Curriculum+2024.pdf,null
 4,AFJROTC_Curriculum,false,How Curriculum Works,#openSCO,null
 5,AFJROTC_Curriculum,false,Directors Curriculum Policy Letter,download.php?f=JROTC_Curriculum%2FCurriculumGuide%2FAFJROTC_Curriculum_Policy_Letter.pdf,null
@@ -71,14 +71,10 @@ id,title,has_parent,name,link,parent
 
 # TESTING NAV BAR BUTTON ############################################################################################################################################
 32,home,false,Testing,#,null
-33,null,true,
+59,null,true,Test 1, test1,32
+60,null,true,Test 2, test2,32
+61,null,true,Test 3, test3,32
 34,null,true,PHP Exercise 1,"javascript:changeContent('../exercisePHP/1/index.php', 'iframe')",32
-35,null,true,PHP Exercise 2,"javascript:changeContent('../exercisePHP/2/index.html', 'iframe')",32
-36,null,true,PHP Exercise 3,"javascript:changeContent('../exercisePHP/3/index.html', 'iframe')",32
-37,null,true,PHP Exercise 4,"javascript:changeContent('../exercisePHP/4/index.html', 'iframe')",32
-38,null,true,PHP Exercise 5,"javascript:changeContent('../exercisePHP/5/index.php', 'iframe')",32
-39,null,true,PHP Exercise 6,"javascript:changeContent('../exercisePHP/6/index.php', 'iframe')",32
-40,null,true,PHP Exercise 7,"javascript:changeContent('../exercisePHP/7/index.php', 'iframe')",32
 41,null,true,Curriculum Page,curriculum.php,32
 42,null,true,Lesson Page,lesson.php,32
 43,null,true,PHP Exercise 6,"javascript:changeContent('../exercisePHP/6/index.php', 'iframe')",32
