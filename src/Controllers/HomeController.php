@@ -22,6 +22,8 @@ class HomeController extends Controller
         // pull common data to be sent to the view
         $data = $this->getData('main_content');
 
+        // die(var_dump($data['viewModels'][0]['data']));
+
         $view = new View($data);
 
         $view->render();

@@ -13,10 +13,8 @@ class CurriculumController extends Controller
     {
         $menuName = filter_input(INPUT_GET, 'menu', FILTER_SANITIZE_URL);
 
-
-
         // pull common data to be sent to the view
-        $data = $this->getData('', $menuName);
+        $data = $this->getData(null, $menuName);
 
         $view = new View($data);
 

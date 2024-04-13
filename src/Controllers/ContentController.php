@@ -13,26 +13,19 @@ class ContentController extends Controller
     {
         // pull common data to be sent to the view
         $data = $this->getData();
+
+        $content = $this->context->Content->exec();
  
         // add an html template
         $data['template']['page'] = 'templates\tables.php';
 
         // add data to be displayed in template
-        $content = new Content();
-        $data['template']['data'] = ['menus' => $content->get()];
+        
+        $data['template']['data'] = ['menus' => $content];
 
         $view = new View($data);
 
         $view->render();
     }
-
-    public function home()
-    {
-        // pull common data to be sent to the view
-        $data = $this->getData();
-
-        $view = new View($data);
-
-        $view->render();
-    }
+    
 }

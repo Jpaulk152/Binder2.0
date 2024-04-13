@@ -5,26 +5,105 @@ namespace Controllers;
 use Models\Menu;
 use Models\File;
 use Models\Page;
+use Models\Customer;
 use Views\View;
 use Views\View2;
+use Models\DB\CSVSet;
+use ViewModels\Builders\ClassList;
 
 class TestController extends Controller
 {
     use \ViewModels\Builders\ClassList;
 
-    public function test1()
+    protected $context;
+
+    public function __construct()
+    {
+        $this->context = $GLOBALS['_csvContext'];
+    }
+
+    public function pages()
     {
          // pull common data to be sent to the view
         $data = $this->getData();
+
+        $pageTables = $this->context->Pages->fetchAll();
+
+        // die(var_dump($pageTables));
  
         // add an html template
         $data['template']['page'] = 'templates\tables.php';
 
         // add data to be displayed in template
-        $page = new Page();
-        $data['template']['data'] = ['menus' => $page->get()];
+        $data['template']['data'] = ['tables' => $pageTables];
 
-        $view = new View($data);
+        $view = new View2($data);
+
+        $view->render();
+    }
+
+
+    public function customers()
+    {
+         // pull common data to be sent to the view
+        $data = $this->getData();
+
+        $customerTables = $this->context->Customers->fetchAll();
+ 
+        // add an html template
+        $data['template']['page'] = 'templates\tables.php';
+
+        // add data to be displayed in template
+        $data['template']['data'] = ['tables' => $customerTables];
+
+        $view = new View2($data);
+
+        $view->render();
+    }
+
+    public function content()
+    {
+         // pull common data to be sent to the view
+        $data = $this->getData();
+
+        $contentTables = $this->context->Content->fetchAll();
+ 
+        // add an html template
+        $data['template']['page'] = 'templates\tables.php';
+
+        // add data to be displayed in template
+        $data['template']['data'] = ['tables' => $contentTables];
+
+        $view = new View2($data);
+
+        $view->render();
+    }
+
+
+    public function test1()
+    {
+        $this->context->Pages->set(['title' => 'home']);
+
+        $pages = $this->context->Pages->exec();
+
+
+        for($i=0;$i<count($pages);$i++)
+        {
+            $this->context->Pages->set(['parent'=>$pages[$i]['id']]);
+            $pages[$i]['submenu'] = $this->context->Pages->exec();
+        }
+
+
+        $data = array();
+        $viewModels = array();
+        $navClasses = $this->navClasses();
+        $viewModels[0] = ['data' => [$pages], 'classes' => $navClasses, 'viewModel' => 'NavViewModel'];
+
+        $data['viewModels'] = $viewModels;
+        
+        // die(var_dump($pages));
+
+        $view = new View2($data);
 
         $view->render();
     }
@@ -32,16 +111,18 @@ class TestController extends Controller
 
     public function test2()
     {
-         // pull common data to be sent to the view
-         $data = $this->getData();
-
-        $data['template']['page'] = 'templates\tables.php';
-
         $page = new Page();
-        $data['template']['data'] = ['menus' => $page->getAll()];
-        // $tables = $menu->get('menu.csv', ['parent' => [12]]);
+        $set = new CSVSet($page);
 
-        $view = new View($data);
+        // $set->model->title = 'home';
+
+        $set->set(['title' => 'home']);
+
+        $pages = $set->get()->toList();
+
+        // die(var_dump($pages[1]));
+
+        $view = new View();
 
         $view->render();
     } 
@@ -51,17 +132,8 @@ class TestController extends Controller
         // pull common data to be sent to the view
         $data = $this->getData();
 
-        // $data['test']['data'] = 'this is a test';
 
-        $page = new Page();
-
-        $page->title = 'home';
-        $page->inMenu = false;
-        $page->parent = null;
-
-        $info = $page->get();
-
-        $data['test']['data'] = $info;
+        $data['test']['data'] = 'Here\'s some text for test3';
 
         $view = new View2($data);
 

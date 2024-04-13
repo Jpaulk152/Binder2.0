@@ -43,7 +43,7 @@ class MainViewModel extends HtmlBuilder implements ViewModel{
                                                         ->create();
                     break;
                 case 'image_card':
-                    $this->content .= $mainContentBuilder->createImageCard($element['thing'], $element['thing1'], $element['thing2'], $element['thing3']);
+                    $this->content .= $mainContentBuilder->createImageCard($element['child1'], $element['child2'], $element['child3'], $element['child4']);
                     break;
                 case 'panel':
                     $this->content .= $mainContentBuilder->createPanelContent($element['content']);
@@ -60,7 +60,7 @@ class MainViewModel extends HtmlBuilder implements ViewModel{
 
                     break;
                 default:
-                    
+                    continue;
             }
         }
 

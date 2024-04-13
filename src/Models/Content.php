@@ -2,34 +2,15 @@
 
 namespace Models;
 
-use Models\DB\Select;
-
-class Content extends Model
+class Content
 {
-    public function get($match=[])
-    {
-        $select = new Select();
-        return $select->from('content.csv')->match($match)->exec();
-    }
-
-    public function getAll()
-    {
-        
-    }
-
-    protected function set($id, $values)
-    {
-
-    }
-
-    protected function add($values)
-    {
-
-    }
-
-    protected function remove($id)
-    {
-
-    }
+    public $id;
+    public $title;
+    public $content;
+    public $name;
+    public $type;
+    public $child1;
+    public $child2;
+    public $child3;
+    public $child4;
 }
-

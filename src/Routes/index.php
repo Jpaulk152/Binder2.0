@@ -8,7 +8,14 @@ use Controllers\MenuController;
 use Controllers\ContentController;
 use Controllers\TestController;
 
+use Models\DB\CSVContext;
+
 use Routes\Router;
+
+global $_csvContext;
+
+$_csvContext = new CSVContext();
+// die(var_dump($GLOBALS));
 
 $router = new Router();
 
@@ -24,10 +31,6 @@ $router->get(\config::public_root(). 'index.php/journal', HomeController::class,
 $router->get(\config::public_root(). 'index.php/curriculum', CurriculumController::class, 'home');
 $router->get(\config::public_root(). 'index.php/curriculum/home', CurriculumController::class, 'home');
 
-// Menus
-$router->get(\config::public_root(). 'index.php/menus', MenuController::class, 'menus');
-$router->get(\config::public_root(). 'index.php/allTables', MenuController::class, 'allTables');
-$router->get(\config::public_root(). 'index.php/allPages', MenuController::class, 'allPages');
 
 // Content
 $router->get(\config::public_root(). 'index.php/content', ContentController::class, 'content');
@@ -35,5 +38,7 @@ $router->get(\config::public_root(). 'index.php/content', ContentController::cla
 $router->get(\config::public_root(). 'index.php/test1', TestController::class, 'test1');
 $router->get(\config::public_root(). 'index.php/test2', TestController::class, 'test2');
 $router->get(\config::public_root(). 'index.php/test3', TestController::class, 'test3');
+$router->get(\config::public_root(). 'index.php/pages', TestController::class, 'pages');
+$router->get(\config::public_root(). 'index.php/content', TestController::class, 'content');
 
 $router->dispatch();
