@@ -3,7 +3,6 @@
 namespace Models;
 
 use Models\DB\Select;
-use Models\DB\File;
 
 class Page
 {
