@@ -2,32 +2,44 @@
 
 namespace Models\DB;
 
+use Models\DB\SQLConfig;
 
-
-class DBContext
+#[\AllowDynamicProperties]
+class DBContext extends DB
 {
-    private $connection;
 
-    function __construct()
+
+
+
+
+
+
+    function createSets()
     {
-        $this->connection = new \mysqli(SQLConfig::$serverName, SQLConfig::$userName, SQLConfig::$password, SQLConfig::$databaseName);
-
-        if ($this->connection->connect_errno)
+        $tableNameQuery = 'SHOW TABLES';
+        $tableNames = $this->connection->query($tableNameQuery);
+        
+        while($tableName = $tableNames->fetch_array())
         {
-            echo "Failed to connect to MySQL: " . $this->connection->connect_error;
-            exit();
+            $tableName = $tableName[0];
+            $fieldNameQuery = 'SELECT column_name FROM information_schema.columns WHERE table_schema = "'. SQLConfig::$databaseName .'" AND table_name = "' . $tableName . '"';
+            $fieldNames = $this->connection->query($fieldNameQuery);
+            
+            $i=0;
+            $fieldArray = array();
+
+            // $field = $fieldNames->fetch_array();
+            // die(var_dump($field[0]));
+
+            while($field = $fieldNames->fetch_array())
+            {
+                $fieldArray[$i] = $field[0];
+                $i++;
+            }
+            
+            $this->$tableName = new DBSet($tableName, $fieldArray);
         }
-
-        $this->tableInfo();
-
     }
-
-
-    function __destruct()
-    {
-        $this->connection->close();
-    }
-
 
 
 
@@ -38,20 +50,16 @@ class DBContext
 
         echo '#########################################################################<br>';
         // die(var_dump($result));
-        while($table = $tableNames->fetch_array())
+        while($tableName = $tableNames->fetch_array()[0])
         {
-            echo 'table name: ' . $table[0] . '<br><br>';
+            echo 'table name: ' . $tableName . '<br><br>';
 
-            $fieldNameQuery = 'SELECT column_name FROM information_schema.columns WHERE table_name = "' . $table[0] . '"';
+            $fieldNameQuery = 'SELECT column_name FROM information_schema.columns WHERE table_schema = "'. SQLConfig::$databaseName .'" AND table_name = "' . $tableName . '"';
             $fieldNames = $this->connection->query($fieldNameQuery);
-
             
-
-            while($fields = $fieldNames->fetch_array())
+            while($field = $fieldNames->fetch_array()[0])
             {
-                // die(var_dump($fields));
-
-                echo  $fields[0] . '<br>';
+                echo  $field . '<br>';
             }
 
             echo '<br><br>';
@@ -59,4 +67,6 @@ class DBContext
         }
         die();
     }
+
+   
 }

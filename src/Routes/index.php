@@ -22,7 +22,9 @@ global $_dbContext;
 $_csvContext = new CSVContext();
 $_dbContext = new DBContext();
 
-die();
+
+// die();
+
 
 // die(var_dump($GLOBALS));
 

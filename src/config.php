@@ -15,7 +15,6 @@ class config{
       );
   }
 
-
   public static function doc_root(){
     return $_SERVER['DOCUMENT_ROOT'];
   }

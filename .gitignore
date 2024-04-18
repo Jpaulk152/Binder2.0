@@ -1,3 +1,4 @@
 src/Models/DB/SQLConfig.php
 HC-DEV
 src/Models/DB/Tables
+src/config.php

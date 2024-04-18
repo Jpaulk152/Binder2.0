@@ -42,9 +42,18 @@ class Controller
         // get main content #########################################
         if(isset($mainContent))
         {
+
+            $dbContext = $GLOBALS['_dbContext'];
+
+            var_dump($dbContext->page_table);
+            die();
+
+
             $this->context->Content->set(['title' => $mainContent]);
             $content = $this->context->Content->exec();
             $mainClasses = $this->mainClasses();
+
+
             
             $viewModels[2] = ['data' => [$content], 'classes' => $mainClasses, 'viewModel' => 'MainViewModel'];
         }

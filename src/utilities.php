@@ -21,5 +21,8 @@ class utilities {
         array_unshift($data, $message);
         echo "<script>console.log('". json_encode($data) ."');</script>";
     }
+
+
+    
     
 }
