@@ -21,7 +21,7 @@ class MenuBuilder extends HtmlBuilder{
                     $i = $tabIndex;
                     $tabIndex++;
 
-                    $subMenu = $this->createMenu($item['submenu'], $classList, $tabIndex, $expandFunction, $internalElements, $adjacentElements);
+                    $subMenu = $this->createMenu($item['child'], $classList, $tabIndex, $expandFunction, $internalElements, $adjacentElements);
 
                     $caret = $this->buildElement('i')
                                   ->id('menu-'. $i .'-caret')
@@ -93,7 +93,7 @@ class MenuBuilder extends HtmlBuilder{
 
     public function isMenu($item)
     {
-        if(is_array($item) && array_key_exists('name', $item) && array_key_exists('link', $item) && array_key_exists('submenu', $item) && is_array($item['submenu']) && count($item['submenu']) > 0)
+        if(is_array($item) && array_key_exists('name', $item) && array_key_exists('link', $item) && array_key_exists('child', $item) && is_array($item['child']) && count($item['child']) > 0)
         {
             return true;
         }

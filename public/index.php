@@ -1,5 +1,9 @@
 <?php
 
+// phpinfo();
+
+// die();
+
 require_once('../src/config.php');
 
 set_include_path(config::src_root());

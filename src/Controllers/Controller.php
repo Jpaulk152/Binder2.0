@@ -20,7 +20,9 @@ class Controller
         $this->context->Pages->set(['title' => $navMenu]);
         $pages = $this->context->Pages->exec();
         $pages = $this->context->Pages->addChildren($pages);
-        $navClasses = $this->navClasses();
+        
+        $this->context->ClassLists->set(['view'=>'nav']);
+        $navClasses = $this->context->ClassLists->exec();
 
         $viewModels[0] = ['data' => [$pages], 'classes' => $navClasses, 'viewModel' => 'NavViewModel'];
 
@@ -30,7 +32,9 @@ class Controller
             $this->context->Pages->set(['title' => $sideMenu]);
             $pages = $this->context->Pages->exec();
             $pages = $this->context->Pages->addChildren($pages);
-            $sideClasses = $this->sideClasses();
+            
+            $this->context->ClassLists->set(['view'=>'side']);
+            $sideClasses = $this->context->ClassLists->exec();
 
             $viewModels[1] = ['data' => [$pages], 'classes' => $sideClasses, 'viewModel' => 'SideViewModel'];
         }
@@ -45,7 +49,9 @@ class Controller
             $viewModels[2] = ['data' => [$content], 'classes' => $mainClasses, 'viewModel' => 'MainViewModel'];
         }
 
-        $layout = $this->layoutClasses()['homeLayout'];
+        $this->context->ClassLists->set(['view'=>'home']);
+        
+        $layout = $this->context->ClassLists->get()->firstOrDefault()->list;
 
         $data['viewModels'] = $viewModels;
         $data['layout'] = $layout;

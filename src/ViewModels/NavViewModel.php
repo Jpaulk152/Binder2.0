@@ -19,6 +19,17 @@ class NavViewModel extends HtmlBuilder implements ViewModel{
     public function render($classList)
     {
 
+
+        $list = array();
+
+        foreach($classList as $item)
+        {
+            $list[$item['title']] = $item['list'];
+        }
+
+        $classList = $list;
+
+
         if (!is_array($this->pageData) || count($this->pageData) == 0)
         {
             return '';
@@ -27,7 +38,7 @@ class NavViewModel extends HtmlBuilder implements ViewModel{
 
         $logo = $this->buildElement('img')
                     ->classList($classList['logo'])
-                    ->src($classList['logoLocation'])
+                    ->src('../resources/logo.png')
                     ->alt('Could not find Image')
                     ->width('70')
                     ->height('70')

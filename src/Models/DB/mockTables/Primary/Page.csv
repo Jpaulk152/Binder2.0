@@ -49,11 +49,10 @@ id,title,name,link,isLive,inMenu,sideContent,mainContent,parent
 # TESTING NAV BAR BUTTON ############################################################################################################################################
 30,home,Testing,#,true,false,null,null,null
 
-31,null,Pages,pages,true,true,null,null,30
-32,null,Content,content,true,true,null,null,30
-33,null,Test 1, test1,true,true,null,null,30
-34,null,Test 2, test2,true,true,null,null,30
-35,null,Test 3, test3,true,true,null,null,30
+33,null,Renders,renders,true,true,null,null,30
+31,null,Test 1,test1,true,true,null,null,30
+34,null,Test 2,test2,true,true,null,null,30
+35,null,Test 3,test3,true,true,null,null,30
 37,null,PHP Exercise 1,"javascript:changeContent('../exercisePHP/1/index.php', 'iframe')",true,true,null,null,30
 38,null,Curriculum Page,curriculum.php,true,true,null,null,30
 39,null,Lesson Page,lesson.php,true,true,null,null,30
@@ -63,6 +62,14 @@ id,title,name,link,isLive,inMenu,sideContent,mainContent,parent
 43,null,Flush Main Content,javascript:flushMainContent(),true,true,null,null,30
 44,null,Attach Lesson SideBar,javascript:getLessonSideContent(),true,true,null,null,30
 45,null,Remove SideBar,javascript:removeSideBar(),true,true,null,null,30
+
+
+75,home,Finished Pages,#,true,false,null,null,null
+
+76,null,Pages,pages,true,true,null,null,75
+77,null,Content,content,true,true,null,null,75
+78,null,ClassLists,classLists,true,true,null,null,75
+
 
 
 # ENTRIES FOR THE SIDE BAR

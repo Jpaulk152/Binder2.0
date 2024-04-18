@@ -4,9 +4,9 @@ namespace Models\DB;
 
 class SQLConfig{
 
-    public static $serverName = "MySQLServer";
-    public static $databaseName = "MyDatabaseName";
-    public static $userName = "MyUserName";
-    public static $password = "MyPassword";
+    public static $serverName = "localhost";
+    public static $databaseName = "phpdb";
+    public static $userName = "root";
+    public static $password = "Tampered0182";
 
 }

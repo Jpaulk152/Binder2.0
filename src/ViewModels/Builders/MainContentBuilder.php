@@ -79,7 +79,7 @@ class MainContentBuilder extends HtmlBuilder{
     }
 
 
-    public function createImageCard($source="", $caption1="", $caption2="", $caption3="", $alt="Could not find image", $id="", $style="", $width="", $height="", $tabIndex=""){
+    public function createImageCard($source="", $caption1="", $caption2="", $caption3="", $alt="Could not find image", $id="", $style="", $width="300", $height="", $tabIndex=""){
 
         $caption1 = '<h4><b>'.$caption1.'</b></h4>';
         $caption2 = $this->createPanelContent($caption2);

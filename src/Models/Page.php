@@ -2,8 +2,6 @@
 
 namespace Models;
 
-use Models\DB\Select;
-
 class Page
 {
     public $id;

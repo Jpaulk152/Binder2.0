@@ -6,20 +6,15 @@ use ReflectionClass;
 
 // A CSVSet should be included as a property of a CSVContext
 // It expects a Model class that exists in a CSV file that is within the path included in the CSVContext
-class CSVSet extends CSVContext {
+class DBSet  {
 
     protected $model;
-    protected $csv;
     protected $generalArray;
     protected $objectArray;
-    protected $subPath = 'Primary\\';
 
     public function __construct($model)
     {
-        $this->model = $model;
 
-        $reflect = new ReflectionClass($this->model);
-        $this->csv = $reflect->getShortName() . '.csv';
     }
 
 
@@ -27,17 +22,7 @@ class CSVSet extends CSVContext {
     // Set or unset the values of the model
     function set($values=[])
     {
-        foreach($this->model as $property=>$value)
-        {
-            if(array_key_exists($property, $values))
-            {
-                $this->model->$property = $values[$property];
-            }
-            else
-            {
-                $this->model->$property = '';
-            }
-        }
+
     }
 
 
@@ -45,11 +30,7 @@ class CSVSet extends CSVContext {
     // returns the generalArral of this CSVSet object
     public function exec()
     {
-        $array = $this->get()->generalArray;
 
-        $this->generalArray = null;
-
-        return $array;
     }
 
 
@@ -57,29 +38,13 @@ class CSVSet extends CSVContext {
     // returns the CSVSet object where the generalArray is set to the result of the query
     public function get()
     {
-        $it = new \RecursiveDirectoryIterator($this->path . $this->subPath);
 
-        // Loop through files
-        foreach(new \RecursiveIteratorIterator($it) as $file) {
-            if ($file->getExtension() == 'csv' && $file->getFileName() == $this->csv) {
-
-                $this->generalArray = $this->CSVtoArray($file);
-            } 
-        }
-
-
-        // reset model to all properties='';
-        $this->set();
-
-        return $this;
     }
 
 
 
     function resolveRelation($id)
     {
-        $this->set(['id'=>$id]);
-        return $this->get()->firstOrDefault();
     }
 
 
@@ -87,29 +52,6 @@ class CSVSet extends CSVContext {
     // Returns general array with child arrays retrieved
     function addChildren($parentArray)
     {
-        if (isset($parentArray))
-        {
-            for($i=0;$i<count($parentArray);$i++)
-            {
-                $this->set(['parent'=>$parentArray[$i]['id']]);
-                // $array[$i]['submenu'] = $this->exec();
-                $child = $this->exec();
-
-                // var_dump($child);
-
-                if(count($child) > 0)
-                {
-                    $child = $this->addChildren($child);
-                    $parentArray[$i]['child'] = $child;
-                }
-            }
-
-            return $parentArray;
-        }
-        else
-        {
-            throw new \Exception('addChildren cannot be called before get');
-        }
     }
 
 
@@ -215,29 +157,7 @@ class CSVSet extends CSVContext {
 
     
     public function fetchAll(){
-        $tables = array();
-        $tableName = '';
 
-        $it = new \RecursiveDirectoryIterator($this->path);
-
-        // Loop through files
-        foreach(new \RecursiveIteratorIterator($it) as $file) {
-            if ($file->getExtension() == 'csv' && $file->getFileName() == $this->csv) {
-
-                $tableName = $file->getPath() . '\\' . $file->getFileName();
-
-                $tables[$tableName] = $this->CSVtoArray($file);
-            } 
-        }
-
-        if(count($tables) > 0)
-        {
-             return $tables;
-        }
-        else
-        {
-            return false;
-        }
     }
 
     

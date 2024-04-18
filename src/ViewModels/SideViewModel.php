@@ -20,6 +20,16 @@ class SideViewModel extends HtmlBuilder implements ViewModel{
 
     public function render($classList)
     {
+ 
+        $list = array();
+
+        foreach($classList as $item)
+        {
+            $list[$item['title']] = $item['list'];
+        }
+
+        $classList = $list;
+
         if (!is_array($this->pageData) || count($this->pageData) == 0)
         {
             return '';
