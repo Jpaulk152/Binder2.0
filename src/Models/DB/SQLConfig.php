@@ -3,10 +3,10 @@
 namespace Models\DB;
 
 class SQLConfig{
-
-    public static $serverName = "localhost";
-    public static $databaseName = "phpdb";
-    public static $userName = "joey";
-    public static $password = "Tampered0182";
+    
+    public static $serverName = "";
+    public static $databaseName = "";
+    public static $userName = "";
+    public static $password = "";
 
 }
