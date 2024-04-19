@@ -8,10 +8,12 @@ use Models\DB\SQLConfig;
 class DBContext extends DB
 {
 
+    function __construct()
+    {
+        parent::__construct();
 
-
-
-
+        $this->createSets();
+    }
 
 
     function createSets()

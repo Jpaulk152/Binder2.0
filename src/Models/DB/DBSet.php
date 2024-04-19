@@ -23,7 +23,7 @@ use \stdClass;
 
 // A DBSet is included as a property of a DBContext
 // #[\AllowDynamicProperties]
-class DBSet extends DBContext {
+class DBSet extends DB {
 
     protected $table;
     protected $model;
@@ -32,6 +32,7 @@ class DBSet extends DBContext {
 
     public function __construct($table, $properties)
     {
+        parent::__construct();
 
         // die(var_dump($properties));
 
@@ -47,40 +48,82 @@ class DBSet extends DBContext {
 
 
 
-    // // Set or unset the values of the model
-    // function set($values=[])
-    // {
-    //     foreach($this->model as $property=>$value)
-    //     {
-    //         if(array_key_exists($property, $values))
-    //         {
-    //             $this->model->$property = $values[$property];
-    //         }
-    //         else
-    //         {
-    //             $this->model->$property = '';
-    //         }
-    //     }
-    // }
+    // Set or unset the values of the model
+    function set($values=[])
+    {
+        foreach($this->model as $property=>$value)
+        {
+            if(array_key_exists($property, $values))
+            {
+                $this->model->$property = $values[$property];
+            }
+            else
+            {
+                $this->model->$property = '';
+            }
+        }
+    }
 
 
-    
+
+    // Runs query of the csv that matches the model's name, 
+    // returns the generalArral of this CSVSet object
+    public function exec()
+    {
+        $array = $this->get()->generalArray;
+
+        $this->generalArray = null;
+
+        return $array;
+    }
 
 
-    // // Runs query of the csv that matches the model's name, 
-    // // returns the generalArral of this CSVSet object
-    // public function exec()
-    // {
+    // Runs query of the csv that matches the model's name, 
+    // returns the CSVSet object where the generalArray is set to the result of the query
+    public function get()
+    {
 
-    // }
+        $query = 'SELECT * FROM ' . $this->table . ' WHERE ';
 
+        $properties = get_object_vars($this->model);
 
-    // // Runs query of the csv that matches the model's name, 
-    // // returns the CSVSet object where the generalArray is set to the result of the query
-    // public function get()
-    // {
+        $i=0;
+        foreach($properties as $property=>$value)
+        {
+            if($value != '')
+            {
+                $fields[$i] = $property;
+                $values[$i] = $value;
+                $i++;
+            }
+            
+        }
 
-    // }
+        for ($i=0;$i<count($fields);$i++)
+        {
+            $query .= $fields[$i] . '="' . $values[$i] . '" ';
+
+            if ($i+1<count($fields) && $values[$i+1] != '')
+            {
+                $query .= 'AND ';
+            }
+
+        }
+
+		// $this->generalArray = $this->query($query)->fetchArray();
+        $this->generalArray = $this->query($query)->fetchAll();
+
+        // die(var_dump($this->generalArray));
+
+		if($this->generalArray)
+        {        
+            // reset model to all properties='';
+            $this->set();
+            return $this;
+        }
+
+		return false;
+    }
 
 
 
@@ -96,37 +139,35 @@ class DBSet extends DBContext {
     // }
 
 
-    // // Returns an array of model objects
-    // function toList()
-    // {
-    //     if (isset($this->generalArray))
-    //     {
-            
+    // Returns an array of model objects
+    function toList()
+    {
+        if (isset($this->generalArray))
+        {
+            for ($i=0;$i<count($this->generalArray);$i++)
+            {
 
-    //         for ($i=0;$i<count($this->generalArray);$i++)
-    //         {
+                $object = new $this->model();
 
-    //             $object = new $this->model();
-
-    //             foreach($this->generalArray[$i] as $field=>$value)
-    //             {
-    //                 $object->$field = $value;
-    //             }
-    //             $this->objectArray[$i] = $object;
+                foreach($this->generalArray[$i] as $field=>$value)
+                {
+                    $object->$field = $value;
+                }
+                $this->objectArray[$i] = $object;
 
 
-    //             // var_dump($this->objectArray);
-    //         }
+                // var_dump($this->objectArray);
+            }
 
-    //         return $this->objectArray;
-    //     }
-    //     else
-    //     {
-    //         throw new \Exception('toList cannot be called before get');
-    //     }
+            return $this->objectArray;
+        }
+        else
+        {
+            throw new \Exception('toList cannot be called before get');
+        }
 
         
-    // }
+    }
 
 
     // // Returns the first or default object received

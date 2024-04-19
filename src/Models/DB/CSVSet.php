@@ -16,6 +16,7 @@ class CSVSet extends CSVContext {
 
     public function __construct($model)
     {
+        
         $this->model = $model;
 
         $reflect = new ReflectionClass($this->model);

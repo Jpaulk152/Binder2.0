@@ -45,7 +45,15 @@ class Controller
 
             $dbContext = $GLOBALS['_dbContext'];
 
-            var_dump($dbContext->page_table);
+            $dbContext->page_table->set(['page_id' => 'afrotc_career_day']);
+            // $dbContext->page_table->set(['page_inmenu' => 'false']);
+
+            
+            $pages = $dbContext->page_table->get()->toList();
+
+
+
+            var_dump($pages);
             die();
 
 
