@@ -140,6 +140,11 @@ class TestController extends Controller
         $view->render();
     }
 
+    public function info()
+    {
+        phpinfo();
+    }
+
 
     
 }

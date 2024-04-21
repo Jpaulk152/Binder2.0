@@ -4,19 +4,22 @@ namespace ViewModels\Builders;
 
 class MenuBuilder extends HtmlBuilder{
 
-    public function createMenu($menuItems, $classList=[], &$tabIndex=1, $expandFunction='', $internalElements=[], $adjacentElements=[]) {
-        if (is_array($menuItems) && count($menuItems) > 0){
+    public function createMenu($menuItems, $classList=[], &$tabIndex=1, $expandFunction='', $internalElements=[], $adjacentElements=[]) 
+    {
+
+        if (is_array($menuItems) && count($menuItems) > 0)
+        {
 
             // echo var_dump($menuItems) . '<br><br>';
 
-            
             $menu = '';
             $tabIndex;
             foreach ($menuItems as $item)
             {
                 
                 // If the item is a menu build a submenu
-                if ($this->isMenu($item)) {
+                if ($this->isMenu($item)) 
+                {
 
                     $i = $tabIndex;
                     $tabIndex++;
@@ -85,7 +88,8 @@ class MenuBuilder extends HtmlBuilder{
             return $menu;
 
         }
-        else{
+        else
+        {
             return false;
         }
     }

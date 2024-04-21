@@ -27,7 +27,7 @@ class DBSet extends DB {
 
     protected $table;
     protected $model;
-    protected $generalArray;
+    protected $enumerableArray;
     protected $objectArray;
 
     public function __construct($table, $properties)
@@ -51,6 +51,9 @@ class DBSet extends DB {
     // Set or unset the values of the model
     function set($values=[])
     {
+        $this->enumerableArray = null;
+        $this->objectArray = null;
+
         foreach($this->model as $property=>$value)
         {
             if(array_key_exists($property, $values))
@@ -67,22 +70,149 @@ class DBSet extends DB {
 
 
     // Runs query of the csv that matches the model's name, 
-    // returns the generalArral of this CSVSet object
+    // returns the enumerableArray of this CSVSet object
     public function exec()
     {
-        $array = $this->get()->generalArray;
+        $array = $this->get()->enumerableArray;
 
-        $this->generalArray = null;
+        $this->enumerableArray = null;
 
         return $array;
     }
 
+    
 
     // Runs query of the csv that matches the model's name, 
-    // returns the CSVSet object where the generalArray is set to the result of the query
+    // returns the CSVSet object where the enumerableArray is set to the result of the query
+    // public function get()
+    // {
+    //    $query = $this->buildSelect();
+
+    //     // $this->enumerableArray = $this->query($query)->fetchArray();
+
+    //     $values = $this->query($query)->fetchAll();
+        
+
+	// 	if($this->enumerableArray && $values)
+    //     {   
+    //         array_push($this->enumerableArray, $values);
+
+    //         // fill the objectArray
+    //         for ($i=0;$i<count($this->enumerableArray);$i++)
+    //         {
+    //             $object = new $this->model();
+
+    //             foreach($this->enumerableArray[$i] as $field=>$value)
+    //             {
+    //                 $object->$field = $value;
+    //             }
+    //             $this->objectArray[$i] = $object;
+    //         }
+
+    //         // reset model to all properties=''; still haven't decided to keep this
+    //         $this->set();
+    //         return $this;
+    //     }
+    //     else if($values)
+    //     {
+    //         $this->enumerableArray = $values;
+    //         return $this;
+    //     }
+
+	// 	return false;
+    // }
+
     public function get()
     {
+       $query = $this->buildSelect();
 
+        // $this->enumerableArray = $this->query($query)->fetchArray();
+        $this->enumerableArray = $this->query($query)->fetchAll();
+
+		if($this->enumerableArray)
+        {   
+            // fill the objectArray
+            for ($i=0;$i<count($this->enumerableArray);$i++)
+            {
+                $object = new $this->model();
+
+                foreach($this->enumerableArray[$i] as $field=>$value)
+                {
+                    $object->$field = $value;
+                }
+                $this->objectArray[$i] = $object;
+            }
+
+            // reset model to all properties=''; still haven't decided to keep this
+            // $this->set();
+            return $this;
+        }
+
+		return false;
+    }
+
+
+
+    public function fields($keys=[])
+    {
+        $rows = array();
+        if($keys)
+        {
+            foreach($this->enumerableArray as $row)
+            {
+                $fields = array();
+                for($i=0;$i<count($keys);$i++)
+                {
+                    if(array_key_exists($keys[$i], $row))
+                    {
+                        $fields[$keys[$i]] = $row[$keys[$i]];
+                    }
+                }
+                array_push($rows, $fields);
+            }
+            return $rows;
+        }
+        else
+        {
+            return $this->enumerableArray;
+        }
+    }
+
+
+
+
+    // Returns an array of objects of type $this->model
+    function objects()
+    {
+        if (isset($this->objectArray))
+        {
+            return array_values($this->objectArray);
+        }
+        else
+        {
+            throw new \Exception('function: objects cannot be called before get');
+        }
+    }
+
+
+    function enumerable()
+    {
+        if (isset($this->enumerableArray))
+        {
+            return $this->enumerableArray;
+        }
+        else
+        {
+            throw new \Exception('function: enumerable cannot be called before get');
+        }
+    }
+
+
+
+
+
+    function buildSelect()
+    {
         $query = 'SELECT * FROM ' . $this->table . ' WHERE ';
 
         $properties = get_object_vars($this->model);
@@ -110,67 +240,28 @@ class DBSet extends DB {
 
         }
 
-		// $this->generalArray = $this->query($query)->fetchArray();
-        $this->generalArray = $this->query($query)->fetchAll();
-
-        // die(var_dump($this->generalArray));
-
-		if($this->generalArray)
-        {        
-            // reset model to all properties='';
-            $this->set();
-            return $this;
-        }
-
-		return false;
+        return $query;
     }
 
 
-
-    // function resolveRelation($id)
-    // {
-    // }
-
-
-
-    // // Returns general array with child arrays retrieved
-    // function addChildren($parentArray)
-    // {
-    // }
-
-
-    // Returns an array of model objects
-    function toList()
+    
+    function resolveRelation($value, $foreignKey)
     {
-        if (isset($this->generalArray))
-        {
-            for ($i=0;$i<count($this->generalArray);$i++)
-            {
-
-                $object = new $this->model();
-
-                foreach($this->generalArray[$i] as $field=>$value)
-                {
-                    $object->$field = $value;
-                }
-                $this->objectArray[$i] = $object;
-
-
-                // var_dump($this->objectArray);
-            }
-
-            return $this->objectArray;
-        }
-        else
-        {
-            throw new \Exception('toList cannot be called before get');
-        }
-
-        
+        $this->set([$foreignKey => $value]);
+        return $this->get();
     }
 
 
-    // // Returns the first or default object received
+
+    // Returns general array with child arrays retrieved
+    function addChildren($parentArray)
+    {
+
+
+    }
+
+
+        // // Returns the first or default object received
     // function firstOrDefault()
     // {
     //     if (isset($this->generalArray))

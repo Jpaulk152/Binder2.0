@@ -63,6 +63,7 @@ $router->get(\config::public_root(). 'index.php/renders', RendersController::cla
 $router->get(\config::public_root(). 'index.php/renders/detail', RendersController::class, 'detail');
 
 // Tests
+$router->get(\config::public_root(). 'index.php/info', TestController::class, 'info');
 $router->get(\config::public_root(). 'index.php/test1', TestController::class, 'test1');
 $router->get(\config::public_root(). 'index.php/test2', TestController::class, 'test2');
 $router->get(\config::public_root(). 'index.php/test3', TestController::class, 'test3');

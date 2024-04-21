@@ -7,34 +7,36 @@ class Controller
 {
     use \ViewModels\Builders\ClassList;
 
-    protected $context;
+    protected $csvContext;
+    protected $dbContext;
 
     public function __construct()
     {
-        $this->context = $GLOBALS['_csvContext'];
+        $this->csvContext = $GLOBALS['_csvContext'];
+        $this->dbContext = $GLOBALS['_dbContext'];
     }
 
     public function getData($mainContent=null, $sideMenu=null, $navMenu='home')
     {
-        // get navbar ################################################
-        $this->context->Pages->set(['title' => $navMenu]);
-        $pages = $this->context->Pages->exec();
-        $pages = $this->context->Pages->addChildren($pages);
-        
-        $this->context->ClassLists->set(['view'=>'nav']);
-        $navClasses = $this->context->ClassLists->exec();
+        $pageSet = $this->dbContext->page_table;
+        $pageData = ['view'=>'test'];
+        $viewModels[0] = $this->viewData($pageSet, $pageData, 'nav');
 
-        $viewModels[0] = ['data' => [$pages], 'classes' => $navClasses, 'viewModel' => 'NavViewModel'];
+        $pageData = ['page_status'=>'true', 'page_inmenu'=>'false', 'page_parent'=>'none'];
+        $viewModels[1] = $this->viewData($this->dbContext->page_table, $pageData, 'side');
+ 
 
         // get sidebar ###############################################
         if(isset($sideMenu))
         {
-            $this->context->Pages->set(['title' => $sideMenu]);
-            $pages = $this->context->Pages->exec();
-            $pages = $this->context->Pages->addChildren($pages);
+            $context = $this->csvContext;
+
+            $context->Pages->set(['title' => $sideMenu]);
+            $pages = $context->Pages->exec();
+            $pages = $context->Pages->addChildren($pages);
             
-            $this->context->ClassLists->set(['view'=>'side']);
-            $sideClasses = $this->context->ClassLists->exec();
+            $context->ClassLists->set(['view'=>'side']);
+            $sideClasses = $context->ClassLists->exec();
 
             $viewModels[1] = ['data' => [$pages], 'classes' => $sideClasses, 'viewModel' => 'SideViewModel'];
         }
@@ -43,36 +45,97 @@ class Controller
         if(isset($mainContent))
         {
 
-            $dbContext = $GLOBALS['_dbContext'];
-
-            $dbContext->page_table->set(['page_id' => 'afrotc_career_day']);
-            // $dbContext->page_table->set(['page_inmenu' => 'false']);
-
-            
-            $pages = $dbContext->page_table->get()->toList();
-
-
-
-            var_dump($pages);
-            die();
-
-
-            $this->context->Content->set(['title' => $mainContent]);
-            $content = $this->context->Content->exec();
-            $mainClasses = $this->mainClasses();
-
-
-            
-            $viewModels[2] = ['data' => [$content], 'classes' => $mainClasses, 'viewModel' => 'MainViewModel'];
         }
 
-        $this->context->ClassLists->set(['view'=>'home']);
+        $context = $this->csvContext;
+
+        $context->ClassLists->set(['view'=>'home']);
         
-        $layout = $this->context->ClassLists->get()->firstOrDefault()->list;
+        $layout = $context->ClassLists->get()->firstOrDefault()->list;
 
         $data['viewModels'] = $viewModels;
         $data['layout'] = $layout;
 
         return $data;
     }
+
+
+
+    
+    public function viewData($dbSet, $viewData, $viewStyle)
+    {
+        // nav classlists
+        $context = $this->csvContext;
+        $context->ClassLists->set(['view'=>$viewStyle]);
+        $navClasses = $context->ClassLists->exec();
+
+        // nav items
+        $context = $this->dbContext;
+        $dbSet->set($viewData);
+        $pages = $dbSet->get()->objects();
+        $pages = $this->addChildren($pages, $dbSet);
+
+        $menuItems = $this->menuData($pages);
+
+        $viewStyle = ucfirst($viewStyle);
+
+        $viewModel = ['data' => [$menuItems], 'classes' => $navClasses, 'viewModel' => $viewStyle . 'ViewModel'];
+
+        return $viewModel;
+    }
+
+
+
+    public function menuData($items)
+    {
+        $menuItems = array();
+        foreach($items as $item)
+        {
+            $menuItem['name'] = $item->page_title;
+            // $menuItem['link'] = '?menu=' . $item->page_id;
+            $menuItem['link'] = '#';//$item->page_id;
+
+            if (isset($item->children))
+            {
+                $menuItem['child'] = $this->menuData($item->children);   
+            }
+
+            array_push($menuItems, $menuItem);
+        }
+        return $menuItems;
+    }
+
+    public function addChildren($parents, $dbSet, $primaryKey='id', $foreignKey='parent')
+    {
+        foreach($parents as &$parent)
+        {
+            $result = $dbSet->resolveRelation($parent->$primaryKey, $foreignKey);
+            if($result)
+            {
+                $children = $dbSet->objects();
+
+                $children = $this->addChildren($children, $dbSet, $primaryKey, $foreignKey);
+                $parent->children = $children;                
+            }
+        }
+        return $parents;
+    }
+
+
+    private $sideBarLinks = array(
+        
+        array("name" => "Regular Accordian", "link" => "#",
+            "menuItems" => array(
+                array("name" => "PHP Exercise 1", "link" => "javascript:changeContent('../exercisePHP/1/index.php', 'iframe')"),
+                array("name" => "PHP Exercise 2", "link" => "javascript:changeContent('../exercisePHP/2/index.html', 'iframe')"),
+                array("name" => "PHP Exercise 3", "link" => "javascript:changeContent('../exercisePHP/3/index.html', 'iframe')"),
+                array("name" => "PHP Exercise 4", "link" => "javascript:changeContent('../exercisePHP/4/index.html', 'iframe')"),
+                array("name" => "PHP Exercise 5", "link" => "javascript:changeContent('../exercisePHP/5/index.php', 'iframe')"),
+                array("name" => "PHP Exercise 6", "link" => "javascript:changeContent('../exercisePHP/6/index.php', 'iframe')"),
+                array("name" => "PHP Exercise 7", "link" => "javascript:changeContent('../exercisePHP/7/index.php', 'iframe')"),
+                )
+            ),
+    
+        array("name" => "Content with no Accordian", "link" => "#")
+        );
 }

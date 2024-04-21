@@ -65,6 +65,43 @@ class View
             $content .= $this->data['test']['data'];
         }
 
+        
+        if(isset($this->data['content']['data']))
+        {   
+            $side=false;
+            if(isset($this->data['viewModels']))
+            {
+                for($i=0;$i<count($this->data['viewModels']);$i++)
+                {
+                    // die(var_dump($this->data));
+                    if($this->data['viewModels'][$i]['viewModel'] == 'SideViewModel')
+                    {
+                        $side = true;
+                    }
+                }
+            }
+            if($side)
+            {
+                $classList = 'mainContentToRight';
+            }
+            else
+            {
+                $classList = '';
+            }
+
+            $classList .= ' w3-container';
+
+            $mainContent = $htmlBuilder->buildElement('div')
+                        ->id('mainContent')
+                        ->classList($classList)
+                        ->content($this->data['content']['data'])
+                        ->create();
+
+
+            $content .= $mainContent;
+        }
+
+
 
         if(isset($this->data['layout']))
         {
