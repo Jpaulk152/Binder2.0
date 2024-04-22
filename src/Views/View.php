@@ -10,21 +10,44 @@ use \ViewModels\Builders\HtmlBuilder;
 // responsible for displaying data; expects page data and decides how to display it
 class View
 {
-    public $body = '';
-    public $elements = [];
 
+    public $head = null;
+    public $title = null;
+    public $body = '';
     public $template = null;
     public $data = null;
-    public $classes = null;
 
-    public function __construct($data=null)
+    public function __construct($data=null, $template=null, $body=null)
     {
         $this->data = $data;
+        $this->template = $template;
+        $this->body = $body;
     }
+
+    // public function __construct($page)
+    // {
+
+
+    //     $this->data = $data;
+    //     $this->template = $template;
+    //     $this->body = $body;
+    // }
+
+    // interpret data
+    function interpretData()
+    {
+
+    }
+
+
+    // decide how to display it
+
 
 
     public function render()
     {
+
+
         include 'top.php';
 
         $htmlBuilder = new HtmlBuilder();

@@ -53,6 +53,8 @@ class DBSet extends DB {
     {
         $this->enumerableArray = null;
         $this->objectArray = null;
+        $this->enumerableArray = array();
+        $this->objectArray = array();
 
         foreach($this->model as $property=>$value)
         {
@@ -145,10 +147,11 @@ class DBSet extends DB {
 
             // reset model to all properties=''; still haven't decided to keep this
             // $this->set();
-            return $this;
+            // return $this;
         }
 
-		return false;
+		return $this;
+        
     }
 
 
@@ -184,14 +187,19 @@ class DBSet extends DB {
     // Returns an array of objects of type $this->model
     function objects()
     {
-        if (isset($this->objectArray))
-        {
-            return array_values($this->objectArray);
-        }
-        else
-        {
-            throw new \Exception('function: objects cannot be called before get');
-        }
+        // if (isset($this->objectArray))
+        // {
+        //     return array_values($this->objectArray);
+        // }
+        // else
+        // {
+        //     // throw new \Exception('function: objects cannot be called before get');
+
+        //     return false;
+
+        //     // return array(new $this->model());
+        // }
+        return array_values($this->objectArray);
     }
 
 
@@ -213,9 +221,10 @@ class DBSet extends DB {
 
     function buildSelect()
     {
-        $query = 'SELECT * FROM ' . $this->table . ' WHERE ';
-
+        $query = 'SELECT * FROM ' . $this->table;
         $properties = get_object_vars($this->model);
+        $fields = array();
+        $values = array();
 
         $i=0;
         foreach($properties as $property=>$value)
@@ -229,6 +238,12 @@ class DBSet extends DB {
             
         }
 
+        if(!$fields)
+        {
+            return $query;
+        }
+
+        $query .= ' WHERE ';
         for ($i=0;$i<count($fields);$i++)
         {
             $query .= $fields[$i] . '="' . $values[$i] . '" ';
@@ -239,6 +254,8 @@ class DBSet extends DB {
             }
 
         }
+
+        // die($query);
 
         return $query;
     }

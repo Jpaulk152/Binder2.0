@@ -26,26 +26,6 @@ class Controller
         $viewModels[1] = $this->viewData($this->dbContext->page_table, $pageData, 'side');
  
 
-        // get sidebar ###############################################
-        if(isset($sideMenu))
-        {
-            $context = $this->csvContext;
-
-            $context->Pages->set(['title' => $sideMenu]);
-            $pages = $context->Pages->exec();
-            $pages = $context->Pages->addChildren($pages);
-            
-            $context->ClassLists->set(['view'=>'side']);
-            $sideClasses = $context->ClassLists->exec();
-
-            $viewModels[1] = ['data' => [$pages], 'classes' => $sideClasses, 'viewModel' => 'SideViewModel'];
-        }
-
-        // get main content #########################################
-        if(isset($mainContent))
-        {
-
-        }
 
         $context = $this->csvContext;
 
@@ -62,32 +42,65 @@ class Controller
 
 
     
-    public function viewData($dbSet, $viewData, $viewStyle)
+    public function viewData($dbSet, $keys, $view)
     {
-        // nav classlists
-        $context = $this->csvContext;
-        $context->ClassLists->set(['view'=>$viewStyle]);
-        $navClasses = $context->ClassLists->exec();
-
         // nav items
         $context = $this->dbContext;
-        $dbSet->set($viewData);
-        $pages = $dbSet->get()->objects();
-        $pages = $this->addChildren($pages, $dbSet);
+        $dbSet->set($keys);
+        $elements = $dbSet->get()->objects();
+        $views = null;
 
-        $menuItems = $this->menuData($pages);
+        if(!$elements) { return false; }
 
-        $viewStyle = ucfirst($viewStyle);
+        foreach($elements as $element)
+        {
+            $element = $this->addChildren($element, $dbSet);
+            if (isset($element->view))
+            {
+                
+                array_push($views[$element->view], $element);
+            }
+            else
+            {
+                array_push($views['default'], $element);
+            }
+        }
 
-        $viewModel = ['data' => [$menuItems], 'classes' => $navClasses, 'viewModel' => $viewStyle . 'ViewModel'];
+        $context = $this->csvContext;
+        foreach($views as $viewName => $view)
+        {
+            $context->ClassLists->set(['view'=>$viewName]);
+            $view['classList'] = $context->ClassLists->exec();
+        }
 
-        return $viewModel;
+
+
+
+
+        // $elements = $this->addChildren($elements, $dbSet);
+
+        // $menuItems = $this->menuData($elements);
+
+        // nav classlists
+        
+
+
+
+
+
+
+        // $view = ucfirst($view);
+        // $viewModel = ['data' => [$menuItems], 'classes' => $navClasses, 'viewModel' => $view . 'ViewModel'];
+
+        return $views;
     }
 
 
 
     public function menuData($items)
     {
+        if(!$items) {return false;}
+
         $menuItems = array();
         foreach($items as $item)
         {
@@ -107,35 +120,25 @@ class Controller
 
     public function addChildren($parents, $dbSet, $primaryKey='id', $foreignKey='parent')
     {
+        
+        // die(var_dump($parents));
         foreach($parents as &$parent)
         {
-            $result = $dbSet->resolveRelation($parent->$primaryKey, $foreignKey);
-            if($result)
-            {
-                $children = $dbSet->objects();
+            if (gettype($parent) != gettype(\stdClass::class))
+            {return $parents;}
 
-                $children = $this->addChildren($children, $dbSet, $primaryKey, $foreignKey);
-                $parent->children = $children;                
-            }
+            $result = $dbSet->resolveRelation($parent->$primaryKey, $foreignKey);
+            if(!$result){return $parents;}
+
+
+            $children = $dbSet->objects();
+            if(!$children) {return $parents;}
+
+
+            $children = $this->addChildren($children, $dbSet, $primaryKey, $foreignKey);
+            $parent->children = $children;    
         }
         return $parents;
     }
 
-
-    private $sideBarLinks = array(
-        
-        array("name" => "Regular Accordian", "link" => "#",
-            "menuItems" => array(
-                array("name" => "PHP Exercise 1", "link" => "javascript:changeContent('../exercisePHP/1/index.php', 'iframe')"),
-                array("name" => "PHP Exercise 2", "link" => "javascript:changeContent('../exercisePHP/2/index.html', 'iframe')"),
-                array("name" => "PHP Exercise 3", "link" => "javascript:changeContent('../exercisePHP/3/index.html', 'iframe')"),
-                array("name" => "PHP Exercise 4", "link" => "javascript:changeContent('../exercisePHP/4/index.html', 'iframe')"),
-                array("name" => "PHP Exercise 5", "link" => "javascript:changeContent('../exercisePHP/5/index.php', 'iframe')"),
-                array("name" => "PHP Exercise 6", "link" => "javascript:changeContent('../exercisePHP/6/index.php', 'iframe')"),
-                array("name" => "PHP Exercise 7", "link" => "javascript:changeContent('../exercisePHP/7/index.php', 'iframe')"),
-                )
-            ),
-    
-        array("name" => "Content with no Accordian", "link" => "#")
-        );
 }
