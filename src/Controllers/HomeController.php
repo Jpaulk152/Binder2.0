@@ -6,7 +6,6 @@ use Views\View;
 
 class HomeController extends Controller
 {
-    // use \ViewModels\Builders\ClassList;
 
     public function index()
     {

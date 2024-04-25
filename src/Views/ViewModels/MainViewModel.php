@@ -6,8 +6,6 @@ use Views\ViewModels\Builders\HtmlBuilder;
 
 class MainViewModel extends HtmlBuilder implements ViewModel{
 
-    // use Builders\ClassList;
-
     public $pageData;
     public $tabIndex;
     public $content;

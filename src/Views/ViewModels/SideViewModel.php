@@ -6,8 +6,6 @@ use Views\ViewModels\Builders\HtmlBuilder;
 
 class SideViewModel extends HtmlBuilder implements ViewModel{
 
-    // use Builders\ClassList;
-
     public $pageData;
     public $tabIndex;
 
