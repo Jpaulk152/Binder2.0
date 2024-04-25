@@ -84,46 +84,6 @@ class DBSet extends DB {
 
     
 
-    // Runs query of the csv that matches the model's name, 
-    // returns the CSVSet object where the enumerableArray is set to the result of the query
-    // public function get()
-    // {
-    //    $query = $this->buildSelect();
-
-    //     // $this->enumerableArray = $this->query($query)->fetchArray();
-
-    //     $values = $this->query($query)->fetchAll();
-        
-
-	// 	if($this->enumerableArray && $values)
-    //     {   
-    //         array_push($this->enumerableArray, $values);
-
-    //         // fill the objectArray
-    //         for ($i=0;$i<count($this->enumerableArray);$i++)
-    //         {
-    //             $object = new $this->model();
-
-    //             foreach($this->enumerableArray[$i] as $field=>$value)
-    //             {
-    //                 $object->$field = $value;
-    //             }
-    //             $this->objectArray[$i] = $object;
-    //         }
-
-    //         // reset model to all properties=''; still haven't decided to keep this
-    //         $this->set();
-    //         return $this;
-    //     }
-    //     else if($values)
-    //     {
-    //         $this->enumerableArray = $values;
-    //         return $this;
-    //     }
-
-	// 	return false;
-    // }
-
     public function get()
     {
        $query = $this->buildSelect();
@@ -147,7 +107,7 @@ class DBSet extends DB {
 
             // reset model to all properties=''; still haven't decided to keep this
             // $this->set();
-            // return $this;
+            
         }
 
 		return $this;
@@ -187,18 +147,6 @@ class DBSet extends DB {
     // Returns an array of objects of type $this->model
     function objects()
     {
-        // if (isset($this->objectArray))
-        // {
-        //     return array_values($this->objectArray);
-        // }
-        // else
-        // {
-        //     // throw new \Exception('function: objects cannot be called before get');
-
-        //     return false;
-
-        //     // return array(new $this->model());
-        // }
         return array_values($this->objectArray);
     }
 
@@ -216,7 +164,18 @@ class DBSet extends DB {
     }
 
 
-
+    // Returns the first or default object received
+    function firstOrDefault()
+    {
+        if (isset($this->objectArray))
+        {            
+            return $this->objectArray[0];
+        }
+        else
+        {
+            return false;
+        }
+    }
 
 
     function buildSelect()
@@ -267,99 +226,5 @@ class DBSet extends DB {
         $this->set([$foreignKey => $value]);
         return $this->get();
     }
-
-
-
-    // Returns general array with child arrays retrieved
-    function addChildren($parentArray)
-    {
-
-
-    }
-
-
-        // // Returns the first or default object received
-    // function firstOrDefault()
-    // {
-    //     if (isset($this->generalArray))
-    //     {
-    //         $object = new $this->model();
-
-    //         foreach($this->generalArray[0] as $field=>$value)
-    //         {
-    //             $object->$field = $value;
-    //         }
-            
-    //         return $object;
-    //     }
-    //     else
-    //     {
-    //         throw new \Exception('toList cannot be called before exec');
-    //     }
-    // }
-
-
-    // function CSVtoArray($file)
-    // {
-    //     $rows = array();
-    //     $rowAdd = true;
-    //     $index = 1;
-    //     $open = $file->openFile('r');
-    //     $header = $open->fgetcsv();
-        
-    //     while($indexRow = $open->fgetcsv())
-    //     {
-
-    //         if((isset($indexRow[0]) && \strpos($indexRow[0], '#') !== false) || !isset($indexRow[0]))
-    //         {
-    //             continue;
-    //         }
-
-
-    //         $row = array();
-    //         for($i=0;$i<count($header);$i++)
-    //         {
-    //             $headerField = $this->validate($i, $header);
-    //             $rowField = $this->validate($i, $indexRow);
-
-    //             if(!empty($this->model->$headerField) && $this->model->$headerField != $rowField)
-    //             {
-    //                 $rowAdd = false;
-    //             }
-
-    //             $row[$headerField] = $rowField;
-    //         }
-
-
-    //         if($rowAdd)
-    //         {
-    //             array_push($rows, $row);
-    //         }
-            
-    //         $rowAdd = true;
-    //         $index++;
-    //     }
-
-    //     return $rows;
-    // }
-
-
-
-
-    
-
-
-    // function validate($key, $array)
-    // {
-    //     if(array_key_exists($key, $array) && isset($array[$key]) && !empty($array[$key]))
-    //     {
-    //         return $array[$key];
-    //     }
-    //     else
-    //     {
-    //         return '<p style="color: red">missing_field</p>';
-    //     }
-    // }
-
 
 }

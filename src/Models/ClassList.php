@@ -2,6 +2,7 @@
 
 namespace Models;
 
+#[AllowDynamicProperties]
 class ClassList
 {
     public $id;

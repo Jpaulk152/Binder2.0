@@ -6,50 +6,48 @@ use Views\View;
 
 class PageController extends Controller
 {
-    use \ViewModels\Builders\ClassList;
-
+    
     public function index()
     {
-        // pull common data to be sent to the view
-        $data = $this->getData();
+        $page = new \stdClass();
 
-        $pages = $this->context->Pages->fetchAll();
- 
-        // die(var_dump($classLists));
+        $page->title = 'Pages';
+        $page->template = 'templates\tables.php';
 
-        // add an html template
-        $data['template']['page'] = 'templates\tables.php';
+        $context = $this->csvContext;
+        $page->data = ['tables' => $context->Pages->fetchAll()];
 
-        // add data to be displayed in template
         
-        $data['template']['data'] = ['tables' => $pages];
+        $page->children['nav'] = $this->getChildren('home', 'nav');
+        // $page->children['side'] = $this->getChildren('Faculty_and_Staff_Development', 'side');
 
-        $view = new View($data);
+        $view = new View($page);
 
         $view->render();
     }
 
     public function detail()
     {
-        $data = $this->getData();
+        // $data = $this->getData();
 
-        $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_URL);
-        $title = filter_input(INPUT_GET, 'title', FILTER_SANITIZE_URL);
+        // $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_URL);
+        // $title = filter_input(INPUT_GET, 'title', FILTER_SANITIZE_URL);
 
-        $this->context->ClassLists->set(['id'=>$id, 'title'=>$title]);
+        // $context = $this->csvContext;
+        // $context->ClassLists->set(['id'=>$id, 'title'=>$title]);
 
-        $pages = $this->context->ClassLists->fetchAll();
+        // $pages = $context->ClassLists->fetchAll();
 
-        // add an html template
-        $data['template']['page'] = 'templates\tables.php';
+        // // add an html template
+        // $data['template']['page'] = 'templates\tables.php';
 
-        // add data to be displayed in template
+        // // add data to be displayed in template
         
-        $data['template']['data'] = ['tables' => $pages];
+        // $data['template']['data'] = ['tables' => $pages];
 
-        $view = new View($data);
+        // $view = new View($data);
 
-        $view->render();
+        // $view->render();
     }
     
 }

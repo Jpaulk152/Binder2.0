@@ -6,75 +6,70 @@ use Views\View;
 
 class HomeController extends Controller
 {
-    use \ViewModels\Builders\ClassList;
+    // use \ViewModels\Builders\ClassList;
 
     public function index()
     {
-        $data['template']['page'] = 'templates\index.php';
-        $data['template']['data'] = ['title' => 'index', 'message' => 'Welcome to the Index Page!'];
-        $view = new View($data);
-        $view->render();
+        // $data['template']['page'] = 'templates\index.php';
+        // $data['template']['data'] = ['title' => 'index', 'message' => 'Welcome to the Index Page!'];
+        // $view = new View($data);
+        // $view->render();
     }
 
 
     public function home()
     {
-        $page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_URL);
-
         $page = new \stdClass();
-
-        $page->content = ''; //$content;
-        $page->view = 'home';
-
-
-        $pageSet = $this->dbContext->page_table;
-        $pageData = ['view'=>'test'];
-        $viewModels[0] = $this->viewData($pageSet, $pageData, 'nav');
-
-        $pageData = ['page_status'=>'true', 'page_inmenu'=>'false', 'page_parent'=>'none'];
-        $viewModels[1] = $this->viewData($pageSet, $pageData, 'side'); 
-
-        $this->csvContext->ClassLists->set(['view'=>'home']);
-        
-        $layout = $this->csvContext->ClassLists->get()->firstOrDefault()->list;
-
-        $data['viewModels'] = $viewModels;
-        $data['layout'] = $layout;
+        $page->title = 'Home';
+        $page->content = 'Test Home';
 
 
+        $page->children['nav'] = $this->getChildren('home', 'nav');
+        $page->children['side'] = $this->getChildren('Faculty_and_Staff_Development', 'side');
 
+
+        $view = new View($page);
+
+        $view->render();
+    }
+
+
+    function test()
+    {
+        // create a parent page
+        // this page's content goes in mainContent
+        $page = new \stdClass();
+        $page->title = 'Test Title';
+        $page->content = 'Test Content';
+
+
+        // get children to that parent
+            // These child elements go into ViewModels later
 
         $context = $this->dbContext;
-        
-        $context->page_table->set(['page_id' => $page]);
-        // $dbContext->page_table->set(['page_inmenu' => 'false']);
+        $context->page_table->set(['page_status' => 'true', 'page_inmenu' => 'false', 'page_parent' => 'none']);
+        // $context->page_table->set(['page_id' => 'as100']);
 
-        $pages = $context->page_table->get()->objects();
+        // ViewModels need by default: an array of element data, an array of classlists to display that data
+        $page->children['nav']['data'] = $context->page_table->get()->objects();
+        $page->children['side']['data'] = $context->page_table->get()->objects();
 
-        // die(urldecode($pages[0]->page_content));
+        $context = $this->csvContext;
+        $context->ClassLists->set(['view'=>'nav']);
+        $page->children['nav']['classes'] = $context->ClassLists->exec();
 
-        if($pages)
-        {
-            $content = urldecode($pages[0]->page_content);
-        }
-        else
-        {
-            $content = 'no page found';
-        }
-        
-        $data['content']['data'] = $content;
-
-
-
-
+        $context->ClassLists->set(['view'=>'side']);
+        $page->children['side']['classes'] = $context->ClassLists->exec();
 
                 
-        // $view = new View($data);
         $view = new View($page);
 
         $view->render();
     }
 }
+
+
+
 
 // test_page_3
 // test_page_2

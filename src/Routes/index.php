@@ -35,37 +35,24 @@ $router = new Router();
 // echo \config::public_root();
 
 // Home
-$router->get(\config::public_root(), HomeController::class, 'index');
+$router->get(\config::public_root(), HomeController::class, 'home');
 $router->get(\config::public_root(). 'index.php', HomeController::class, 'home');
 $router->get(\config::public_root(). 'index.php/home', HomeController::class, 'home');
-$router->get(\config::public_root(). 'index.php/journal', HomeController::class, 'journal');
-
-// Curriculum
-$router->get(\config::public_root(). 'index.php/curriculum', CurriculumController::class, 'home');
-$router->get(\config::public_root(). 'index.php/curriculum/home', CurriculumController::class, 'home');
-
+$router->get(\config::public_root(). 'index.php/test', HomeController::class, 'test');
 
 // Pages
 $router->get(\config::public_root(). 'index.php/pages', PageController::class, 'index');
 $router->get(\config::public_root(). 'index.php/pages/detail', PageController::class, 'detail');
-
-// Content
-$router->get(\config::public_root(). 'index.php/content', ContentController::class, 'index');
-$router->get(\config::public_root(). 'index.php/content/detail', ContentController::class, 'detail');
 
 // ClassLists
 $router->get(\config::public_root(). 'index.php/classLists', ClassListController::class, 'index');
 $router->get(\config::public_root(). 'index.php/classLists/detail', ClassListController::class, 'detail');
 
 
-// Renders
-$router->get(\config::public_root(). 'index.php/renders', RendersController::class, 'index');
-$router->get(\config::public_root(). 'index.php/renders/detail', RendersController::class, 'detail');
-
 // Tests
-$router->get(\config::public_root(). 'index.php/info', TestController::class, 'info');
+$router->get(\config::public_root(). 'index.php/test', TestController::class, 'index');
 $router->get(\config::public_root(). 'index.php/test1', TestController::class, 'test1');
 $router->get(\config::public_root(). 'index.php/test2', TestController::class, 'test2');
-$router->get(\config::public_root(). 'index.php/test3', TestController::class, 'test3');
+$router->get(\config::public_root(). 'index.php/info', TestController::class, 'info');
 
 $router->dispatch();

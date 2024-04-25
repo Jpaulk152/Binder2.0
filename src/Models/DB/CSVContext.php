@@ -8,10 +8,11 @@ use Models\Content;
 use Models\ClassList;
 use Models\Renders;
 
+#[\AllowDynamicProperties]
 class CSVContext
 {
 
-    protected $path='..\src\Models\DB\mockTables\\';
+    protected $path='..\src\Models\DB\Tables\\';
 
     public function __construct()
     {

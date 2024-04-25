@@ -6,11 +6,12 @@ use ReflectionClass;
 
 // A CSVSet should be included as a property of a CSVContext
 // It expects a Model class that exists in a CSV file that is within the path included in the CSVContext
+// #[\AllowDynamicProperties]
 class CSVSet extends CSVContext {
 
     protected $model;
     protected $csv;
-    protected $generalArray;
+    protected $enumerableArray;
     protected $objectArray;
     protected $subPath = 'Primary\\';
 
@@ -28,6 +29,11 @@ class CSVSet extends CSVContext {
     // Set or unset the values of the model
     function set($values=[])
     {
+        $this->enumerableArray = null;
+        $this->objectArray = null;
+        $this->enumerableArray = array();
+        $this->objectArray = array();
+
         foreach($this->model as $property=>$value)
         {
             if(array_key_exists($property, $values))
@@ -46,16 +52,16 @@ class CSVSet extends CSVContext {
     // returns the generalArral of this CSVSet object
     public function exec()
     {
-        $array = $this->get()->generalArray;
+        $array = $this->get()->enumerableArray;
 
-        $this->generalArray = null;
+        $this->enumerableArray = null;
 
         return $array;
     }
 
 
     // Runs query of the csv that matches the model's name, 
-    // returns the CSVSet object where the generalArray is set to the result of the query
+    // returns the CSVSet object where the enumerableArray is set to the result of the query
     public function get()
     {
         $it = new \RecursiveDirectoryIterator($this->path . $this->subPath);
@@ -64,23 +70,67 @@ class CSVSet extends CSVContext {
         foreach(new \RecursiveIteratorIterator($it) as $file) {
             if ($file->getExtension() == 'csv' && $file->getFileName() == $this->csv) {
 
-                $this->generalArray = $this->CSVtoArray($file);
+                $this->enumerableArray = $this->CSVtoArray($file);
             } 
         }
 
+        if($this->enumerableArray)
+        {   
+            // fill the objectArray
+            for ($i=0;$i<count($this->enumerableArray);$i++)
+            {
+                $object = new $this->model();
 
-        // reset model to all properties='';
-        $this->set();
+                foreach($this->enumerableArray[$i] as $field=>$value)
+                {
+                    $object->$field = $value;
+                }
+                $this->objectArray[$i] = $object;
+            }
+
+            // reset model to all properties=''; still haven't decided to keep this
+            // $this->set();
+
+        }
 
         return $this;
     }
 
-
-
-    function resolveRelation($id)
+    function resolveRelation($value, $foreignKey)
     {
-        $this->set(['id'=>$id]);
-        return $this->get()->firstOrDefault();
+        $this->set([$foreignKey => $value]);
+        return $this->get();
+    }
+
+    // function resolveRelation($id)
+    // {
+    //     $this->set(['id'=>$id]);
+    //     return $this->get()->firstOrDefault();
+    // }
+
+
+
+
+    // Returns an array of objects of type $this->model
+    function objects()
+    {
+        return array_values($this->objectArray);
+    }
+
+
+
+
+    // Returns the first or default object received
+    function firstOrDefault()
+    {
+        if (isset($this->objectArray))
+        {            
+            return $this->objectArray[0];
+        }
+        else
+        {
+            return false;
+        }
     }
 
 
@@ -114,60 +164,6 @@ class CSVSet extends CSVContext {
     }
 
 
-    // Returns an array of model objects
-    function toList()
-    {
-        if (isset($this->generalArray))
-        {
-            
-
-            for ($i=0;$i<count($this->generalArray);$i++)
-            {
-
-                $object = new $this->model();
-
-                foreach($this->generalArray[$i] as $field=>$value)
-                {
-                    $object->$field = $value;
-                }
-                $this->objectArray[$i] = $object;
-
-
-                // var_dump($this->objectArray);
-            }
-
-            return $this->objectArray;
-        }
-        else
-        {
-            throw new \Exception('toList cannot be called before get');
-        }
-
-        
-    }
-
-
-    // Returns the first or default object received
-    function firstOrDefault()
-    {
-        if (isset($this->generalArray))
-        {
-            $object = new $this->model();
-
-            foreach($this->generalArray[0] as $field=>$value)
-            {
-                $object->$field = $value;
-            }
-            
-            return $object;
-        }
-        else
-        {
-            throw new \Exception('toList cannot be called before exec');
-        }
-    }
-
-
     function CSVtoArray($file)
     {
         $rows = array();
@@ -179,11 +175,16 @@ class CSVSet extends CSVContext {
         while($indexRow = $open->fgetcsv())
         {
 
+            
+
+            // checks for comments or newlines and ignores them
             if((isset($indexRow[0]) && \strpos($indexRow[0], '#') !== false) || !isset($indexRow[0]))
             {
                 continue;
             }
 
+
+            // echo var_dump($indexRow) . '<br>';
 
             $row = array();
             for($i=0;$i<count($header);$i++)
@@ -200,8 +201,12 @@ class CSVSet extends CSVContext {
             }
 
 
+
+
             if($rowAdd)
             {
+                // echo var_dump($row) . '<br>';
+
                 array_push($rows, $row);
             }
             
@@ -215,7 +220,8 @@ class CSVSet extends CSVContext {
 
 
     
-    public function fetchAll(){
+    public function fetchAll()
+    {
         $tables = array();
         $tableName = '';
 

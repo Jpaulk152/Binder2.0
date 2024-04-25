@@ -2,149 +2,107 @@
 
 namespace Controllers;
 
-use Models\Menu;
-use Models\File;
-use Models\Page;
-use Models\Customer;
 use Views\View;
-use Views\View2;
-use Models\DB\CSVSet;
-use ViewModels\Builders\ClassList;
 
 class TestController extends Controller
 {
-    use \ViewModels\Builders\ClassList;
-
-    protected $context;
-
-    public function __construct()
+    
+    public function index()
     {
-        $this->context = $GLOBALS['_csvContext'];
-    }
-
-    public function pages()
-    {
-         // pull common data to be sent to the view
-        $data = $this->getData();
-
-        $pageTables = $this->context->Pages->fetchAll();
-
-        // die(var_dump($pageTables));
- 
-        // add an html template
-        $data['template']['page'] = 'templates\tables.php';
-
-        // add data to be displayed in template
-        $data['template']['data'] = ['tables' => $pageTables];
-
-        $view = new View2($data);
-
-        $view->render();
-    }
-
-
-    public function customers()
-    {
-         // pull common data to be sent to the view
-        $data = $this->getData();
-
-        $customerTables = $this->context->Customers->fetchAll();
- 
-        // add an html template
-        $data['template']['page'] = 'templates\tables.php';
-
-        // add data to be displayed in template
-        $data['template']['data'] = ['tables' => $customerTables];
-
-        $view = new View2($data);
-
-        $view->render();
-    }
-
-    public function content()
-    {
-         // pull common data to be sent to the view
-        $data = $this->getData();
-
-        $contentTables = $this->context->Content->fetchAll();
- 
-        // add an html template
-        $data['template']['page'] = 'templates\tables.php';
-
-        // add data to be displayed in template
-        $data['template']['data'] = ['tables' => $contentTables];
-
-        $view = new View2($data);
-
-        $view->render();
-    }
-
-
-    public function test1()
-    {
-        $this->context->Pages->set(['title' => 'home']);
-
-        $pages = $this->context->Pages->exec();
-
-
-        for($i=0;$i<count($pages);$i++)
-        {
-            $this->context->Pages->set(['parent'=>$pages[$i]['id']]);
-            $pages[$i]['submenu'] = $this->context->Pages->exec();
-        }
-
-
-        $data = array();
-        $viewModels = array();
-        $navClasses = $this->navClasses();
-        $viewModels[0] = ['data' => [$pages], 'classes' => $navClasses, 'viewModel' => 'NavViewModel'];
-
-        $data['viewModels'] = $viewModels;
+        $page = new \stdClass();
+        $page->title = 'Home';
+        $page->content = 'Test Home';
         
-        // die(var_dump($pages));
 
-        $view = new View2($data);
-
-        $view->render();
-    }
+        $page->children['nav'] = $this->getChildren('home', 'nav');
+        $page->children['side'] = $this->getChildren('Faculty_and_Staff_Development', 'side');
 
 
-    public function test2()
-    {
-        $page = new Page();
-        $set = new CSVSet($page);
-
-        // $set->model->title = 'home';
-
-        $set->set(['title' => 'home']);
-
-        $pages = $set->get()->toList();
-
-        // die(var_dump($pages[1]));
-
-        $view = new View();
-
-        $view->render();
-    } 
-
-    public function test3()
-    {
-        // pull common data to be sent to the view
-        $data = $this->getData();
-
-
-        $data['test']['data'] = 'Here\'s some text for test3';
-
-        $view = new View2($data);
+        $view = new View($page);
 
         $view->render();
     }
 
-    public function info()
+
+    function test1()
+    {
+        // create a parent page
+        // this page's content goes in mainContent
+        $page = new \stdClass();
+        $page->title = 'Test Title';
+        $page->content = 'Test Content';
+
+
+        // get children to that parent
+            // These child elements go into ViewModels later
+
+        $context = $this->dbContext;
+        $context->page_table->set(['page_status' => 'true', 'page_inmenu' => 'false', 'page_parent' => 'none']);
+        // $context->page_table->set(['page_id' => 'as100']);
+
+        // ViewModels need by default: an array of element data, an array of classlists to display that data
+        $page->children['nav']['data'] = $context->page_table->get()->objects();
+        $page->children['side']['data'] = $context->page_table->get()->objects();
+
+        $context = $this->csvContext;
+        $context->ClassLists->set(['view'=>'nav']);
+        $page->children['nav']['classes'] = $context->ClassLists->exec();
+
+        $context->ClassLists->set(['view'=>'side']);
+        $page->children['side']['classes'] = $context->ClassLists->exec();
+
+                
+        $view = new View($page);
+
+        $view->render();
+    }
+
+    function test2()
+    {
+
+    }
+
+
+    function info()
     {
         phpinfo();
     }
-
-
-    
 }
+
+
+
+
+// test_page_3
+// test_page_2
+// test4
+// softwaremain
+// software main
+// sd
+// rotc
+// reporting_test
+// pdfrender_test
+// ots
+// main
+// long_test
+// jrotc_dev
+// jrotc
+// jr_form_test
+// jr1
+// instructions
+// downloadsoftware
+// dib1234
+// dib123
+// detlocater
+// cap-usaf
+// camtasia_test
+// calt
+// as400
+// as300
+// as200b
+// as200
+// as100b2
+// as100b
+// as100
+// afrotc_career_day
+// ac2_test
+// a_test

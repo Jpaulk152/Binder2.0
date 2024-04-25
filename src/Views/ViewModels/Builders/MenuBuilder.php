@@ -1,6 +1,6 @@
 <?php
 
-namespace ViewModels\Builders;
+namespace Views\ViewModels\Builders;
 
 class MenuBuilder extends HtmlBuilder{
 
@@ -17,9 +17,13 @@ class MenuBuilder extends HtmlBuilder{
             foreach ($menuItems as $item)
             {
                 
+                $item = $this->menuData($item);
+
                 // If the item is a menu build a submenu
                 if ($this->isMenu($item)) 
                 {
+
+
 
                     $i = $tabIndex;
                     $tabIndex++;
@@ -103,8 +107,6 @@ class MenuBuilder extends HtmlBuilder{
         }
         else
         {
-           
-            // \utilities::consoleLog('Item is not a menu: ', $item);
             return false;
         }
     }
@@ -118,10 +120,33 @@ class MenuBuilder extends HtmlBuilder{
         }
         else
         {
-            
-            // \utilities::consoleLog('Item is not a button', $item);
             return false;
         }
     }
+
+
+    public function menuData($item)
+    {
+        // die(var_dump($item));
+
+        if(!$item)
+        {
+            throw new \Exception('Error in menuData function: no $item passed');
+        }
+
+        $menuItem['name'] = $item->name;
+        $menuItem['link'] = $item->link;
+
+
+        // $menuItem['name'] = $item->page_title;
+        // $menuItem['link'] = '?menu=' . $item->page_id;
+
+
+        $menuItem['child'] = $item->children;
+
+        return $menuItem;
+
+    }
+
 
 }
