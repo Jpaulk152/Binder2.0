@@ -141,8 +141,11 @@ class MenuBuilder extends HtmlBuilder{
         // $menuItem['name'] = $item->page_title;
         // $menuItem['link'] = '?menu=' . $item->page_id;
 
-
-        $menuItem['child'] = $item->children;
+        if(isset($item->children))
+        {
+            $menuItem['child'] = $item->children;
+        }
+        
 
         return $menuItem;
 

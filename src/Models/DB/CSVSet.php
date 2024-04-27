@@ -55,6 +55,7 @@ class CSVSet extends CSVContext {
         $array = $this->get()->enumerableArray;
 
         $this->enumerableArray = null;
+        $this->set();
 
         return $array;
     }
@@ -214,6 +215,8 @@ class CSVSet extends CSVContext {
             $index++;
         }
 
+        // die(var_dump($rows));
+        
         return $rows;
     }
 
@@ -226,7 +229,7 @@ class CSVSet extends CSVContext {
         $tableName = '';
 
         $it = new \RecursiveDirectoryIterator($this->path);
-
+        
         // Loop through files
         foreach(new \RecursiveIteratorIterator($it) as $file) {
             if ($file->getExtension() == 'csv' && $file->getFileName() == $this->csv) {

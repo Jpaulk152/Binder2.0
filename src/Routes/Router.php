@@ -24,9 +24,7 @@ class Router
     public function dispatch()
     {
         $uri = strtok($_SERVER['REQUEST_URI'], '?');
-
-        // echo $uri;
-
+        $param = strtok('?');
 
         $method = $_SERVER['REQUEST_METHOD'];
 
@@ -36,7 +34,7 @@ class Router
             $action = $this->routes[$method][$uri]['action'];
 
             $controller = new $controller();
-            $controller->$action();
+            $controller->$action($param);
         }
         else
         {

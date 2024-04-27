@@ -6,25 +6,36 @@ use Views\View;
 
 class TestController extends Controller
 {
-    
-    public function index()
+      
+    public function index($test)
+    {
+        $this->$test();
+    }
+
+
+    function build_admin()
+    {
+        $response = build_admin();
+
+        echo json_encode($response);
+    }
+
+
+    function test2()
     {
         $page = new \stdClass();
-        $page->title = 'Home';
-        $page->content = 'Test Home';
-        
+        $page->title = 'Test Title';
+        $page->content = 'Test Content';
 
-        $page->children['nav'] = $this->getChildren('home', 'nav');
-        $page->children['side'] = $this->getChildren('Faculty_and_Staff_Development', 'side');
-
+        $page->template = 'templates\index.php';
+        $page->data = ['title' => 'index', 'message' => 'Welcome to the test2 Page!'];
 
         $view = new View($page);
-
         $view->render();
     }
 
 
-    function test1()
+    function testHome()
     {
         // create a parent page
         // this page's content goes in mainContent
@@ -57,52 +68,9 @@ class TestController extends Controller
         $view->render();
     }
 
-    function test2()
-    {
-
-    }
-
 
     function info()
     {
         phpinfo();
     }
 }
-
-
-
-
-// test_page_3
-// test_page_2
-// test4
-// softwaremain
-// software main
-// sd
-// rotc
-// reporting_test
-// pdfrender_test
-// ots
-// main
-// long_test
-// jrotc_dev
-// jrotc
-// jr_form_test
-// jr1
-// instructions
-// downloadsoftware
-// dib1234
-// dib123
-// detlocater
-// cap-usaf
-// camtasia_test
-// calt
-// as400
-// as300
-// as200b
-// as200
-// as100b2
-// as100b
-// as100
-// afrotc_career_day
-// ac2_test
-// a_test

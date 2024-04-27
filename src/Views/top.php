@@ -1,7 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Document</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -21,4 +17,4 @@
     <script src="../js/mainContent.js"></script>
     <script src="../js/home.js"></script>
     <script src="../js/lesson.js"></script>
-</head>
+    <script src="../js/test.js"></script>

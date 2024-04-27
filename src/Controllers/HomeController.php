@@ -6,101 +6,52 @@ use Views\View;
 
 class HomeController extends Controller
 {
+    public $page;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->page = new \stdClass();
+        $this->page->title = 'Home';
+        $this->page->content = 'Home Index';
+        
+        $this->page->children['nav'] = $this->getChildren('home', 'nav');
+        $this->page->children['side'] = $this->getChildren('AFJROTC_Curriculum', 'side');
+
+        $testPage =  (object)array(
+            'name'=>'Dashboard',
+            'link'=>'dash'
+        );
+
+        array_unshift($this->page->children['nav']['data'], $testPage);
+
+
+        // from here we should be able to hit any other controller strictly using ajax to pull:
+        // - views
+        // - content
+
+        // each controller should implement an interface that allows it to return these items
+
+
+
+    }
 
     public function index()
     {
-        // $data['template']['page'] = 'templates\index.php';
-        // $data['template']['data'] = ['title' => 'index', 'message' => 'Welcome to the Index Page!'];
-        // $view = new View($data);
-        // $view->render();
-    }
-
-
-    public function home()
-    {
-        $page = new \stdClass();
-        $page->title = 'Home';
-        $page->content = 'Test Home';
-
-
-        $page->children['nav'] = $this->getChildren('home', 'nav');
-        $page->children['side'] = $this->getChildren('Faculty_and_Staff_Development', 'side');
-
-
-        $view = new View($page);
+        $view = new View($this->page);
 
         $view->render();
     }
 
-
-    function test()
+    function childView()
     {
-        // create a parent page
-        // this page's content goes in mainContent
-        $page = new \stdClass();
-        $page->title = 'Test Title';
-        $page->content = 'Test Content';
+        $childView = filter_input(INPUT_GET, 'view', FILTER_SANITIZE_URL);
 
-
-        // get children to that parent
-            // These child elements go into ViewModels later
-
-        $context = $this->dbContext;
-        $context->page_table->set(['page_status' => 'true', 'page_inmenu' => 'false', 'page_parent' => 'none']);
-        // $context->page_table->set(['page_id' => 'as100']);
-
-        // ViewModels need by default: an array of element data, an array of classlists to display that data
-        $page->children['nav']['data'] = $context->page_table->get()->objects();
-        $page->children['side']['data'] = $context->page_table->get()->objects();
-
-        $context = $this->csvContext;
-        $context->ClassLists->set(['view'=>'nav']);
-        $page->children['nav']['classes'] = $context->ClassLists->exec();
-
-        $context->ClassLists->set(['view'=>'side']);
-        $page->children['side']['classes'] = $context->ClassLists->exec();
-
-                
-        $view = new View($page);
-
-        $view->render();
+        $view = new View($this->page);
+        echo json_encode($view->renderChildView($childView));
     }
+
 }
 
 
-
-
-// test_page_3
-// test_page_2
-// test4
-// softwaremain
-// software main
-// sd
-// rotc
-// reporting_test
-// pdfrender_test
-// ots
-// main
-// long_test
-// jrotc_dev
-// jrotc
-// jr_form_test
-// jr1
-// instructions
-// downloadsoftware
-// dib1234
-// dib123
-// detlocater
-// cap-usaf
-// camtasia_test
-// calt
-// as400
-// as300
-// as200b
-// as200
-// as100b2
-// as100b
-// as100
-// afrotc_career_day
-// ac2_test
-// a_test

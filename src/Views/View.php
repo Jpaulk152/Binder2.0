@@ -13,83 +13,128 @@ class View
     public $body = '';
     public $page = null;
     public $template = null;
+    public $tabIndex = 1;
+    public $contentClasses = '';
+    public $htmlBuilder;
+    public $content = '';
+
 
     public function __construct($page=null)
     {
         $this->page = $page;
+        $this->htmlBuilder = new HtmlBuilder();
     }
 
 
     public function render()
     {
-        include 'top.php';
-        
-        $htmlBuilder = new HtmlBuilder();
-        $content = '';
-        $tabIndex = 1;
+        echo '<!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <title>'.$this->page->title.'</title>';
 
+                    include 'top.php';
+
+        echo    '</head>';
+
+        
+        
         if(!isset($this->page))
         {
             echo 'no data provided';
             return;
         }
 
-        $mainContentClasses = '';
         // expand viewModels with their data and classes
+        $this->renderChildren();
+
+        // add templates to the mainContent
+        $this->content .= $this->renderTemplate();
+        
+        $this->content .= $this->renderPageContent();
+
+        $this->body .= $this->htmlBuilder->buildElement('div')
+                                    ->id('layout')
+                                    ->classList('homeLayout')
+                                    ->content($this->content)
+                                    ->create();                
+
+        echo $this->body;
+
+        include 'bottom.php';
+
+    }
+
+
+    public function renderChildren()
+    {
         if(isset($this->page->children))
         {
             foreach($this->page->children as $view=>$child)
             {
-                if ($view == 'side') {$mainContentClasses.='mainContentToRight';}
-
-                $viewModel = 'Views\ViewModels\\' . ucfirst($view) . 'ViewModel';
+                if ($view == 'side' && count($child['data']) > 0) 
+                {
+                    $this->contentClasses.=' mainContentToRight';
+                }
                 
-                $viewModel = new $viewModel($child['data'], $tabIndex);
-                $content .= $viewModel->render($child['classes']);
-
+                $this->content .= $this->renderChildView($view);
             }
         }
+    }
 
-        // add templates to the mainContent
+
+    public function renderChildView($view)
+    {
+        if(isset($this->page->children[$view]))
+        {
+            $child = $this->page->children[$view];
+            $viewModel = 'Views\ViewModels\\' . ucfirst($view) . 'ViewModel';
+            $viewModel = new $viewModel($child['data'], $this->tabIndex);
+
+            return $viewModel->render($child['classes']);
+        }
+        else
+        {
+            return '';
+        }
+    }
+
+
+    public function renderTemplate()
+    {
         if(isset($this->page->template) && isset($this->page->data))
         {
             $this->template = new Template($this->page->template, $this->page->data);
 
             $templateContent = '';
             $templateContent .= $this->template->render();
-
-            $content .= $htmlBuilder->buildElement('div')
+    
+            return $this->htmlBuilder->buildElement('div')
                                     ->id('mainContent')
-                                    ->classList('w3-container mainContent ' . $mainContentClasses)
+                                    ->classList('w3-container mainContent' . $this->contentClasses)
                                     ->content($templateContent)
                                     ->create(); 
         }
-        else if(isset($this->page->content))
+        else
         {
-            $content .= $htmlBuilder->buildElement('div')
+            return '';
+        }
+    }
+
+    public function renderPageContent()
+    {
+        if(isset($this->page->content))
+        {
+            return $this->htmlBuilder->buildElement('div')
                                     ->id('mainContent')
-                                    ->classList('w3-container mainContent ' . $mainContentClasses)
+                                    ->classList('w3-container mainContent' . $this->contentClasses)
                                     ->content($this->page->content)
                                     ->create(); 
         }
-
-
-
-
-        $this->body .= $htmlBuilder->buildElement('div')
-                                    ->id('layout')
-                                    ->classList('homeLayout')
-                                    ->content($content)
-                                    ->create();   
-
-
-        
-                                    
-
-        echo $this->body;
-
-        include 'bottom.php';
-
+        else
+        {
+            return '';
+        }
     }
 }
 

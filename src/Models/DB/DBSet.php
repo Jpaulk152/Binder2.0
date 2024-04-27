@@ -26,7 +26,7 @@ use \stdClass;
 class DBSet extends DB {
 
     protected $table;
-    protected $model;
+    public $model;
     protected $enumerableArray;
     protected $objectArray;
 
@@ -58,7 +58,7 @@ class DBSet extends DB {
 
         foreach($this->model as $property=>$value)
         {
-            if(array_key_exists($property, $values))
+            if(array_key_exists($property, $values) && !empty($values[$property]))
             {
                 $this->model->$property = $values[$property];
             }
@@ -71,22 +71,18 @@ class DBSet extends DB {
 
 
 
-    // Runs query of the csv that matches the model's name, 
-    // returns the enumerableArray of this CSVSet object
-    public function exec()
-    {
-        $array = $this->get()->enumerableArray;
 
-        $this->enumerableArray = null;
-
-        return $array;
-    }
 
     
 
     public function get()
     {
        $query = $this->buildSelect();
+
+       if(!$query)
+       {
+            return $this;
+       }
 
         // $this->enumerableArray = $this->query($query)->fetchArray();
         $this->enumerableArray = $this->query($query)->fetchAll();
@@ -111,7 +107,18 @@ class DBSet extends DB {
         }
 
 		return $this;
-        
+    }
+
+    // Runs query of the csv that matches the model's name, 
+    // returns the enumerableArray of this CSVSet object
+    public function exec()
+    {
+        $array = $this->get()->enumerableArray;
+
+        $this->enumerableArray = null;
+        $this->set();
+
+        return $array;
     }
 
 
@@ -194,12 +201,11 @@ class DBSet extends DB {
                 $values[$i] = $value;
                 $i++;
             }
-            
         }
 
         if(!$fields)
         {
-            return $query;
+            return false;
         }
 
         $query .= ' WHERE ';
@@ -218,6 +224,9 @@ class DBSet extends DB {
 
         return $query;
     }
+
+
+    
 
 
     
