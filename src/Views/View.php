@@ -83,15 +83,15 @@ class View
     }
 
 
-    public function renderChildView($view)
-    {
+    public function renderChildView($view, $itemTitle='name', $itemLink='link')
+    {        
         if(isset($this->page->children[$view]))
         {
             $child = $this->page->children[$view];
             $viewModel = 'Views\ViewModels\\' . ucfirst($view) . 'ViewModel';
             $viewModel = new $viewModel($child['data'], $this->tabIndex);
 
-            return $viewModel->render($child['classes']);
+            return $viewModel->render($child['classes'], $itemTitle, $itemLink);
         }
         else
         {

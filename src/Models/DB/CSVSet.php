@@ -48,17 +48,6 @@ class CSVSet extends CSVContext {
     }
 
 
-    // Runs query of the csv that matches the model's name, 
-    // returns the generalArral of this CSVSet object
-    public function exec()
-    {
-        $array = $this->get()->enumerableArray;
-
-        $this->enumerableArray = null;
-        $this->set();
-
-        return $array;
-    }
 
 
     // Runs query of the csv that matches the model's name, 
@@ -97,26 +86,75 @@ class CSVSet extends CSVContext {
         return $this;
     }
 
-    function resolveRelation($value, $foreignKey)
+
+    // Runs query of the csv that matches the model's name, 
+    // returns the generalArral of this CSVSet object
+    public function exec()
     {
-        $this->set([$foreignKey => $value]);
-        return $this->get();
+        $array = $this->get()->enumerableArray;
+
+        $this->enumerableArray = null;
+        $this->set();
+
+        return $array;
     }
 
-    // function resolveRelation($id)
-    // {
-    //     $this->set(['id'=>$id]);
-    //     return $this->get()->firstOrDefault();
-    // }
 
 
 
-
-    // Returns an array of objects of type $this->model
-    function objects()
+    public function fields($keys)
     {
-        return array_values($this->objectArray);
+        
+        if(!$keys)
+        {
+            throw new \Exception('function: fields cannot be called without keys added.');
+        }
+        if(!$this->objectArray)
+        {
+            throw new \Exception('function: fields cannot be called before calling get().');
+        }
+
+        $objects = array();
+        foreach($this->objectArray as $object)
+        {
+            $item = new \stdClass();
+            foreach($keys as $key)
+            {
+                if(property_exists($object, $key))
+                {
+                    $item->$key = $object->$key;
+                }
+            }
+            array_push($objects, $item);
+        }
+        $this->objectArray = $objects;
+
+        return $this;
     }
+
+
+
+    
+   // Returns an array of objects of type $this->model
+   function objects()
+   {
+       return array_values($this->objectArray);
+   }
+
+
+
+
+   function enumerable()
+   {
+       if (isset($this->enumerableArray))
+       {
+           return $this->enumerableArray;
+       }
+       else
+       {
+           throw new \Exception('function: enumerable cannot be called before get');
+       }
+   }
 
 
 
@@ -133,6 +171,16 @@ class CSVSet extends CSVContext {
             return false;
         }
     }
+
+
+
+
+    function resolveRelation($value, $foreignKey)
+    {
+        $this->set([$foreignKey => $value]);
+        return $this->get();
+    }
+
 
 
 
@@ -163,6 +211,8 @@ class CSVSet extends CSVContext {
             throw new \Exception('addChildren cannot be called before get');
         }
     }
+
+
 
 
     function CSVtoArray($file)

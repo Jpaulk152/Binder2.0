@@ -72,9 +72,6 @@ class DBSet extends DB {
 
 
 
-
-    
-
     public function get()
     {
        $query = $this->buildSelect();
@@ -109,6 +106,9 @@ class DBSet extends DB {
 		return $this;
     }
 
+
+
+
     // Runs query of the csv that matches the model's name, 
     // returns the enumerableArray of this CSVSet object
     public function exec()
@@ -123,31 +123,37 @@ class DBSet extends DB {
 
 
 
-    public function fields($keys=[])
-    {
-        $rows = array();
-        if($keys)
-        {
-            foreach($this->enumerableArray as $row)
-            {
-                $fields = array();
-                for($i=0;$i<count($keys);$i++)
-                {
-                    if(array_key_exists($keys[$i], $row))
-                    {
-                        $fields[$keys[$i]] = $row[$keys[$i]];
-                    }
-                }
-                array_push($rows, $fields);
-            }
-            return $rows;
-        }
-        else
-        {
-            return $this->enumerableArray;
-        }
-    }
 
+
+    public function fields($keys)
+    {
+        
+        if(!$keys)
+        {
+            throw new \Exception('function: fields cannot be called without keys added.');
+        }
+        if(!$this->objectArray)
+        {
+            throw new \Exception('function: fields cannot be called before calling get().');
+        }
+
+        $objects = array();
+        foreach($this->objectArray as $object)
+        {
+            $item = new \stdClass();
+            foreach($keys as $key)
+            {
+                if(property_exists($object, $key))
+                {
+                    $item->$key = $object->$key;
+                }
+            }
+            array_push($objects, $item);
+        }
+        $this->objectArray = $objects;
+
+        return $this;
+    }
 
 
 
@@ -184,6 +190,17 @@ class DBSet extends DB {
         }
     }
 
+
+
+
+    function resolveRelation($value, $foreignKey)
+    {
+        $this->set([$foreignKey => $value]);
+        return $this->get();
+    }
+
+
+    
 
     function buildSelect()
     {
@@ -230,10 +247,6 @@ class DBSet extends DB {
 
 
     
-    function resolveRelation($value, $foreignKey)
-    {
-        $this->set([$foreignKey => $value]);
-        return $this->get();
-    }
+
 
 }

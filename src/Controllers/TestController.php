@@ -13,13 +13,28 @@ class TestController extends Controller
     }
 
 
+    function testDBFields()
+    {
+        $this->dbContext->page_table->set(['page_id' => 'as100']);
+        $page = $this->dbContext->page_table->get()->fields(['page_id', 'page_title'])->firstOrDefault();
+
+        echo json_encode($page->page_title);
+    }
+
+    function testCSVFields()
+    {
+        $this->csvContext->Pages->set(['id' => 3]);
+        $page = $this->csvContext->Pages->get()->fields(['id', 'name'])->firstOrDefault();
+
+        echo json_encode($page->name);
+    }
+
     function build_admin()
     {
         $response = build_admin();
 
         echo json_encode($response);
     }
-
 
     function test2()
     {
@@ -35,37 +50,42 @@ class TestController extends Controller
     }
 
 
-    function testHome()
+    function testHomeSide()
     {
-        // create a parent page
-        // this page's content goes in mainContent
         $page = new \stdClass();
-        $page->title = 'Test Title';
-        $page->content = 'Test Content';
+
+        // side menu data
+        $context = $this->dbContext;
+        $context->page_table->set(['page_status' => 'true', 'page_inmenu' => 'false', 'page_parent' => 'none']);
+        // $context->page_table->set(['page_id' => 'as100']);
+        $page->children['side']['data'] = $context->page_table->get()->objects();
+
+        // side menu classlists
+        $context = $this->csvContext;
+        $context->ClassLists->set(['view'=>'side']);
+        $page->children['side']['classes'] = $context->ClassLists->exec();
+
+        $view = new View($page);
+        echo json_encode($view->renderChildView('side'));
+    }
 
 
-        // get children to that parent
-            // These child elements go into ViewModels later
+
+    function testHomeNav()
+    {
+        $page = new \stdClass();
 
         $context = $this->dbContext;
         $context->page_table->set(['page_status' => 'true', 'page_inmenu' => 'false', 'page_parent' => 'none']);
         // $context->page_table->set(['page_id' => 'as100']);
-
-        // ViewModels need by default: an array of element data, an array of classlists to display that data
         $page->children['nav']['data'] = $context->page_table->get()->objects();
-        $page->children['side']['data'] = $context->page_table->get()->objects();
 
         $context = $this->csvContext;
         $context->ClassLists->set(['view'=>'nav']);
         $page->children['nav']['classes'] = $context->ClassLists->exec();
-
-        $context->ClassLists->set(['view'=>'side']);
-        $page->children['side']['classes'] = $context->ClassLists->exec();
-
                 
         $view = new View($page);
-
-        $view->render();
+        echo json_encode($view->renderChildView('nav'));
     }
 
 

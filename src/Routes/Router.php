@@ -38,7 +38,12 @@ class Router
         }
         else
         {
-            throw new \Exception('No route found for URI: ' . $uri);
+            $home = new \Controllers\HomeController();
+
+            $home->redirect($uri);
+            
+
+            // throw new \Exception('No route found for URI: ' . $uri);
         }
     }
 }

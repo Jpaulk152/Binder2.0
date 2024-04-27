@@ -16,7 +16,7 @@ class SideViewModel extends HtmlBuilder implements ViewModel{
         $this->tabIndex = &$tabIndex;
     }
 
-    public function render($classList)
+    public function render($classList, $itemTitle='name', $itemLink='link')
     {
  
         $list = array();
@@ -33,8 +33,9 @@ class SideViewModel extends HtmlBuilder implements ViewModel{
             return '';
         }
 
+
         $menuBuilder = new Builders\MenuBuilder();
-        $menu = $menuBuilder->createMenu($this->pageData, $classList, $this->tabIndex);
+        $menu = $menuBuilder->createMenu($this->pageData, $classList, $this->tabIndex, $itemTitle, $itemLink);
 
         // button to open menu on small screen formats
         $openButton = $this->buildElement('button')

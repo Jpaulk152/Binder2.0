@@ -33,6 +33,7 @@ function ajaxTaskHandler(task, callback){
         }
         
     }).fail(function(response){
+        
         alert("The ajax call did not work\n\n");
         console.log(response);
 

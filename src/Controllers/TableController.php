@@ -15,7 +15,7 @@ class TableController extends Controller
 
         $this->page = (object) array('title'=>'Tables');
 
-        $this->page->template = 'templates\tables.php';
+       
     }
 
     public function index()
@@ -30,6 +30,8 @@ class TableController extends Controller
         $context = $this->csvContext;
         $this->page->data = ['tables' => $context->Pages->fetchAll()];
 
+        $this->page->template = 'templates\tables.php';
+
         // if called before the fetchAll, will not get anything: problem for later
         $this->page->children['nav'] = $this->getChildren('home', 'nav');
 
@@ -41,6 +43,8 @@ class TableController extends Controller
     public function classLists()
     {
         $this->page->title = 'ClassLists';
+        
+        $this->page->template = 'templates\tables.php';
 
         $context = $this->csvContext;
         $this->page->data = ['tables' => $context->ClassLists->fetchAll()];

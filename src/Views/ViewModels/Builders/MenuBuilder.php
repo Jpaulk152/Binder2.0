@@ -4,12 +4,11 @@ namespace Views\ViewModels\Builders;
 
 class MenuBuilder extends HtmlBuilder{
 
-    public function createMenu($menuItems, $classList=[], &$tabIndex=1, $expandFunction='', $internalElements=[], $adjacentElements=[]) 
+    public function createMenu($menuItems, $classList=[], &$tabIndex=1, $itemTitle='name', $itemLink='link') 
     {
 
         if (is_array($menuItems) && count($menuItems) > 0)
         {
-
             // echo var_dump($menuItems) . '<br><br>';
 
             $menu = '';
@@ -17,7 +16,7 @@ class MenuBuilder extends HtmlBuilder{
             foreach ($menuItems as $item)
             {
                 
-                $item = $this->menuData($item);
+                $item = $this->menuData($item, $itemTitle, $itemLink);
 
                 // If the item is a menu build a submenu
                 if ($this->isMenu($item)) 
@@ -28,7 +27,7 @@ class MenuBuilder extends HtmlBuilder{
                     $i = $tabIndex;
                     $tabIndex++;
 
-                    $subMenu = $this->createMenu($item['child'], $classList, $tabIndex, $expandFunction, $internalElements, $adjacentElements);
+                    $subMenu = $this->createMenu($item['child'], $classList, $tabIndex, $itemTitle, $itemLink);
 
                     $caret = $this->buildElement('i')
                                   ->id('menu-'. $i .'-caret')
@@ -125,7 +124,7 @@ class MenuBuilder extends HtmlBuilder{
     }
 
 
-    public function menuData($item)
+    public function menuData($item, $itemTitle, $itemLink)
     {
         // die(var_dump($item));
 
@@ -134,12 +133,11 @@ class MenuBuilder extends HtmlBuilder{
             throw new \Exception('Error in menuData function: no $item passed');
         }
 
-        $menuItem['name'] = $item->name;
-        $menuItem['link'] = $item->link;
+        $itemArray = array_values((array)$item);
 
+        $menuItem['name'] = $itemArray[0];
+        $menuItem['link'] = $itemArray[1];
 
-        // $menuItem['name'] = $item->page_title;
-        // $menuItem['link'] = '?menu=' . $item->page_id;
 
         if(isset($item->children))
         {

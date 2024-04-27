@@ -39,10 +39,7 @@ $router->get(\config::public_root(). 'index.php/classLists', TableController::cl
 
 // Tests
 $router->get(\config::public_root(). 'index.php/test', TestController::class, 'index');
-$router->get(\config::public_root(). 'index.php/test1', TestController::class, 'test1');
-$router->get(\config::public_root(). 'index.php/test2', TestController::class, 'test2');
-$router->get(\config::public_root(). 'index.php/test3', TestController::class, 'test3');
-$router->get(\config::public_root(). 'index.php/info', TestController::class, 'info');
+$router->get(\config::public_root(). 'index.php/test/fields', TestController::class, 'testFields');
 
 // Dashboard
 $router->get(\config::public_root(). 'index.php/dash', DashController::class, 'index');

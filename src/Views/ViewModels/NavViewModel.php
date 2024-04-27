@@ -16,10 +16,10 @@ class NavViewModel extends HtmlBuilder implements ViewModel{
         $this->tabIndex = &$tabIndex;
     }
 
-    public function render($classList)
+    public function render($classList, $itemTitle='name', $itemLink='link')
     {
 
-
+        
         $list = array();
 
         foreach($classList as $item)
@@ -53,9 +53,9 @@ class NavViewModel extends HtmlBuilder implements ViewModel{
 
         $menuBuilder = new Builders\MenuBuilder();
 
-        $menu = $menuBuilder->createMenu($this->pageData, $classList, $this->tabIndex);
+        $menu = $menuBuilder->createMenu($this->pageData, $classList, $this->tabIndex, $itemTitle, $itemLink);
 
-// die(var_dump($this->classList));
+        // die(var_dump($this->classList));
 
         $navBar = $this->buildElement('div')
                                 ->id('navContent')
