@@ -222,7 +222,7 @@ class CSVSet extends CSVContext {
 
 
 
-    function CSVtoArray($file)
+    function CSVtoArray($file, $all=false)
     {
         $rows = array();
         $rowAdd = true;
@@ -250,7 +250,9 @@ class CSVSet extends CSVContext {
                 $headerField = $this->validate($i, $header);
                 $rowField = $this->validate($i, $indexRow);
 
-                if(!empty($this->model->$headerField) && $this->model->$headerField != $rowField)
+                
+
+                if(!$all && !empty($this->model->$headerField) && $this->model->$headerField != $rowField)
                 {
                     $rowAdd = false;
                 }
@@ -293,9 +295,11 @@ class CSVSet extends CSVContext {
 
                 $tableName = $file->getPath() . '\\' . $file->getFileName();
 
-                $tables[$tableName] = $this->CSVtoArray($file);
+                $tables[$tableName] = $this->CSVtoArray($file, true);
             } 
         }
+
+        // die(var_dump($tables));
 
         if(count($tables) > 0)
         {

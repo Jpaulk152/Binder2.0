@@ -1,6 +1,8 @@
 <?php
 
 namespace Views;
+
+use Views\Includes\Includes;
 use Views\ViewModels\SideViewModel;
 use Views\ViewModels\NavViewModel;
 
@@ -33,7 +35,8 @@ class View
                 <head>
                     <title>'.$this->page->title.'</title>';
 
-                    include 'top.php';
+                    Includes::css();
+                    Includes::js();
 
         echo    '</head>';
 
@@ -99,15 +102,12 @@ class View
         }
     }
 
-
     public function renderTemplate()
     {
-        if(isset($this->page->template) && isset($this->page->data))
+        if(isset($this->page->template))
         {
-            $this->template = new Template($this->page->template, $this->page->data);
-
             $templateContent = '';
-            $templateContent .= $this->template->render();
+            $templateContent .= $this->page->template->render();
     
             return $this->htmlBuilder->buildElement('div')
                                     ->id('mainContent')
@@ -120,6 +120,27 @@ class View
             return '';
         }
     }
+
+    // public function renderTemplate()
+    // {
+    //     if(isset($this->page->template) && isset($this->page->data))
+    //     {
+    //         $this->template = new Template($this->page->template, $this->page->data);
+
+    //         $templateContent = '';
+    //         $templateContent .= $this->template->render();
+    
+    //         return $this->htmlBuilder->buildElement('div')
+    //                                 ->id('mainContent')
+    //                                 ->classList('w3-container mainContent' . $this->contentClasses)
+    //                                 ->content($templateContent)
+    //                                 ->create(); 
+    //     }
+    //     else
+    //     {
+    //         return '';
+    //     }
+    // }
 
     public function renderPageContent()
     {

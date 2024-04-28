@@ -16,7 +16,7 @@ class TestController extends Controller
     function testDBFields()
     {
         $this->dbContext->page_table->set(['page_id' => 'as100']);
-        $page = $this->dbContext->page_table->get()->fields(['page_id', 'page_title'])->firstOrDefault();
+        $page = $this->dbContext->page_table->get()->fields(['page_id', 'page_title'])->firstOrDefault();//FIX THIS
 
         echo json_encode($page->page_title);
     }
@@ -42,7 +42,7 @@ class TestController extends Controller
         $page->title = 'Test Title';
         $page->content = 'Test Content';
 
-        $page->template = 'templates\index.php';
+        $page->template = 'Templates\index.php';
         $page->data = ['title' => 'index', 'message' => 'Welcome to the test2 Page!'];
 
         $view = new View($page);
@@ -86,6 +86,12 @@ class TestController extends Controller
                 
         $view = new View($page);
         echo json_encode($view->renderChildView('nav'));
+    }
+
+
+    function error($msg)
+    {
+        echo json_encode(['error'=> $msg]);
     }
 
 

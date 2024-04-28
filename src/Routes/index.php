@@ -45,6 +45,7 @@ $router->get(\config::public_root(). 'index.php/test/fields', TestController::cl
 
 // Dashboard
 $router->get(\config::public_root(). 'index.php/dash', DashController::class, 'index');
+$router->get(\config::public_root(). 'index.php/dash/test', DashController::class, 'testTemplate');
 $router->get(\config::public_root(). 'index.php/info', DashController::class, 'info');
 
 

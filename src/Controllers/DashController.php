@@ -20,19 +20,14 @@ class DashController extends Controller
         // each controller should implement an interface that allows it to return these items
 
 
-
-        $this->csvContext->Pages->set(['title'=>'home']);
-        $nav1 = $this->csvContext->Pages->get()->fields(['name','link', 'id'])->objects();
-        $nav1 = $this->addChildren($nav1, $this->csvContext->Pages);
-
-        $nav2 = [
+        $nav1 = [
             // tests
             (object) array ('name'=>'Unit Tests', 'link'=>'javascript:alert(`this is a test...`)', 'children' => 
                 [
+                    (object)array('name'=>'test whatever', 'link'=>'dash/test'),
                     (object)array('name'=>'testDBFields', 'link'=>'javascript:runTest(`testDBFields`);'),
                     (object)array('name'=>'testCSVFields', 'link'=>'javascript:runTest(`testCSVFields`);'),
                     (object)array('name'=>'build_admin', 'link'=>'javascript:runTest(`build_admin`);'),
-                    (object)array('name'=>'test 3', 'link'=>'test3')
                 ]
             ),
 
@@ -42,10 +37,15 @@ class DashController extends Controller
                     (object)array('name'=>'testHomeSide', 'link'=>'javascript:runTest(`testHomeSide`);'),
                     (object)array('name'=>'testHomeNav', 'link'=>'javascript:runTest(`testHomeNav`);'),
                     (object)array('name'=>'Attach Home Side Bar', 'link'=>'javascript:getChildView(`home`, `side`);'),
-                    (object)array('name'=>'Detach Side Bar', 'link'=>'javascript:detachChildView(`side`);')
+                    (object)array('name'=>'Detach Side Bar', 'link'=>'javascript:detachChildView(`side`);'),
                 ]
             )
         ];
+
+
+        $this->csvContext->Pages->set(['title'=>'home']);
+        $nav2 = $this->csvContext->Pages->get()->fields(['name','link', 'id'])->objects();
+        $nav2 = $this->addChildren($nav2, $this->csvContext->Pages);
 
 
         $nav  = array_merge($nav1, $nav2);
@@ -61,12 +61,17 @@ class DashController extends Controller
 
 
     
-    public function index($thing)
+    public function index()
     {
         $view = new View($this->page);
         $view->render();
     }
 
+
+    public function testTemplate()
+    {
+        $this->index();
+    }
 
 
     function info()

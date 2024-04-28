@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Views\View;
+use Views\Templates\Template;
 
 class TableController extends Controller
 {
@@ -15,6 +16,13 @@ class TableController extends Controller
 
         $this->page = (object) array('title'=>'Tables');
 
+        $context = $this->csvContext;
+        $context->Pages->set(['title'=>'home']);
+        $nav = $context->Pages->get()->fields(['name','link', 'id'])->objects();
+        $nav = $this->addChildren($nav, $context->Pages);
+
+        $this->page->children['nav']['data'] = $nav;
+        $this->page->children['nav']['classes'] = $this->getClasses('nav');
        
     }
 
@@ -27,22 +35,12 @@ class TableController extends Controller
     {
         $this->page->title = 'Pages';
 
-
         $context = $this->csvContext;
+        $data = ['tables' => $context->Pages->fetchAll()];
 
-        // if called after add children, does not pull data
-        $this->page->data = ['tables' => $context->Pages->fetchAll()];
-        $this->page->template = 'templates\tables.php';
-
-
-        $context->Pages->set(['title'=>'home']);
-        $nav = $context->Pages->get()->fields(['name','link', 'id'])->objects();
-        $nav = $this->addChildren($nav, $context->Pages);
-
-        $this->page->children['nav']['data'] = $nav;
-        $this->page->children['nav']['classes'] = $this->getClasses('nav');
+        $template = new Template('tables.php', $data);
+        $this->page->template = $template;
         
-
         $view = new View($this->page);
 
         $view->render();
@@ -53,18 +51,10 @@ class TableController extends Controller
         $this->page->title = 'ClassLists';
         
         $context = $this->csvContext;
+        $data = ['tables' => $context->ClassLists->fetchAll()];
 
-        // if called after add children, does not pull data
-        $this->page->data = ['tables' => $context->ClassLists->fetchAll()];
-        $this->page->template = 'templates\tables.php';
-
-        $context->Pages->set(['title'=>'home']);
-        $nav = $context->Pages->get()->fields(['name','link', 'id'])->objects();
-        $nav = $this->addChildren($nav, $context->Pages);
-
-        $this->page->children['nav']['data'] = $nav;
-        $this->page->children['nav']['classes'] = $this->getClasses('nav');
-        
+        $template = new Template('tables.php', $data);
+        $this->page->template = $template;   
 
         $view = new View($this->page);
 
