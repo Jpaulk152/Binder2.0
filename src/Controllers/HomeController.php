@@ -21,19 +21,20 @@ class HomeController extends Controller
 
         $context = $this->dbContext;
         $context->page_table->set(['page_status' => 'true', 'page_inmenu' => 'false', 'page_parent' => 'none']);
-        // $context->page_table->set(['page_id' => 'as100']);
+        // $context->page_table->set(['page_id' => 'as200']);
 
-        $this->page->children['nav']['data'] = $context->page_table->get()->fields(['page_title', 'page_id'])->objects();
-        $this->page->children['side']['data'] = $context->page_table->get()->fields(['page_title', 'page_id'])->objects();
 
+        $nav = $context->page_table->get()->fields(['page_title', 'page_id'])->objects();
+        $nav = $this->addChildren($nav, $context->page_table, 'page_id', 'page_parent', ['page_title', 'page_id']);
+        $side = $nav;
+
+
+        $this->page->children['nav']['data'] = $nav;
+        $this->page->children['side']['data'] = $side;
 
         // nav menu classlists
-        $context = $this->csvContext;
-        $context->ClassLists->set(['view'=>'nav']);
-        $this->page->children['nav']['classes'] = $context->ClassLists->exec();
-
-        $context->ClassLists->set(['view'=>'side']);
-        $this->page->children['side']['classes'] = $context->ClassLists->exec();
+        $this->page->children['nav']['classes'] = $this->getClasses('nav');
+        $this->page->children['side']['classes'] = $this->getClasses('side');
 
 
         $dashboard =  (object)array(

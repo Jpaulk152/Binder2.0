@@ -19,7 +19,13 @@ class DashController extends Controller
 
         // each controller should implement an interface that allows it to return these items
 
-        $nav = [
+
+
+        $this->csvContext->Pages->set(['title'=>'home']);
+        $nav1 = $this->csvContext->Pages->get()->fields(['name','link', 'id'])->objects();
+        $nav1 = $this->addChildren($nav1, $this->csvContext->Pages);
+
+        $nav2 = [
             // tests
             (object) array ('name'=>'Unit Tests', 'link'=>'javascript:alert(`this is a test...`)', 'children' => 
                 [
@@ -42,22 +48,15 @@ class DashController extends Controller
         ];
 
 
+        $nav  = array_merge($nav1, $nav2);
+
 
         $this->page = (object) array('title'=>'Dashboard', 'content'=>'Test Index');        
         $this->page->children['nav']['data'] = $nav;
 
 
-        $this->csvContext->ClassLists->set(['view'=>'nav']);
-        $this->page->children['nav']['classes'] = $this->csvContext->ClassLists->exec();
+        $this->page->children['nav']['classes'] = $this->getClasses('nav');
 
-
-        // $this->csvContext->ClassLists->set(['view'=>'side']);
-        // $this->page->children['side']['classes'] = $this->csvContext->ClassLists->exec();
-
-
-
-        // $this->page->children['nav'] = $this->getChildren('home', 'nav');
-        // $this->page->children['side'] = $this->getChildren('home', 'side');
     }
 
 

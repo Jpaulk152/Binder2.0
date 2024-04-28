@@ -19,6 +19,14 @@ class Controller
     }
 
 
+    public function getClasses($view)
+    {
+        $context = $this->csvContext;
+        $context->ClassLists->set(['view'=>$view]);
+        return $context->ClassLists->exec();
+    }
+
+
     public function getChildren($data, $view)
     {
         $context = $this->csvContext;
@@ -33,20 +41,35 @@ class Controller
     }
 
 
-    public function addChildren($parents, $dbSet, $primaryKey='id', $foreignKey='parent')
+    public function addChildren($parents, $dbSet, $primaryKey='id', $foreignKey='parent', $fields=['name', 'link', 'id'])
     {
-        
+        if (!$parents || count($parents) < 1) {return $parents;}
+
         // die(var_dump($parents));
         foreach($parents as $parent)
         {
             // if (gettype($parent) != gettype(\stdClass::class))
             // {return $parents;}
+        
+            if (!isset($parent->$primaryKey))
+            {
+                throw new \Exception('Undefined property: ' . gettype($parent) . '::$' . $primaryKey . ' in addChildren function', 1);
+            }
+
 
             $result = $dbSet->resolveRelation($parent->$primaryKey, $foreignKey);
-            if(!$result){return $parents;}
 
-            $children = $dbSet->objects();
-            // if(!$children) {return $parents;}
+            
+            if(!$result){continue;}
+
+            
+
+            $children = $result->fields($fields)->objects();
+
+            
+
+            if(empty($children)) {return $parents;}
+
             
             $children = $this->addChildren($children, $dbSet, $primaryKey, $foreignKey);
             $parent->children = $children;    

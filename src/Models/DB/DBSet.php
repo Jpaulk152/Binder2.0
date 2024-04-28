@@ -23,20 +23,22 @@ use \stdClass;
 
 // A DBSet is included as a property of a DBContext
 // #[\AllowDynamicProperties]
-class DBSet extends DB {
+class DBSet extends DBContext {
 
     protected $table;
-    public $model;
+    protected $model;
+    protected $properties;
     protected $enumerableArray;
     protected $objectArray;
 
     public function __construct($table, $properties)
     {
-        parent::__construct();
+        // parent::__construct();
 
-        // die(var_dump($properties));
 
         $this->table = $table;
+        $this->properties = $properties;
+
         $this->model = new stdClass();
 
         for($i=0;$i<count($properties);$i++)
@@ -195,8 +197,15 @@ class DBSet extends DB {
 
     function resolveRelation($value, $foreignKey)
     {
-        $this->set([$foreignKey => $value]);
-        return $this->get();
+        $dbSet = new DBSet($this->table, $this->properties);
+        $dbSet->set([$foreignKey => $value]); 
+
+        if (!$dbSet->get()->objectArray)
+        {
+            return false;
+        }
+
+        return $dbSet;
     }
 
 

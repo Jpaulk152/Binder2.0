@@ -177,8 +177,15 @@ class CSVSet extends CSVContext {
 
     function resolveRelation($value, $foreignKey)
     {
-        $this->set([$foreignKey => $value]);
-        return $this->get();
+        $csvSet = new CSVSet($this->model);
+        $csvSet->set([$foreignKey => $value]);
+
+        if (!$csvSet->get()->objectArray)
+        {
+            return false;
+        }
+
+        return $csvSet;
     }
 
 

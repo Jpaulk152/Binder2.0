@@ -26,14 +26,22 @@ class TableController extends Controller
     public function pages()
     {
         $this->page->title = 'Pages';
-        
-        $context = $this->csvContext;
-        $this->page->data = ['tables' => $context->Pages->fetchAll()];
 
+
+        $context = $this->csvContext;
+
+        // if called after add children, does not pull data
+        $this->page->data = ['tables' => $context->Pages->fetchAll()];
         $this->page->template = 'templates\tables.php';
 
-        // if called before the fetchAll, will not get anything: problem for later
-        $this->page->children['nav'] = $this->getChildren('home', 'nav');
+
+        $context->Pages->set(['title'=>'home']);
+        $nav = $context->Pages->get()->fields(['name','link', 'id'])->objects();
+        $nav = $this->addChildren($nav, $context->Pages);
+
+        $this->page->children['nav']['data'] = $nav;
+        $this->page->children['nav']['classes'] = $this->getClasses('nav');
+        
 
         $view = new View($this->page);
 
@@ -44,12 +52,19 @@ class TableController extends Controller
     {
         $this->page->title = 'ClassLists';
         
+        $context = $this->csvContext;
+
+        // if called after add children, does not pull data
+        $this->page->data = ['tables' => $context->ClassLists->fetchAll()];
         $this->page->template = 'templates\tables.php';
 
-        $context = $this->csvContext;
-        $this->page->data = ['tables' => $context->ClassLists->fetchAll()];
+        $context->Pages->set(['title'=>'home']);
+        $nav = $context->Pages->get()->fields(['name','link', 'id'])->objects();
+        $nav = $this->addChildren($nav, $context->Pages);
 
-        $this->page->children['nav'] = $this->getChildren('home', 'nav');
+        $this->page->children['nav']['data'] = $nav;
+        $this->page->children['nav']['classes'] = $this->getClasses('nav');
+        
 
         $view = new View($this->page);
 
