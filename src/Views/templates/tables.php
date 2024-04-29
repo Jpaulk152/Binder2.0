@@ -1,6 +1,4 @@
 
-<!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
-
 <?php foreach($tables as $tableName => $table): ?>
 
   <?php if (count($table) > 0): ?>
@@ -8,7 +6,7 @@
     <table  class="w3-table-all">
       <thead>
         <tr class='w3-blue'>
-          <th><?php echo implode('</th class="w3-border-black"><th>', array_keys(current($table))); ?></th>
+          <th><?php echo implode('</th><th>', array_keys(current($table))); ?></th>
         </tr>
       </thead>
       <tbody>

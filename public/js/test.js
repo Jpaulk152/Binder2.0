@@ -222,3 +222,35 @@ function runTest(test)
 
     buffer.append(task);
 }
+
+
+function testReplace(test, target)
+{
+    var task = new Task({}, 'test?'+test, function(response){
+
+        var element = new DOMParser().parseFromString(response, "text/html").getElementById(target);
+
+        replace(target, element);
+    })
+
+    buffer.append(task);
+}
+
+
+function getView(view, target)
+{
+    var task = new Task({}, 'home?'+view, function(response){
+
+        var element = new DOMParser().parseFromString(response, "text/html").getElementById(target);
+
+        replace(target, element);
+    })
+
+    buffer.append(task);
+}
+
+
+function replace(target, element)
+{
+    document.getElementById(target).replaceWith(element);
+}

@@ -2,8 +2,6 @@
 
 namespace Controllers;
 
-use \AllowDynamicProperties;
-
 // responsible for gathering data and sending it to a view
 class Controller
 {
@@ -16,6 +14,19 @@ class Controller
     {
         $this->csvContext = $GLOBALS['_csvContext'];
         $this->dbContext = $GLOBALS['_dbContext'];
+    }
+
+
+
+    function addView($view, $dbSet)
+    {
+        $dbSet->set($this->$view['set']);
+
+        $childView['data'] = $dbSet->get()->fields($this->$view['fields'])->objects();
+        $childView['data'] = $this->addChildren($childView['data'], $dbSet, $this->$view['primaryKey'], $this->$view['foreignKey'], $this->$view['fields']);
+        $childView['classes'] = $this->getClasses($view);
+
+        return $childView;
     }
 
 
@@ -45,33 +56,22 @@ class Controller
     {
         if (!$parents || count($parents) < 1) {return $parents;}
 
-        // die(var_dump($parents));
         foreach($parents as $parent)
-        {
-            // if (gettype($parent) != gettype(\stdClass::class))
-            // {return $parents;}
-        
+        {        
             if (!isset($parent->$primaryKey))
             {
                 throw new \Exception('Undefined property: ' . gettype($parent) . '::$' . $primaryKey . ' in addChildren function', 1);
             }
 
-
             $result = $dbSet->resolveRelation($parent->$primaryKey, $foreignKey);
-
-            
             if(!$result){continue;}
 
-            
 
             $children = $result->fields($fields)->objects();
-
-            
-
             if(empty($children)) {return $parents;}
 
             
-            $children = $this->addChildren($children, $dbSet, $primaryKey, $foreignKey);
+            $children = $this->addChildren($children, $dbSet, $primaryKey, $foreignKey, $fields);
             $parent->children = $children;    
 
         }

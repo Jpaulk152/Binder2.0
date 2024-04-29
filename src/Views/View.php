@@ -40,8 +40,6 @@ class View
 
         echo    '</head>';
 
-        
-        
         if(!isset($this->page))
         {
             echo 'no data provided';
@@ -86,8 +84,10 @@ class View
     }
 
 
-    public function renderChildView($view, $itemTitle='name', $itemLink='link')
+    public function renderChildView($view, $itemTitle='name', $itemLink='link', $page = null)
     {        
+        if ($page == null) $page = $this->page;
+        
         if(isset($this->page->children[$view]))
         {
             $child = $this->page->children[$view];
@@ -121,26 +121,6 @@ class View
         }
     }
 
-    // public function renderTemplate()
-    // {
-    //     if(isset($this->page->template) && isset($this->page->data))
-    //     {
-    //         $this->template = new Template($this->page->template, $this->page->data);
-
-    //         $templateContent = '';
-    //         $templateContent .= $this->template->render();
-    
-    //         return $this->htmlBuilder->buildElement('div')
-    //                                 ->id('mainContent')
-    //                                 ->classList('w3-container mainContent' . $this->contentClasses)
-    //                                 ->content($templateContent)
-    //                                 ->create(); 
-    //     }
-    //     else
-    //     {
-    //         return '';
-    //     }
-    // }
 
     public function renderPageContent()
     {
@@ -156,33 +136,5 @@ class View
         {
             return '';
         }
-    }
-}
-
-
-
-
-class Template{
-
-    public $page;
-    public $data;
-
-    public function __construct($page, $data)
-    {
-        $this->page = $page;
-        $this->data = $data;
-    }
-
-    public function render()
-    {
-        if (!$this->data)
-        {
-            return 'data not found';
-        }
-
-        ob_start();
-        extract($this->data);
-        include($this->page);
-        return ob_get_clean();
     }
 }

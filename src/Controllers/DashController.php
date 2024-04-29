@@ -25,6 +25,8 @@ class DashController extends Controller
             (object) array ('name'=>'Unit Tests', 'link'=>'javascript:alert(`this is a test...`)', 'children' => 
                 [
                     (object)array('name'=>'test whatever', 'link'=>'dash/test'),
+                    (object)array('name'=>'getHomeNav', 'link'=>'javascript:getView(`nav`, `navContent`);'),
+                    (object)array('name'=>'testPages', 'link'=>'javascript:testReplace(`testPages`, `mainContent`);'),
                     (object)array('name'=>'testDBFields', 'link'=>'javascript:runTest(`testDBFields`);'),
                     (object)array('name'=>'testCSVFields', 'link'=>'javascript:runTest(`testCSVFields`);'),
                     (object)array('name'=>'build_admin', 'link'=>'javascript:runTest(`build_admin`);'),

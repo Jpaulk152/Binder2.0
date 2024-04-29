@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Views\View;
+use Views\Templates\Template;
 
 class TestController extends Controller
 {
@@ -10,6 +11,20 @@ class TestController extends Controller
     public function index($test)
     {
         $this->$test();
+    }
+
+
+    function testPages()
+    {
+        $context = $this->csvContext;
+        $data = ['tables' => $context->Pages->fetchAll()];
+
+        $template = new Template('tables.php', $data);
+        $page = (object) array('template' => $template);
+        
+        $view = new View($page);
+
+        echo json_encode($view->renderTemplate());
     }
 
 
