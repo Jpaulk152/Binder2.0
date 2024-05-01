@@ -16,6 +16,8 @@ class DBContext
     function __construct()
     {		
         $this->createConnection();
+
+
         $this->createSets();
     }
 
@@ -75,11 +77,16 @@ class DBContext
 
             $fieldNameQuery = 'SELECT column_name FROM information_schema.columns WHERE table_schema = "'. SQLConfig::$databaseName .'" AND table_name = "' . $tableName . '"';
             $fieldNames = $this->connection->query($fieldNameQuery);
-            
+
             while($field = $fieldNames->fetch_array()[0])
             {
                 echo  $field . '<br>';
             }
+
+            // while($field = $fieldNames->fetch_array()[0])
+            // {
+            //     echo  $field . '<br>';
+            // }
 
             echo '<br><br>';
             echo '#########################################################################<br>';
@@ -89,16 +96,12 @@ class DBContext
 
 
 
-
-
-
-
-
-
     
 
     public function query($query) {
 
+        // die(var_dump($query));
+        
         $this->createConnection();
 
         if (!$this->query_closed) {
@@ -107,10 +110,12 @@ class DBContext
 
 		if ($this->query = $this->connection->prepare($query)) {
             if (func_num_args() > 1) {
+
                 $x = func_get_args();
                 $args = array_slice($x, 1);
 				$types = '';
                 $args_ref = array();
+
                 foreach ($args as $k => &$arg) {
 					if (is_array($args[$k])) {
 						foreach ($args[$k] as $j => &$a) {
@@ -125,6 +130,7 @@ class DBContext
 				array_unshift($args_ref, $types);
                 call_user_func_array(array($this->query, 'bind_param'), $args_ref);
             }
+
             $this->query->execute();
            	if ($this->query->errno) {
 				$this->error('Unable to process MySQL query (check your params) - ' . $this->query->error);
@@ -226,6 +232,10 @@ class DBContext
 
 	public function getPrimaryKey($table) {
 		$array = $this->query("SHOW KEYS FROM $table WHERE Key_name = 'PRIMARY'")->fetchArray();
+        if(!$array)
+        {
+            return false;
+        }
 		return $array['Column_name'];
 	}
 }

@@ -5,8 +5,6 @@ namespace Controllers;
 // responsible for gathering data and sending it to a view
 class Controller
 {
-    // use Views\ViewModels\Builders\ClassList;
-
     protected $csvContext;
     protected $dbContext;
 
@@ -20,11 +18,11 @@ class Controller
 
     function addView($view, $dbSet)
     {
-        $dbSet->set($this->$view['set']);
+        $dbSet->set($view['parameters']);
 
-        $childView['data'] = $dbSet->get()->fields($this->$view['fields'])->objects();
-        $childView['data'] = $this->addChildren($childView['data'], $dbSet, $this->$view['primaryKey'], $this->$view['foreignKey'], $this->$view['fields']);
-        $childView['classes'] = $this->getClasses($view);
+        $childView['data'] = $dbSet->get()->fields($view['fields'])->objects();
+        $childView['data'] = $this->addChildren($childView['data'], $dbSet, $view['primaryKey'], $view['foreignKey'], $view['fields']);
+        $childView['classes'] = $this->getClasses($view['classes']);
 
         return $childView;
     }
@@ -33,8 +31,8 @@ class Controller
     public function getClasses($view)
     {
         $context = $this->csvContext;
-        $context->ClassLists->set(['view'=>$view]);
-        return $context->ClassLists->exec();
+        $context->ClassList->set(['view'=>$view]);
+        return $context->ClassList->exec();
     }
 
 
@@ -45,8 +43,8 @@ class Controller
         $children['data'] = $context->Pages->get()->objects();
         $children['data'] = $this->addChildren($children['data'], $context->Pages);
 
-        $context->ClassLists->set(['view'=>$view]);
-        $children['classes'] = $context->ClassLists->exec();
+        $context->ClassList->set(['view'=>$view]);
+        $children['classes'] = $context->ClassList->exec();
 
         return $children;
     }

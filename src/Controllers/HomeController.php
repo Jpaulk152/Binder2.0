@@ -9,17 +9,19 @@ class HomeController extends Controller
     public $page;
 
     public $nav = [
-        'set'=> ['page_status' => 'true', 'page_inmenu' => 'false', 'page_parent' => 'none'], 
+        'parameters'=> ['page_status' => 'true', 'page_inmenu' => 'false', 'page_parent' => 'none'], 
         'fields' => ['page_title', 'page_id'],
         'primaryKey' => 'page_id',
-        'foreignKey' => 'page_parent'
+        'foreignKey' => 'page_parent',
+        'classes' => 'nav'
     ];
 
     public $side = [
-        'set'=> ['page_status' => 'true', 'page_inmenu' => 'false', 'page_parent' => 'none'],
+        'parameters'=> ['page_status' => 'true', 'page_inmenu' => 'false', 'page_parent' => 'none'],
         'fields' => ['page_title', 'page_id'],
         'primaryKey' => 'page_id', 
-        'foreignKey' => 'page_parent'
+        'foreignKey' => 'page_parent',
+        'classes' => 'side' // handle when we don't get any classlist
     ];
 
 
@@ -31,8 +33,8 @@ class HomeController extends Controller
         $this->page->title = 'Home';
         $this->page->content = 'Home Index';
 
-        $this->page->children['nav'] = $this->addView('nav', $this->dbContext->page_table);
-        $this->page->children['side'] = $this->addView('side', $this->dbContext->page_table);
+        $this->page->children['nav'] = $this->addView($this->nav, $this->dbContext->page_table);
+        $this->page->children['side'] = $this->addView($this->side, $this->dbContext->page_table);
 
         $dashboard =  (object)array(
             'name'=>'Dashboard',
@@ -44,15 +46,8 @@ class HomeController extends Controller
 
     public function index($uri=false)
     {
-        if ($uri)
-        {
-            $this->getView($uri);
-        }
-        else
-        {
-            $view = new View($this->page);
-            $view->render();
-        }
+        $view = new View($this->page);
+        $view->render();
     }
 
 

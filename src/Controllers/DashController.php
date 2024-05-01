@@ -41,22 +41,27 @@ class DashController extends Controller
                     (object)array('name'=>'Attach Home Side Bar', 'link'=>'javascript:getChildView(`home`, `side`);'),
                     (object)array('name'=>'Detach Side Bar', 'link'=>'javascript:detachChildView(`side`);'),
                 ]
+            ),
+
+                // Tables
+                (object)array('name'=>'Tables', 'link'=>'#', 'children' =>
+                [
+                    (object)array('name'=>'Pages', 'link'=>'javascript:replaceContent(`mainContent`,`table`,`pages`);'),
+                    (object)array('name'=>'ClassLists', 'link'=>'javascript:replaceContent(`mainContent`,`table`,`classLists`);'),
+                ]
             )
         ];
 
 
-        $this->csvContext->Pages->set(['title'=>'home']);
-        $nav2 = $this->csvContext->Pages->get()->fields(['name','link', 'id'])->objects();
-        $nav2 = $this->addChildren($nav2, $this->csvContext->Pages);
-
+        $this->csvContext->Page->set(['title'=>'home']);
+        $nav2 = $this->csvContext->Page->get()->fields(['name','link', 'id'])->objects();
+        $nav2 = $this->addChildren($nav2, $this->csvContext->Page);
 
         $nav  = array_merge($nav1, $nav2);
 
 
         $this->page = (object) array('title'=>'Dashboard', 'content'=>'Test Index');        
         $this->page->children['nav']['data'] = $nav;
-
-
         $this->page->children['nav']['classes'] = $this->getClasses('nav');
 
     }

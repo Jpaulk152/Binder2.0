@@ -1,14 +1,18 @@
 <?php
 
+
 spl_autoload_register('Autoloader::loadNameSpaces');
 
 require_once('config.php');
+
 
 class Autoloader
 {
     public static $testing = false;
 
     static function load($path, $className){
+
+        
 
         $path = utilities::switchSlash((config::src_root().$path));
 
@@ -26,13 +30,15 @@ class Autoloader
                 echo 'it exists.. <br>';
             }
 
-            require($file);
+            require_once($file);
         }
     }
 
     public static function loadNameSpaces($className)
     {
+        
         $filePath = '';
         self::load($filePath, $className);
+
     }
 }

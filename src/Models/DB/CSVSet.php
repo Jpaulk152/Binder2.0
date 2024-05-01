@@ -2,26 +2,37 @@
 
 namespace Models\DB;
 
-use ReflectionClass;
+use \stdClass;
 
 // A CSVSet should be included as a property of a CSVContext
 // It expects a Model class that exists in a CSV file that is within the path included in the CSVContext
-// #[\AllowDynamicProperties]
 class CSVSet extends CSVContext {
 
+    protected $table;
     protected $model;
+    protected $properties;
     protected $csv;
     protected $enumerableArray;
     protected $objectArray;
-    protected $subPath = 'Primary\\';
+    protected $subPath = '';
 
-    public function __construct($model)
+    
+    public function __construct($table, $properties)
     {
-        
-        $this->model = $model;
+        // parent::__construct();
 
-        $reflect = new ReflectionClass($this->model);
-        $this->csv = $reflect->getShortName() . '.csv';
+
+        $this->table = $table;
+        $this->properties = $properties;
+        $this->csv = $this->table . '.csv';
+
+        $this->model = new stdClass();
+
+        for($i=0;$i<count($properties);$i++)
+        {
+            $property = $properties[$i];
+            $this->model->$property = '';
+        }
     }
 
 
@@ -55,17 +66,18 @@ class CSVSet extends CSVContext {
     public function get()
     {
         $it = new \RecursiveDirectoryIterator($this->path . $this->subPath);
-
+        // die($this->csv);
         // Loop through files
         foreach(new \RecursiveIteratorIterator($it) as $file) {
             if ($file->getExtension() == 'csv' && $file->getFileName() == $this->csv) {
-
+                // die('HERE');
                 $this->enumerableArray = $this->CSVtoArray($file);
             } 
         }
 
         if($this->enumerableArray)
         {   
+            
             // fill the objectArray
             for ($i=0;$i<count($this->enumerableArray);$i++)
             {
@@ -82,6 +94,8 @@ class CSVSet extends CSVContext {
             // $this->set();
 
         }
+
+        // die(var_dump($this->enumerableArray));
 
         return $this;
     }
@@ -177,7 +191,7 @@ class CSVSet extends CSVContext {
 
     function resolveRelation($value, $foreignKey)
     {
-        $csvSet = new CSVSet($this->model);
+        $csvSet = new CSVSet($this->table, $this->properties);
         $csvSet->set([$foreignKey => $value]);
 
         if (!$csvSet->get()->objectArray)

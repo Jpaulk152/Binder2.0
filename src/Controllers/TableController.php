@@ -14,51 +14,48 @@ class TableController extends Controller
     {
         parent::__construct();
 
-        $this->page = (object) array('title'=>'Tables');
+        // $this->page = (object) array('title'=>'Tables');
 
-        $context = $this->csvContext;
-        $context->Pages->set(['title'=>'home']);
-        $nav = $context->Pages->get()->fields(['name','link', 'id'])->objects();
-        $nav = $this->addChildren($nav, $context->Pages);
+        // $context = $this->csvContext;
+        // $context->Pages->set(['title'=>'home']);
+        // $nav = $context->Pages->get()->fields(['name','link', 'id'])->objects();
+        // $nav = $this->addChildren($nav, $context->Pages);
 
-        $this->page->children['nav']['data'] = $nav;
-        $this->page->children['nav']['classes'] = $this->getClasses('nav');
+        // $this->page->children['nav']['data'] = $nav;
+        // $this->page->children['nav']['classes'] = $this->getClasses('nav');
        
     }
 
-    public function index()
+    public function index($uri)
     {
-
+        $this->$uri();
     }
+
 
     public function pages()
     {
-        $this->page->title = 'Pages';
-
         $context = $this->csvContext;
-        $data = ['tables' => $context->Pages->fetchAll()];
+        $data = ['tables' => $context->Page->fetchAll()];
 
         $template = new Template('tables.php', $data);
-        $this->page->template = $template;
+        $page = (object) array('template' => $template);
         
-        $view = new View($this->page);
+        $view = new View($page);
 
-        $view->render();
+        echo json_encode($view->renderTemplate());
     }
+
 
     public function classLists()
     {
-        $this->page->title = 'ClassLists';
-        
         $context = $this->csvContext;
-        $data = ['tables' => $context->ClassLists->fetchAll()];
+        $data = ['tables' => $context->ClassList->fetchAll()];
 
         $template = new Template('tables.php', $data);
-        $this->page->template = $template;   
+        $page = (object) array('template' => $template);
+        
+        $view = new View($page);
 
-        $view = new View($this->page);
-
-        $view->render();
-    }
-    
+        echo json_encode($view->renderTemplate());
+    }    
 }

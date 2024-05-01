@@ -2,9 +2,7 @@
 
 namespace Models\DB;
 
-use ReflectionClass;
 use \stdClass;
-
 
 //Database Class
 //Info on this at https://codeshack.io/super-fast-php-mysql-database-class/
@@ -21,8 +19,12 @@ use \stdClass;
 */
 
 
+// NOTES:
+// method to easily query for number of rows
+// 
+
+
 // A DBSet is included as a property of a DBContext
-// #[\AllowDynamicProperties]
 class DBSet extends DBContext {
 
     protected $table;
@@ -38,6 +40,9 @@ class DBSet extends DBContext {
 
         $this->table = $table;
         $this->properties = $properties;
+        $this->enumerableArray = array();
+        $this->objectArray = array();
+
 
         $this->model = new stdClass();
 
@@ -47,7 +52,6 @@ class DBSet extends DBContext {
             $this->model->$property = '';
         }
     }
-
 
 
     // Set or unset the values of the model
@@ -74,6 +78,29 @@ class DBSet extends DBContext {
 
 
 
+    // CREATE #############################################################################
+    public function add($object)
+    {
+        $isValid = false;
+        // switch($object)
+        // {
+        //     case is_object($object):
+        //         break;
+
+        //     case is_array($object):
+        //         break;
+
+        //     default:
+                
+        // }
+
+        $dbSet = new DBSet($this->table, $this->properties);
+        $dbSet->set((array)$object);
+
+        return $isValid;
+    }
+    
+    // READ ###############################################################################
     public function get()
     {
        $query = $this->buildSelect();
@@ -83,10 +110,10 @@ class DBSet extends DBContext {
             return $this;
        }
 
-        // $this->enumerableArray = $this->query($query)->fetchArray();
-        $this->enumerableArray = $this->query($query)->fetchAll();
+        // $this->enumerableArray = call_user_func_array(array($this, 'query'), $query)->fetchArray();
+        $this->enumerableArray = call_user_func_array(array($this, 'query'), $query)->fetchAll();
 
-		if($this->enumerableArray)
+        if($this->enumerableArray)
         {   
             // fill the objectArray
             for ($i=0;$i<count($this->enumerableArray);$i++)
@@ -107,25 +134,6 @@ class DBSet extends DBContext {
 
 		return $this;
     }
-
-
-
-
-    // Runs query of the csv that matches the model's name, 
-    // returns the enumerableArray of this CSVSet object
-    public function exec()
-    {
-        $array = $this->get()->enumerableArray;
-
-        $this->enumerableArray = null;
-        $this->set();
-
-        return $array;
-    }
-
-
-
-
 
     public function fields($keys)
     {
@@ -193,8 +201,105 @@ class DBSet extends DBContext {
     }
 
 
+    // override parent fetchAll function
+    public function fetchAll($callback = null) {
+        
+        if ($this->query == null)
+        {
+            $this->query('SELECT * FROM ' . $this->table);
+        }
+
+        $result = parent::fetchAll($callback);
+		return $result;
+	}
+
+    public function numRows() {
+
+        if ($this->query == null)
+        {
+            $this->query('SELECT * FROM ' . $this->table);
+        }
+
+        $result = parent::numRows();
+		return $result;
+	}
+
+	public function affectedRows() {
+
+        if ($this->query == null)
+        {
+            $this->query('SELECT * FROM ' . $this->table);
+        }
+
+        $result = parent::affectedRows();
+		return $result;
+	}
 
 
+	public function columnNames($table = null) {
+
+        if($table == null)
+        {
+            $table = $this->table;
+        }
+
+        $resultArray = parent::columnNames($table);
+
+		return $resultArray;
+	}
+
+	public function table($table = null) {
+
+        if($table == null)
+        {
+            $table = $this->table;
+        }
+
+        $resultArray = parent::table($table);
+
+		return $resultArray;
+	}
+
+	public function getPrimaryKey($table = null) {
+
+        if($table == null)
+        {
+            $table = $this->table;
+        }
+
+        $key = parent::getPrimaryKey($table);
+
+		return $key;
+	}
+
+
+    // UPDATE #############################################################################
+
+
+    // DELETE #############################################################################
+
+
+
+
+
+
+
+    // UTILITY ############################################################################
+
+
+    // Runs query of the csv that matches the model's name, 
+    // returns the enumerableArray of this CSVSet object
+    public function exec()
+    {
+        $array = $this->get()->enumerableArray;
+
+        $this->enumerableArray = null;
+        $this->set();
+
+        return $array;
+    }
+
+    // returns dbSet with objects based on foreign key relation, if any
     function resolveRelation($value, $foreignKey)
     {
         $dbSet = new DBSet($this->table, $this->properties);
@@ -205,16 +310,15 @@ class DBSet extends DBContext {
             return false;
         }
 
-
         return $dbSet;
     }
 
 
-    
 
+    // builds a select statment based on set model fields
     function buildSelect()
     {
-        $query = 'SELECT * FROM ' . $this->table;
+        $query[0] = 'SELECT * FROM ' . $this->table;
         $properties = get_object_vars($this->model);
         $fields = array();
         $values = array();
@@ -235,28 +339,47 @@ class DBSet extends DBContext {
             return false;
         }
 
-        $query .= ' WHERE ';
+        $query[0] .= ' WHERE ';
         for ($i=0;$i<count($fields);$i++)
         {
-            $query .= $fields[$i] . '="' . $values[$i] . '" ';
+            $query[0] .= $fields[$i] . ' = ? ';
 
             if ($i+1<count($fields) && $values[$i+1] != '')
-            {
-                $query .= 'AND ';
+            {    
+                $query[0] .= 'AND ';   
             }
-
+            $query[$i+1] = $values[$i];
         }
 
-        // die($query);
+
+
+        // $query .= ' WHERE ';
+        // for ($i=0;$i<count($fields);$i++)
+        // {
+        //     $query .= $fields[$i] . '="' . $values[$i] . '" ';
+
+        //     if ($i+1<count($fields) && $values[$i+1] != '')
+        //     {
+        //         $query .= 'AND ';
+        //     }
+        // }
+
+        // die(var_dump(...$query));
+
+        // $func = function($arg1, $arg2, $arg3) {
+        //     echo $arg1 . '<br>' . $arg2 . '<br>' . $arg3;
+        // };
+        
+        // die(var_dump(call_user_func_array($func, $query)));
+
+
 
         return $query;
     }
 
 
-    
+    function buildUpdate()
+    {
 
-
-    
-
-
+    }
 }

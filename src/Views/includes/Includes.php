@@ -28,7 +28,7 @@ class Includes
     public static function js()
     {
         $js = '
-            <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
             <script src="'. self::$includePath .'js/buffer.js"></script>
             <script src="'. self::$includePath .'js/taskHandler.js"></script>
             <script src="'. self::$includePath .'js/layout.js"></script>

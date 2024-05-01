@@ -31,15 +31,15 @@ class TestController extends Controller
     function testDBFields()
     {
         $this->dbContext->page_table->set(['page_id' => 'as100']);
-        $page = $this->dbContext->page_table->get()->fields(['page_id', 'page_title'])->firstOrDefault();//FIX THIS
+        $page = $this->dbContext->page_table->get()->fields(['page_id', 'page_title'])->firstOrDefault();//FIX THIS: can't remember, I think this is fixed
 
         echo json_encode($page->page_title);
     }
 
     function testCSVFields()
     {
-        $this->csvContext->Pages->set(['id' => 3]);
-        $page = $this->csvContext->Pages->get()->fields(['id', 'name'])->firstOrDefault();
+        $this->csvContext->Page->set(['id' => 3]);
+        $page = $this->csvContext->Page->get()->fields(['id', 'name'])->firstOrDefault();
 
         echo json_encode($page->name);
     }
@@ -77,8 +77,8 @@ class TestController extends Controller
 
         // side menu classlists
         $context = $this->csvContext;
-        $context->ClassLists->set(['view'=>'side']);
-        $page->children['side']['classes'] = $context->ClassLists->exec();
+        // $context->ClassLists->set(['view'=>'side2']);
+        $page->children['side']['classes'] = $context->ClassList->exec();
 
         $view = new View($page);
         echo json_encode($view->renderChildView('side'));
