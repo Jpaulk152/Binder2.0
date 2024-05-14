@@ -241,6 +241,8 @@ function replaceContent(target, controller, content)
 {
     var task = new Task({}, controller+'?'+content, function(response){
 
+        console.log(response);
+
         var element = new DOMParser().parseFromString(response, "text/html").getElementById(target);
 
         replace(target, element);
@@ -266,4 +268,21 @@ function getView(view, target)
 function replace(target, element)
 {
     document.getElementById(target).replaceWith(element);
+}
+
+
+function get(content)
+{
+    var task = new Task({}, 'api?'+content, function(response){
+
+        console.log(response);
+
+        // insertDebug('getDebug', response, '', '');
+
+        var element = new DOMParser().parseFromString(response, "text/html").getElementById('mainContent');
+
+        replace('mainContent', element);
+    })
+
+    buffer.append(task);
 }

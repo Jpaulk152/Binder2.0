@@ -37,6 +37,7 @@ class Includes
             <script src="'. self::$includePath .'js/home.js"></script>
             <script src="'. self::$includePath .'js/lesson.js"></script>
             <script src="'. self::$includePath .'js/test.js"></script>
+            <script src="'. self::$includePath .'js/debug.js"></script>
         ';
 
         echo $js;

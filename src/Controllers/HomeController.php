@@ -42,6 +42,13 @@ class HomeController extends Controller
         );
 
         array_unshift($this->page->children['nav']['data'], $dashboard);
+
+        $index = (object)array(
+            'name'=>'Index',
+            'link'=>'index'
+        );
+
+        array_unshift($this->page->children['nav']['data'], $index);
     }
 
     public function index($uri=false)
@@ -58,14 +65,7 @@ class HomeController extends Controller
         $this->index();
     }
 
-
-
-
     
-
-
-
-
 
     function childView()
     {

@@ -189,10 +189,10 @@ class CSVSet extends CSVContext {
 
 
 
-    function resolveRelation($value, $foreignKey)
+    function resolveRelation($parameters)
     {
         $csvSet = new CSVSet($this->table, $this->properties);
-        $csvSet->set([$foreignKey => $value]);
+        $csvSet->set($parameters);
 
         if (!$csvSet->get()->objectArray)
         {

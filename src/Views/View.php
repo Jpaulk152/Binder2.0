@@ -54,7 +54,7 @@ class View
         
         $this->content .= $this->renderPageContent();
 
-        $this->body .= $this->htmlBuilder->buildElement('div')
+        $this->body .= $this->htmlBuilder->buildElement('body')
                                     ->id('layout')
                                     ->classList('homeLayout')
                                     ->content($this->content)

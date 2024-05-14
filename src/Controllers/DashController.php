@@ -3,6 +3,8 @@
 namespace Controllers;
 
 use Views\View;
+use Views\Templates\Template;
+use \utilities as u;
 
 class DashController extends Controller
 {
@@ -85,5 +87,23 @@ class DashController extends Controller
     {
         phpinfo();
     }
+
+
+    public function get()
+    {
+        $table = 'page_table';
+
+        $context = $this->dbContext;
+        $data = ['objects' => [$table  => $context->$table->fetchAll()]];
+
+        echo '<body></body>';
+        u::dd($data);
+
+        $template = new Template('objects.php', $data);
+        $page = (object) array('template' => $template);
+        $page->title = $table ;
+        $view = new View($page);
+        $view->render();
+    }  
 
 }

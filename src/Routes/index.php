@@ -2,10 +2,12 @@
 
 namespace Routes;
 
+use Controllers\IndexController;
 use Controllers\HomeController;
 use Controllers\TableController;
 use Controllers\TestController;
 use Controllers\DashController;
+use Controllers\APIController;
 
 use Models\DB\CSVContext;
 use Models\DB\DBContext;
@@ -40,9 +42,13 @@ $router = new Router();
 
 // echo \config::public_root();
 
+
+// Index
+$router->get(\config::public_root(), IndexController::class, 'index');
+$router->get(\config::public_root(). 'index.php', IndexController::class, 'index');
+$router->get(\config::public_root(). 'index.php/index', IndexController::class, 'index');
+
 // Home
-$router->get(\config::public_root(), HomeController::class, 'index');
-$router->get(\config::public_root(). 'index.php', HomeController::class, 'index');
 $router->get(\config::public_root(). 'index.php/home', HomeController::class, 'index');
 $router->get(\config::public_root(). 'index.php/home/childView', HomeController::class, 'childView');
 
@@ -62,6 +68,10 @@ $router->get(\config::public_root(). 'index.php/test/fields', TestController::cl
 $router->get(\config::public_root(). 'index.php/dash', DashController::class, 'index');
 $router->get(\config::public_root(). 'index.php/dash/test', DashController::class, 'testTemplate');
 $router->get(\config::public_root(). 'index.php/info', DashController::class, 'info');
+$router->get(\config::public_root(). 'index.php/get', DashController::class, 'get');
 
+
+// API
+$router->get(\config::public_root(). 'index.php/api', APIController::class, 'get');
 
 $router->dispatch();

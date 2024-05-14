@@ -3,6 +3,7 @@
 namespace Models\DB;
 
 use \stdClass;
+use \utilities as u;
 
 //Database Class
 //Info on this at https://codeshack.io/super-fast-php-mysql-database-class/
@@ -32,6 +33,10 @@ class DBSet extends DBContext {
     protected $properties;
     protected $enumerableArray;
     protected $objectArray;
+    protected $cache;
+
+
+    protected $orderBy;
 
     public function __construct($table, $properties)
     {
@@ -42,6 +47,7 @@ class DBSet extends DBContext {
         $this->properties = $properties;
         $this->enumerableArray = array();
         $this->objectArray = array();
+        $this->cache = array();
 
 
         $this->model = new stdClass();
@@ -57,10 +63,7 @@ class DBSet extends DBContext {
     // Set or unset the values of the model
     function set($values=[])
     {
-        $this->enumerableArray = null;
-        $this->objectArray = null;
-        $this->enumerableArray = array();
-        $this->objectArray = array();
+        $this->purgeSet();
 
         foreach($this->model as $property=>$value)
         {
@@ -73,6 +76,8 @@ class DBSet extends DBContext {
                 $this->model->$property = '';
             }
         }
+
+        return $this;
     }
 
 
@@ -101,43 +106,61 @@ class DBSet extends DBContext {
     }
     
     // READ ###############################################################################
-    public function get()
+    public function get($fields = [])
     {
-       $query = $this->buildSelect();
+        $query = $this->buildSelect($fields);
 
-       if(!$query)
-       {
+        if(!$query)
+        {
             return $this;
-       }
-
-        // $this->enumerableArray = call_user_func_array(array($this, 'query'), $query)->fetchArray();
-        $this->enumerableArray = call_user_func_array(array($this, 'query'), $query)->fetchAll();
-
-        if($this->enumerableArray)
-        {   
-            // fill the objectArray
-            for ($i=0;$i<count($this->enumerableArray);$i++)
-            {
-                $object = new $this->model();
-
-                foreach($this->enumerableArray[$i] as $field=>$value)
-                {
-                    $object->$field = $value;
-                }
-                $this->objectArray[$i] = $object;
-            }
-
-            // reset model to all properties=''; still haven't decided to keep this
-            // $this->set();
-            
         }
+
+        try
+        {
+            // $this->enumerableArray = call_user_func_array(array($this, 'query'), $query)->fetchArray();
+            $this->enumerableArray = call_user_func_array(array($this, 'query'), $query)->fetchAll();
+        }
+        catch(\Exception $e)
+        {
+            u::dd($e);
+        }
+
+
+        $this->objectArray = $this->enumToObjects($this->enumerableArray);
 
 		return $this;
     }
 
+    public function fieldsArray($keys)
+    {
+        if(!$keys)
+        {
+            throw new \Exception('function: fields cannot be called without keys added.');
+        }
+        if(!$this->objectArray)
+        {
+            throw new \Exception('function: fields cannot be called before calling get().');
+        }
+
+        $rows = array();
+        foreach($this->objectArray as $object)
+        {  
+            $fields = array();
+            foreach($keys as $key)
+            {
+                if(property_exists($object, $key))
+                {
+                    $fields[$key] = $object->$key;
+                }
+            }
+            array_push($rows, $fields);
+        }
+
+        return $rows;
+    }
+
     public function fields($keys)
     {
-        
         if(!$keys)
         {
             throw new \Exception('function: fields cannot be called without keys added.');
@@ -169,8 +192,10 @@ class DBSet extends DBContext {
 
     // Returns an array of objects of type $this->model
     function objects()
-    {
-        return array_values($this->objectArray);
+    {        
+        $objects = array_values($this->objectArray);
+        $this->purgeSet();
+        return $objects;
     }
 
 
@@ -178,11 +203,13 @@ class DBSet extends DBContext {
     {
         if (isset($this->enumerableArray))
         {
-            return $this->enumerableArray;
+            $array = $this->enumerableArray;
+            $this->purgeSet();
+            return $array;
         }
         else
         {
-            throw new \Exception('function: enumerable cannot be called before get');
+            throw new \Exception('function: enumerable cannot be called before get()');
         }
     }
 
@@ -190,9 +217,12 @@ class DBSet extends DBContext {
     // Returns the first or default object received
     function firstOrDefault()
     {
-        if (isset($this->objectArray))
+        // u::dd($this->objectArray);
+        if (!empty($this->objectArray))
         {            
-            return $this->objectArray[0];
+            $object = $this->objectArray[0];
+            $this->purgeSet();
+            return $object;
         }
         else
         {
@@ -203,25 +233,38 @@ class DBSet extends DBContext {
 
     // override parent fetchAll function
     public function fetchAll($callback = null) {
-        
+
         if ($this->query == null)
         {
             $this->query('SELECT * FROM ' . $this->table);
         }
 
-        $result = parent::fetchAll($callback);
-		return $result;
+        $this->enumerableArray = parent::fetchAll($callback);
+        $this->objectArray = $this->enumToObjects($this->enumerableArray);
+
+		return $this->objectArray;
 	}
 
     public function numRows() {
 
-        if ($this->query == null)
+        // u::dd($this->objectArray);
+
+        if (!empty($this->objectArray))
         {
-            $this->query('SELECT * FROM ' . $this->table);
+            return count($this->objectArray);
+        }
+        else
+        {
+            return 0;
         }
 
-        $result = parent::numRows();
-		return $result;
+        // if ($this->query == null)
+        // {
+        //     $this->query('SELECT * FROM ' . $this->table);
+        // }
+
+        // $result = parent::numRows();
+		// return $result;
 	}
 
 	public function affectedRows() {
@@ -272,6 +315,52 @@ class DBSet extends DBContext {
 		return $key;
 	}
 
+    public function orderBy($fields, $acending = true)
+    {
+        $properties = array_keys(get_object_vars($this->model));
+        $orderBy = ' ORDER BY ';
+        if(is_array($fields))
+        {
+            foreach($fields as $field)
+            {
+                if(!in_array($field, $properties))
+                {
+                    throw new \Exception('function: orderBy; the table: ['.$this->table.'] has no field: ['.$field.']');
+                }
+            }
+
+            
+            for($i=0;$i<count($fields);$i++)
+            {  
+                $orderBy .= $fields[$i];
+                if ($i+1<count($fields))
+                {    
+                    $orderBy .= ', ';   
+                }
+            }
+        }
+        else
+        {
+            if(!in_array($fields, $properties))
+            {
+                throw new \Exception('function: orderBy; the table: ['.$this->table.'] has no field: ['.$fields.']');
+            }
+            else
+            {
+                $orderBy .= $fields;
+            }
+        }
+
+        if (!$acending)
+        {
+            $orderBy .= ' DESC';
+        }
+
+        $this->orderBy = $orderBy;
+
+        return $this;
+    }
+
 
     // UPDATE #############################################################################
 
@@ -300,10 +389,10 @@ class DBSet extends DBContext {
     }
 
     // returns dbSet with objects based on foreign key relation, if any
-    function resolveRelation($value, $foreignKey)
+    function resolveRelation($parameters)
     {
         $dbSet = new DBSet($this->table, $this->properties);
-        $dbSet->set([$foreignKey => $value]); 
+        $dbSet->set($parameters); 
 
         if (!$dbSet->get()->objectArray)
         {
@@ -314,29 +403,110 @@ class DBSet extends DBContext {
     }
 
 
+    function getParent($key, $parameters = [])
+    {
+        $primaryKey = $this->getPrimaryKey();
+        if(!$this->model->$primaryKey)
+        {
+            return false;
+        }
+        $dbSet = new DBSet($this->table, $this->properties);
+        $value = $dbSet->set([$primaryKey => $this->model->$primaryKey])->get()->fieldsArray([$key])[0][$key];
+
+        $foreignKey = $primaryKey;
+
+        $parameters[$foreignKey] = $value;
+
+        $parentDbSet = $this->resolveRelation($parameters);
+
+        if(!$parentDbSet)
+        {
+            return false;
+        }
+
+        return $parentDbSet;
+    }
+
+    function enumToObjects($array)
+    {
+        $objectArray = array();
+        if($array)
+        {   
+            // fill the objectArray
+            for ($i=0;$i<count($array);$i++)
+            {
+                $object = new $this->model();
+
+                foreach($array[$i] as $field=>$value)
+                {
+                    $object->$field = $value;
+                }
+                $objectArray[$i] = $object;
+            }            
+        }
+        return $objectArray;
+    }
+
+    function purgeSet()
+    {
+        $this->enumerableArray = array();
+        $this->objectArray = array();
+        $this->orderBy = null;
+
+        foreach($this->model as &$property)
+        {
+            $property = '';
+        }
+    }
 
     // builds a select statment based on set model fields
-    function buildSelect()
+    function buildSelect($getFields)
     {
-        $query[0] = 'SELECT * FROM ' . $this->table;
+        // create the SELECT and FROM clause
+        if(!empty($getFields))
+        {
+            if (!is_array($getFields))
+            {
+                throw new \Exception('function: buildSelect passed optional parameter that is not an array.');
+            }
+
+            $query[0] = 'SELECT '.implode(', ', $getFields).' FROM ' . $this->table;
+        }
+        else
+        {
+            $query[0] = 'SELECT * FROM ' . $this->table;
+        }
+
+        // then create the WHERE clause
         $properties = get_object_vars($this->model);
         $fields = array();
         $values = array();
 
+        // u::dd($properties, true, 'props');
+        // u::dd($getFields,true);
+
         $i=0;
         foreach($properties as $property=>$value)
         {
+            
+            // if property of model has a value
             if($value != '')
             {
+
+                // u::dd($value,true, $i. ' value');
+                // u::dd($property,true, $i. ' property');
+
                 $fields[$i] = $property;
                 $values[$i] = $value;
                 $i++;
             }
         }
 
+        // u::dd($fields,true, 'fields');
+
         if(!$fields)
         {
-            return false;
+            return $query;
         }
 
         $query[0] .= ' WHERE ';
@@ -351,31 +521,19 @@ class DBSet extends DBContext {
             $query[$i+1] = $values[$i];
         }
 
+        // create ORDER BY clause if it exists
+        if($this->orderBy != null)
+        {
+            $query[0] .= $this->orderBy;
+        }
 
+        $query[0] .= ';';
 
-        // $query .= ' WHERE ';
-        // for ($i=0;$i<count($fields);$i++)
-        // {
-        //     $query .= $fields[$i] . '="' . $values[$i] . '" ';
-
-        //     if ($i+1<count($fields) && $values[$i+1] != '')
-        //     {
-        //         $query .= 'AND ';
-        //     }
-        // }
-
-        // die(var_dump(...$query));
-
-        // $func = function($arg1, $arg2, $arg3) {
-        //     echo $arg1 . '<br>' . $arg2 . '<br>' . $arg3;
-        // };
-        
-        // die(var_dump(call_user_func_array($func, $query)));
-
-
+        // u::dd($query,true);
 
         return $query;
     }
+
 
 
     function buildUpdate()

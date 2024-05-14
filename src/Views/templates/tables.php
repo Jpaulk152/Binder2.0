@@ -1,3 +1,14 @@
+<?php
+use \utilities as u;
+
+
+u::dd($data);
+
+
+?>
+
+
+
 
 <?php foreach($tables as $tableName => $table): ?>
 

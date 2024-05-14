@@ -3,6 +3,7 @@
 namespace Models\DB;
 
 use Models\DB\SQLConfig;
+use \utilities as u;
 
 #[\AllowDynamicProperties]
 class DBContext
@@ -16,8 +17,6 @@ class DBContext
     function __construct()
     {		
         $this->createConnection();
-
-
         $this->createSets();
     }
 
@@ -95,18 +94,72 @@ class DBContext
     }
 
 
+    
+    function allTables()
+    {
+        $tableNameQuery = 'SHOW TABLES';
+        $tableNames = $this->connection->query($tableNameQuery);
 
+        $tables = array();
+        $i = 0;
+        while($tableName = $tableNames->fetch_array())
+        {
+            $tables[$i] = $tableName[0];
+
+            $i++;
+        }
+
+        return $tables;
+    }
+
+
+    public function thisFuckingTableIsNamedGroups($query)
+    {
+        $query = explode(" ", $query);
+
+        for($i=0;$i<count($query);$i++)
+        {
+            if ($query[$i] == 'FROM' && $query[$i+1] == 'groups')
+            {
+                return true;
+            } 
+        }
+        return false;
+    }
+
+    public function putSpecialFuckingQuotesAroundThisSpecialFuckingTable($query)
+    {
+        $query = explode(" ", $query);
+
+        for($i=0;$i<count($query);$i++)
+        {
+            if ($query[$i] == 'FROM' && $query[$i+1] == 'groups')
+            {
+                $query[$i+1] = '`'.$query[$i+1].'`';
+                break;
+            } 
+        }
+
+        return implode(" ", array_splice($query, 0));
+    }
     
 
     public function query($query) {
 
-        // die(var_dump($query));
-        
-        $this->createConnection();
+    
+        if($this->thisFuckingTableIsNamedGroups($query))
+        {
+            $query = $this->putSpecialFuckingQuotesAroundThisSpecialFuckingTable($query);
+        }
 
+        // die(var_dump($query));
+        // u::dd(func_get_args());
+       
         if (!$this->query_closed) {
             $this->query->close();
         }
+
+        $this->createConnection();
 
 		if ($this->query = $this->connection->prepare($query)) {
             if (func_num_args() > 1) {
@@ -127,11 +180,13 @@ class DBContext
 	                    $args_ref[] = &$arg;
 					}
                 }
+
 				array_unshift($args_ref, $types);
                 call_user_func_array(array($this->query, 'bind_param'), $args_ref);
             }
 
             $this->query->execute();
+
            	if ($this->query->errno) {
 				$this->error('Unable to process MySQL query (check your params) - ' . $this->query->error);
            	}
@@ -145,9 +200,11 @@ class DBContext
 
 
 	public function fetchAll($callback = null) {
+
 	    $params = array();
         $row = array();
 	    $meta = $this->query->result_metadata();
+
 	    while ($field = $meta->fetch_field()) {
 	        $params[] = &$row[$field->name];
 	    }
@@ -165,6 +222,7 @@ class DBContext
                 $result[] = $r;
             }
         }
+
         $this->query->close();
         $this->query_closed = TRUE;
 		return $result;

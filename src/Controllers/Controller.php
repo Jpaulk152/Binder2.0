@@ -61,7 +61,7 @@ class Controller
                 throw new \Exception('Undefined property: ' . gettype($parent) . '::$' . $primaryKey . ' in addChildren function', 1);
             }
 
-            $result = $dbSet->resolveRelation($parent->$primaryKey, $foreignKey);
+            $result = $dbSet->resolveRelation([$foreignKey => $parent->$primaryKey]);
             if(!$result){continue;}
 
 

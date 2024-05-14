@@ -2,8 +2,10 @@
 
 namespace Controllers;
 
+use Controllers\API\Request;
 use Views\View;
 use Views\Templates\Template;
+use Controllers\API\Response;
 
 class TableController extends Controller
 {
@@ -42,7 +44,9 @@ class TableController extends Controller
         
         $view = new View($page);
 
-        echo json_encode($view->renderTemplate());
+        new Response($view->renderTemplate(), 200, ['Content-Type: application/json']);
+
+        // echo json_encode($view->renderTemplate());
     }
 
 
@@ -58,4 +62,25 @@ class TableController extends Controller
 
         echo json_encode($view->renderTemplate());
     }    
+
+
+        public function get($uri='')
+    {
+        if(empty($uri))
+        {
+            new Response('', 404);
+        }
+
+        $context = $this->dbContext;
+        $data = ['tables' => $context->$uri->fetchAll()];
+
+        $template = new Template('tables.php', $data);
+        $page = (object) array('template' => $template);
+        
+        $view = new View($page);
+
+        new Response($view->renderTemplate(), 200, ['Content-Type: application/json']);
+
+        // echo json_encode($view->renderTemplate());
+    }  
 }
