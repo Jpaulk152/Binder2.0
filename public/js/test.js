@@ -271,18 +271,100 @@ function replace(target, element)
 }
 
 
-function get(content)
+function getTable(table)
 {
-    var task = new Task({}, 'api?'+content, function(response){
 
-        console.log(response);
+    var task = new Task({table: table}, 'api/getTable?table='+table, function(response){
 
-        // insertDebug('getDebug', response, '', '');
+        // console.log(response);
+
+        var element = new DOMParser().parseFromString(response, "text/html").getElementById('mainContent');
+
+        replace('mainContent', element);
+    }, 'POST')
+
+    buffer.append(task);
+}
+
+function form()
+{
+    var task = new Task({}, 'apiForm', function(response){
+
+        // console.log(response);
+
+        insertDebug('getDebug', response, '', '');
 
         var element = new DOMParser().parseFromString(response, "text/html").getElementById('mainContent');
 
         replace('mainContent', element);
     })
+
+    buffer.append(task);
+}
+
+
+
+
+
+
+
+
+
+
+function create(entity)
+{
+    var task = new Task({entity: entity}, 'api/create', function(response){
+
+        console.log(response);
+
+        // var element = new DOMParser().parseFromString(response, "text/html").getElementById('mainContent');
+
+        // replace('mainContent', element);
+    }, 'POST')
+
+    buffer.append(task);
+}
+
+function read(parameters, target='mainContent')
+{
+
+    var task = new Task(parameters, 'api/read', function(response){
+
+        console.log(response);
+
+        var element = new DOMParser().parseFromString(response, "text/html").getElementById(target);
+
+        replace(target, element);
+
+    }, 'POST')
+
+    buffer.append(task);
+}
+
+function update(entity, id)
+{
+    var task = new Task({entity: entity, id: id}, 'api/update', function(response){
+
+        console.log(response);
+
+        // var element = new DOMParser().parseFromString(response, "text/html").getElementById('mainContent');
+
+        // replace('mainContent', element);
+    }, 'POST')
+
+    buffer.append(task);
+}
+
+function del(entity, id)
+{
+    var task = new Task({entity: entity, id: id}, 'api/delete', function(response){
+
+        console.log(response);
+
+        // var element = new DOMParser().parseFromString(response, "text/html").getElementById('mainContent');
+
+        // replace('mainContent', element);
+    }, 'POST')
 
     buffer.append(task);
 }

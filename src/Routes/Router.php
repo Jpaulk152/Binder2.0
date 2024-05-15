@@ -24,20 +24,38 @@ class Router
     public function dispatch()
     {
         $uri = strtok($_SERVER['REQUEST_URI'], '?');
-        $param = strtok('?');
 
         $method = $_SERVER['REQUEST_METHOD'];
 
         if (array_key_exists($uri, $this->routes[$method]))
         {
+
+            $parameters = [];
+            if($method == 'POST')
+            {
+                foreach($_POST as $key=>$value)
+                {
+                    $parameters[htmlspecialchars($key)] = htmlspecialchars($value);
+                }
+            }
+            if($method == 'GET')
+            {
+                foreach($_GET as $key=>$value)
+                {
+                    $parameters[htmlspecialchars($key)] = htmlspecialchars($value);
+                }
+            }
+
             $controller = $this->routes[$method][$uri]['controller'];
             $action = $this->routes[$method][$uri]['action'];
 
             $controller = new $controller();
-            $controller->$action($param);
+            $controller->$action($parameters);
         }
         else
         {
+            // hand API redirections
+
             $home = new \Controllers\HomeController();
 
             $home->redirect($uri);

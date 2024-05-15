@@ -34,9 +34,12 @@ function ajaxTaskHandler(task, callback){
         
     }).fail(function(response){
         
-        alert("The ajax call did not work\n\n");
+        insertDebug('', JSON.stringify(response), '', '');
+
         console.log(response);
 
     })
+
+    
 
 }

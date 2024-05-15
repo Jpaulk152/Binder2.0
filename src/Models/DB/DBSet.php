@@ -131,6 +131,11 @@ class DBSet extends DBContext {
 		return $this;
     }
 
+    public function getProperties()
+    {
+        return $this->properties;
+    }
+
     public function fieldsArray($keys)
     {
         if(!$keys)

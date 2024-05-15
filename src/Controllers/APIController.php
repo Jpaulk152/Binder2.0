@@ -9,7 +9,6 @@ use Views\Templates\Template;
 
 class APIController extends Controller
 {
-    
     public $page;
 
     public function __construct()
@@ -28,27 +27,116 @@ class APIController extends Controller
        
     }
 
-    public function index($uri)
-    {
-        $this->$uri();
-    }
 
-
-    public function get($uri='')
+    public function getTable($parameters)
     {
-        if(empty($uri))
+        if(!$parameters || !isset($parameters['table']))
         {
-            new Response('', 404);
+            new Response('404 error', 404);
         }
 
-        $context = $this->dbContext;
-        $data = ['objects' => [$uri => $context->$uri->fetchAll()]];
+        $table = $parameters['table'];
 
-        $template = new Template('objects.php', $data);
+        $context = $this->dbContext;
+        $data = [$table => $context->$table->fetchAll()];
+
+        $template = new Template('table.php', $data);
         $page = (object) array('template' => $template);
         
         $view = new View($page);
 
         new Response($view->renderTemplate(), 200, ['Content-Type: application/json']);
-    }  
+        // new Response($parameters['table'], 200, ['Content-Type: application/json']);
+    }
+
+
+    public function form($parameters)
+    {
+        // $data = ['thing'=>['dataToExtract']];
+
+        // $template = new Template('form.php', $data);
+        // $page = (object) array('template' => $template);
+        
+        // $view = new View($page);
+        // new Response($view, 200, ['Content-Type: application/json']);
+
+
+
+        if($parameters)
+        {
+            extract($parameters);
+
+
+
+            $object = $parameters['object'];
+            $id = $parameters['id'];
+
+            $pk = $this->dbContext->$object->getPrimaryKey();
+
+            $data = $this->dbContext->page->set([$pk=>$id])->get()->firstOrDefault();
+
+
+            new Response($id, 404);
+        }
+        else
+        {
+            new Response('', 404);
+        }
+    }
+
+
+    public function create()
+    {
+        new Response('works', 200, ['Content-Type: application/json']);
+    }
+
+    public function read($parameters)
+    {
+        if($parameters)
+        {
+            extract($parameters);
+
+            $pk = $this->dbContext->$entity->getPrimaryKey();
+            $data = [
+                $entity => [
+                    $this->dbContext->$entity->set([$pk=>$id])->get()->firstOrDefault()
+                ]
+            ];
+
+            $template = new Template($template.'.php', $data);
+            $page = (object) array('template' => $template);
+            $view = new View($page);
+
+            new Response($view->renderTemplate(), 200, ['Content-Type: application/json']);
+        }
+        else
+        {
+            new Response('', 404);
+        }
+    }
+
+    public function update($parameters)
+    {
+        new Response('works', 200, ['Content-Type: application/json']);
+    }
+
+    public function delete($parameters)
+    {
+        new Response('works', 200, ['Content-Type: application/json']);
+    }
+
+
+    public function new($parameters)
+    {
+
+    }
+
+
+    function childView()
+    {
+        $childView = filter_input(INPUT_GET, 'view', FILTER_SANITIZE_URL);
+
+        $view = new View($this->page);
+        echo json_encode($view->renderChildView($childView));
+    }
 }

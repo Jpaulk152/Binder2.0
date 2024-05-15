@@ -30,7 +30,9 @@ class Template{
         }
 
         ob_start();
-        extract($this->data);
+        // extract($this->data);
+
+        $data = $this->data;
         include($this->template);
         return ob_get_clean();
     }

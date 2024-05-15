@@ -91,7 +91,7 @@ class DashController extends Controller
 
     public function get()
     {
-        $table = 'page_table';
+        $table = 'file_table';
 
         $context = $this->dbContext;
         $data = ['objects' => [$table  => $context->$table->fetchAll()]];

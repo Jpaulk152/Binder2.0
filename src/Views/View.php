@@ -49,10 +49,16 @@ class View
         // expand viewModels with their data and classes
         $this->renderChildren();
 
-        // add templates to the mainContent
-        $this->content .= $this->renderTemplate();
-        
-        $this->content .= $this->renderPageContent();
+        if(isset($this->page->template))
+        {
+            // add templates to the mainContent
+            $this->content .= $this->renderTemplate();
+        }
+        else
+        {
+            // otherwise, uses pages content property
+            $this->content .= $this->renderPageContent();
+        }
 
         $this->body .= $this->htmlBuilder->buildElement('body')
                                     ->id('layout')

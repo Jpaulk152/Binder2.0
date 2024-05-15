@@ -1,5 +1,11 @@
+<?php
+function entities($field)
+{
+  return !empty($field) ? htmlentities($field) : htmlentities("none");
+}
+?>
 
-<?php foreach($objects as $name => $object): ?>
+<?php foreach($data as $name => $object): ?>
 
   <?php if (count($object) > 0): ?>
   <h3><?php echo $name ?></h3>
@@ -10,7 +16,7 @@
         </tr>
       </thead>
       <tbody>
-        <?php foreach ($object as $row): array_map('htmlentities', (array)$row); ?>
+        <?php foreach ($object as $row): array_map('entities', (array)$row); ?>
         <tr>
           <td><?php echo implode('</td><td>', (array)$row); ?></td>
         </tr>

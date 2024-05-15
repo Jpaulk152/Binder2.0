@@ -72,6 +72,17 @@ $router->get(\config::public_root(). 'index.php/get', DashController::class, 'ge
 
 
 // API
-$router->get(\config::public_root(). 'index.php/api', APIController::class, 'get');
+$router->post(\config::public_root(). 'index.php/api/getTable', APIController::class, 'getTable');
+$router->get(\config::public_root(). 'index.php/apiForm', APIController::class, 'form');
+
+$router->get(\config::public_root(). 'index.php/api/create', APIController::class, 'create');
+$router->get(\config::public_root(). 'index.php/api/read', APIController::class, 'read');
+$router->get(\config::public_root(). 'index.php/api/update', APIController::class, 'update');
+$router->get(\config::public_root(). 'index.php/api/delete', APIController::class, 'delete');
+
+$router->post(\config::public_root(). 'index.php/api/create', APIController::class, 'create');
+$router->post(\config::public_root(). 'index.php/api/read', APIController::class, 'read');
+$router->post(\config::public_root(). 'index.php/api/update', APIController::class, 'update');
+$router->post(\config::public_root(). 'index.php/api/delete', APIController::class, 'delete');
 
 $router->dispatch();
