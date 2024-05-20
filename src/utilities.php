@@ -29,11 +29,9 @@ class utilities {
 
     public static function dd($object, $continue = false, $title='')
     {
-        // echo '<script language="javascript" type="text/javascript" src="/HC-DEV/MVC/public/js/buffer.js"></script>';
-        // echo '<script language="javascript" type="text/javascript" src="/HC-DEV/MVC/public/js/debug.js"></script>';
 
-        echo '<script language="javascript" type="text/javascript" src="/public/js/buffer.js"></script>';
-        echo '<script language="javascript" type="text/javascript" src="/public/js/debug.js"></script>';
+        echo '<script language="javascript" type="text/javascript" src="/MVC/public/js/buffer.js"></script>';
+        echo '<script language="javascript" type="text/javascript" src="/MVC/public/js/debug.js"></script>';
         
 
         $type = gettype($object);

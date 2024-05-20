@@ -2,8 +2,6 @@
 
 namespace Views\Includes;
 
-use \config;
-
 class Includes
 {
 
@@ -39,9 +37,20 @@ class Includes
             <script src="'. self::$includePath .'js/lesson.js"></script>
             <script src="'. self::$includePath .'js/test.js"></script>
             <script src="'. self::$includePath .'js/debug.js"></script>
+            <script src="'. self::$includePath .'js/api.js"></script>
         ';
 
         echo $js;
+    }
+
+
+    public function path($resource)
+    {
+        switch($resource)
+        {
+            case 'logo':
+                self::$resourcePath . 'logo.png';
+        }
     }
 
 }

@@ -84,26 +84,72 @@ class DBSet extends DBContext {
 
 
     // CREATE #############################################################################
-    public function add($object)
+
+    public function new($values=[], $setPK=false)
     {
-        $isValid = false;
-        // switch($object)
-        // {
-        //     case is_object($object):
-        //         break;
+        $this->purgeSet();
 
-        //     case is_array($object):
-        //         break;
+        $newModel = clone $this->model;
 
-        //     default:
-                
+        $pk = $this->getPrimaryKey();
+        if (!$setPK)
+        {
+            if($pk && array_key_exists($pk, $values))
+            {
+                throw new \Exception('function: new, '.$pk.' is a Primary Key.');
+            }
+            
+            unset($newModel->$pk);
+        }
+
+        if(!empty($values))
+        {
+            foreach($newModel as $property=>$value)
+            {
+                if(array_key_exists($property, $values) && !empty($values[$property]))
+                {
+                    $newModel->$property = $values[$property];
+                }
+                else
+                {
+                    $newModel->$property = '';
+                }
+            }
+        }
+
+        return $newModel;
+    }
+
+
+    public function insert($object, $setPK=false)
+    {
+
+        // $isValid = false;
+
+
+
+
+
+        // $pk = $this->getPrimaryKey();
+        // if (!$setPK && $pk)
+        // {          
+        //     unset($newModel->$pk);
         // }
 
-        $dbSet = new DBSet($this->table, $this->properties);
-        $dbSet->set((array)$object);
+        $query = 'INSERT INTO ' . $this->table . ' (' . implode(', ', array_keys((array)$object)) . ') VALUES ("' . implode('", "', (array)$object) . '");';
 
-        return $isValid;
+        // u::dd($query);
+
+
+        $affectedRows = $this->query($query)->affectedRows();
+        
+
+        // $dbSet = new DBSet($this->table, $this->properties);
+        // $dbSet->set((array)$object);
+
+        return $affectedRows;
     }
+
     
     // READ ###############################################################################
     public function get($fields = [])
@@ -133,8 +179,11 @@ class DBSet extends DBContext {
 
     public function getProperties()
     {
-        return $this->properties;
+        $this->purgeSet();
+        return clone $this->model;
     }
+
+
 
     public function fieldsArray($keys)
     {

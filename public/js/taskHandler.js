@@ -34,7 +34,7 @@ function ajaxTaskHandler(task, callback){
         
     }).fail(function(response){
         
-        insertDebug('', JSON.stringify(response), '', '');
+        insertDebug('from ajaxTaskHandler', JSON.stringify(response), '', '');
 
         console.log(response);
 

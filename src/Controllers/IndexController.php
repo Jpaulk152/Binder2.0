@@ -21,10 +21,10 @@ class IndexController extends Controller
         // each controller should implement an interface that allows it to return these items
 
 
-        $params = '{entity: `page`, id: `2`, template: `form/read`}';
+        $params = '{name: `page`, id: `2`, template: `forms/default`}';
 
         $nav1 = [
-            (object)array('name'=>'CRUD functions', 'link'=>'javascript:form()', 'children'=>[
+            (object)array('name'=>'CRUD functions', 'link'=>'javascript:alert(`CRUD!!!`)', 'children'=>[
                 (object)array('name'=>'create(`page`)', 'link'=>'javascript:create(`page`)'),
                 (object)array('name'=>'read('.$params.')', 'link'=>'javascript:read('.$params.')'),
                 (object)array('name'=>'update(`page`,`1`)', 'link'=>'javascript:update(`page`,`1`)'),
@@ -39,41 +39,16 @@ class IndexController extends Controller
 
         for ($i=0;$i<count($tables);$i++)
         {
-            $nav2[$i] = (object)array('name'=>$tables[$i], 'link'=>'javascript:getTable(`'.$tables[$i].'`)');
+            $params = '{entity: `'.$tables[$i].'`, template: `tables/default`}';
+            $nav2[$i] = (object)array('name'=>$tables[$i], 'link'=>'javascript:read('.$params.')');
+
+            $params1 = '{entity: `'.$tables[$i].'`, template: `forms/default`, method: `create`}';
+            $params2 = '{entity: `'.$tables[$i].'`, template: `forms/default`, method: `create`, setPK: `true`}';
+            $nav2[$i]->children = [
+                (object)array('name'=>'new', 'link'=>'javascript:read('.$params1.')'),
+                (object)array('name'=>'new (set primary key)', 'link'=>'javascript:read('.$params2.')'),
+            ];
         }
-
-
-        // $nav1 = [
-        //     // tests
-        //     (object) array ('name'=>'Unit Tests', 'link'=>'javascript:alert(`this is a test...`)', 'children' => 
-        //         [
-        //             (object)array('name'=>'test whatever', 'link'=>'dash/test'),
-        //             (object)array('name'=>'getHomeNav', 'link'=>'javascript:getView(`nav`, `navContent`);'),
-        //             (object)array('name'=>'testPages', 'link'=>'javascript:testReplace(`testPages`, `mainContent`);'),
-        //             (object)array('name'=>'testDBFields', 'link'=>'javascript:runTest(`testDBFields`);'),
-        //             (object)array('name'=>'testCSVFields', 'link'=>'javascript:runTest(`testCSVFields`);'),
-        //             (object)array('name'=>'build_admin', 'link'=>'javascript:runTest(`build_admin`);'),
-        //         ]
-        //     ),
-
-        //     // jsFunctions
-        //     (object)array('name'=>'JS Tests', 'link'=>'#', 'children' =>
-        //         [
-        //             (object)array('name'=>'testHomeSide', 'link'=>'javascript:runTest(`testHomeSide`);'),
-        //             (object)array('name'=>'testHomeNav', 'link'=>'javascript:runTest(`testHomeNav`);'),
-        //             (object)array('name'=>'Attach Home Side Bar', 'link'=>'javascript:getChildView(`home`, `side`);'),
-        //             (object)array('name'=>'Detach Side Bar', 'link'=>'javascript:detachChildView(`side`);'),
-        //         ]
-        //     ),
-
-        //         // Tables
-        //         (object)array('name'=>'Tables', 'link'=>'#', 'children' =>
-        //         [
-        //             (object)array('name'=>'Pages', 'link'=>'javascript:replaceContent(`mainContent`,`table`,`pages`);'),
-        //             (object)array('name'=>'ClassLists', 'link'=>'javascript:replaceContent(`mainContent`,`table`,`classLists`);'),
-        //         ]
-        //     )
-        // ];
 
 
         // $this->csvContext->Page->set(['title'=>'home']);
@@ -83,7 +58,7 @@ class IndexController extends Controller
         $nav  = array_merge($nav1, $nav2);
 
 
-        $this->page = (object) array('title'=>'Index', 'content'=>'Test Index'); 
+        $this->page = (object) array('title'=>'Index', 'content'=>'Index'); 
         $this->page->children['nav']['data'] = $nav;
         $this->page->children['nav']['classes'] = $this->getClasses('nav');
 
@@ -94,40 +69,70 @@ class IndexController extends Controller
     public function index()
     {
 
-        $data = array
-        (
-            'someEntityName' => array
-            (
-                (object)array
-                (
-                    'id'=>1,
-                    'field1'=>3,
-                    'field2'=>'something'
-                ),
-                // (object)array
-                // (
-                //     'id'=>2,
-                //     'field1'=>3,
-                //     'field2'=>'something'
-                // ),
-                // (object)array
-                // (
-                //     'id'=>3,
-                //     'field1'=>3,
-                //     'field2'=>'something'
-                // )
-            )
-        );
+        
 
-        $table = 'page';
-        $data = [$table=>$this->dbContext->$table->fetchAll()];
+        // $newEntity = $this->dbContext->admin_table->getProperties();
+        // echo '<body></body>';
+        // u::dd($newEntity);
 
-        $template = new Template('form.php', $data);
+
+        // $table = 'Test Array';
+        // $data1 = [
+
+        //     (object)array
+        //     (
+        //         'id'=>1,
+        //         'field1'=>3,
+        //         'field2'=>'something'
+        //     ),
+        //     (object)array
+        //     (
+        //         'id'=>2,
+        //         'field1'=>3,
+        //         'field2'=>'something'
+        //     ),
+        //     (object)array
+        //     (
+        //         'id'=>3,
+        //         'field1'=>3,
+        //         'field2'=>'something'
+        //     ),
+
+
+        // ];
+
+
+        // $table = 'admin_table';
+        // $data2 = $this->dbContext->$table->get()->firstOrDefault();
+        // // echo '<body></body>';
+        // // u::dd($data2, true);
+
+        // // $newEntity = $this->dbContext->admin_table->getProperties();
+        
+        // // u::dd($newEntity);
+
+        $data = $this->dbContext->page->new();
+
+        $template = new Template('forms/default.php', ['page'=>$data], 'create');
 
         $this->page->template = $template;
 
         $view = new View($this->page);
         echo $view->render();
+
+        // $page = $this->dbContext->page->new([ 'content'=>'null', 'inMenu'=>true, 'isLive'=>true, 'link'=>'#', 'name'=>'test page name', 'parent'=>false, 'title'=>'test page title' ]);
+        // $page = $this->dbContext->page->new();
+
+        // $page->content = 'null';
+        // $page->link = '#';
+        // $page->name = 'another test name2';
+        // $page->title = 'another test title2';
+
+        // u::dd($page);
+
+        // $rows = $this->dbContext->page->insert($page);
+
+        // u::dd($rows);
     }
 
 

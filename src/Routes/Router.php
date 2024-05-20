@@ -33,10 +33,13 @@ class Router
             $parameters = [];
             if($method == 'POST')
             {
-                foreach($_POST as $key=>$value)
-                {
-                    $parameters[htmlspecialchars($key)] = htmlspecialchars($value);
-                }
+
+                $parameters = filter_input_array(INPUT_POST);
+
+                // foreach($_POST as $key=>$value)
+                // {
+                //     $parameters[htmlspecialchars($key)] = htmlspecialchars($value);
+                // }
             }
             if($method == 'GET')
             {

@@ -13,107 +13,118 @@ class APIController extends Controller
 
     public function __construct()
     {
-        parent::__construct();
-
-        // $this->page = (object) array('title'=>'Tables');
-
-        // $context = $this->csvContext;
-        // $context->Pages->set(['title'=>'home']);
-        // $nav = $context->Pages->get()->fields(['name','link', 'id'])->objects();
-        // $nav = $this->addChildren($nav, $context->Pages);
-
-        // $this->page->children['nav']['data'] = $nav;
-        // $this->page->children['nav']['classes'] = $this->getClasses('nav');
-       
+        parent::__construct();       
     }
 
 
-    public function getTable($parameters)
+    public function create($parameters)
     {
-        if(!$parameters || !isset($parameters['table']))
+        extract($parameters);
+
+        if (isset($entity) && isset($values))
         {
-            new Response('404 error', 404);
+            $object = $this->dbContext->$entity->new($values);
+            $affectedRows = $this->dbContext->$entity->insert($object);
+    
+
+            if ($affectedRows > 0)
+            {
+                $objects = $this->dbContext->$entity->get()->objects();
+
+                // structure html with a template, optional method is for submitting forms
+                $template = new Template('tables/default.php', [$entity=>$objects]);
+
+                $page = (object) array('template' => $template);
+                $view = new View($page);
+
+                new Response($view->renderTemplate(), 200, ['Content-Type: application/json']);
+                return;
+            }
+            else
+            {
+                new Response('<p id="mainContent" style="color:red">could not create entry</p>', 500, ['Content-Type: application/json']);
+                return;
+            }
         }
 
-        $table = $parameters['table'];
-
-        $context = $this->dbContext;
-        $data = [$table => $context->$table->fetchAll()];
-
-        $template = new Template('table.php', $data);
-        $page = (object) array('template' => $template);
+        new Response('<p id="mainContent" style="color:red">entity not provided</p>', 500);
         
-        $view = new View($page);
-
-        new Response($view->renderTemplate(), 200, ['Content-Type: application/json']);
-        // new Response($parameters['table'], 200, ['Content-Type: application/json']);
     }
 
 
-    public function form($parameters)
-    {
-        // $data = ['thing'=>['dataToExtract']];
-
-        // $template = new Template('form.php', $data);
-        // $page = (object) array('template' => $template);
-        
-        // $view = new View($page);
-        // new Response($view, 200, ['Content-Type: application/json']);
-
-
-
-        if($parameters)
-        {
-            extract($parameters);
-
-
-
-            $object = $parameters['object'];
-            $id = $parameters['id'];
-
-            $pk = $this->dbContext->$object->getPrimaryKey();
-
-            $data = $this->dbContext->page->set([$pk=>$id])->get()->firstOrDefault();
-
-
-            new Response($id, 404);
-        }
-        else
-        {
-            new Response('', 404);
-        }
-    }
-
-
-    public function create()
-    {
-        new Response('works', 200, ['Content-Type: application/json']);
-    }
 
     public function read($parameters)
     {
-        if($parameters)
+        // new Response('<p style="color:red">data not found</p>', 404);
+        // new Response($parameters, 404);
+        // return;
+    
+        extract($parameters);
+
+        if (isset($entity))
         {
-            extract($parameters);
+            // if we want to set the primary key
+            $setPK = (isset($setPK) && $setPK == true) ? $setPK : false;
 
-            $pk = $this->dbContext->$entity->getPrimaryKey();
-            $data = [
-                $entity => [
-                    $this->dbContext->$entity->set([$pk=>$id])->get()->firstOrDefault()
-                ]
-            ];
+            // if a method is specified
+            if (isset($method))
+            {
+                switch ($method)
+                {
+                    case 'create':
+                        $object = $this->dbContext->$entity->new([], $setPK);
+                        break;
+                    
+                    case 'update':
+                        if (!isset($id)){new Response('<p id="mainContent" style="color:red">must provide id to update</p>', 404); return;}
+                        $pk = $this->dbContext->$entity->getPrimaryKey();
+                        $object = $this->dbContext->$entity->set([$pk=>$id])->get()->firstOrDefault();
+                        break;
 
-            $template = new Template($template.'.php', $data);
+                    default:
+                        new Response('<p id="mainContent" style="color:red">invalid method name</p>', 404);
+                        return;
+                }
+            }
+            else
+            {
+                // if there is an id, get a specific entry
+                if (isset($id))
+                {
+                    
+                }
+                // otherwise get an array of all entities from the set
+                else
+                {
+                    $object = $this->dbContext->$entity->get()->objects();
+                }
+            }
+
+           
+            // structure html with a template, optional method is for submitting forms
+            $template = new Template($template.'.php', [$entity=>$object], isset($method) ? $method : '');
+
             $page = (object) array('template' => $template);
             $view = new View($page);
 
             new Response($view->renderTemplate(), 200, ['Content-Type: application/json']);
+
+            return;
         }
-        else
-        {
-            new Response('', 404);
-        }
+
+        new Response('<p id="mainContent" style="color:red">data not found</p>', 404);
     }
+
+
+
+
+
+
+
+
+
+
+
 
     public function update($parameters)
     {
@@ -126,10 +137,7 @@ class APIController extends Controller
     }
 
 
-    public function new($parameters)
-    {
 
-    }
 
 
     function childView()

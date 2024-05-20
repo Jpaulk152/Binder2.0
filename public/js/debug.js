@@ -37,7 +37,7 @@ debugStyles = [
 ]
 
 
-function insertDebug(title, content, type, count)
+function insertDebug(title='', content='', type='', count='')
 {
     debugContainer = document.getElementById('debugContainer');
     if (debugContainer === null)
@@ -67,10 +67,35 @@ function insertDebug(title, content, type, count)
     {
         objectTitle = '';
     }
+
+    if(content.length > 0)
+    {
+        objectContent = 'content: ' + content + '<br><br>';
+    }
+    else 
+    {
+        objectContent = '';
+    }
+
+    if(type.length > 0)
+    {
+        objectType = 'type: ' + type + '<br><br>';
+    }
+    else 
+    {
+        objectType = '';
+    }
+
+
+    if(count.length > 0)
+    {
+        objectCount = 'count: ' + count + '<br><br>';
+    }
+    else 
+    {
+        objectCount = '';
+    }
     
-    objectType = 'parameter type: ' + type + '<br><br>';
-    objectCount = 'count: ' + count + '<br><br>';
-    objectContent = 'content: ' + content + '<br><br>';
 
     div.innerHTML += objectTitle;
     div.innerHTML += objectType;

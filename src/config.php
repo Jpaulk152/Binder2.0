@@ -4,8 +4,8 @@ require_once('utilities.php');
 
 class config{
 
-  // public static $currentPath = '/MVC';
-  public static $currentPath = '';
+  public static $currentPath = '/MVC';
+  // public static $currentPath = '';
 
   public static function baseURL(){
     return sprintf(
