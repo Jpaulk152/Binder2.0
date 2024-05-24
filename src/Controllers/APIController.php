@@ -26,7 +26,6 @@ class APIController extends Controller
             $object = $this->dbContext->$entity->new($values);
             $affectedRows = $this->dbContext->$entity->insert($object);
     
-
             if ($affectedRows > 0)
             {
                 $objects = $this->dbContext->$entity->get()->objects();
@@ -37,18 +36,17 @@ class APIController extends Controller
                 $page = (object) array('template' => $template);
                 $view = new View($page);
 
-                new Response($view->renderTemplate(), 200, ['Content-Type: application/json']);
+                new Response($view->renderTemplate(), 200);
                 return;
             }
             else
             {
-                new Response('<p id="mainContent" style="color:red">could not create entry</p>', 500, ['Content-Type: application/json']);
+                new Response('<p id="mainContent" style="color:red">could not create entry</p>', 500);
                 return;
             }
         }
 
         new Response('<p id="mainContent" style="color:red">entity not provided</p>', 500);
-        
     }
 
 

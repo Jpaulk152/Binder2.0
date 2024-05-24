@@ -2,7 +2,8 @@
 
 namespace Views\ViewModels;
 
-use Views\ViewModels\Builders\HtmlBuilder;
+use Views\HtmlBuilder;
+use Views\MenuBuilder;
 
 class NavViewModel extends HtmlBuilder{
 
@@ -36,32 +37,34 @@ class NavViewModel extends HtmlBuilder{
         }
 
 
-        $logo = $this->buildElement('img')
-                    ->classList($classList['logo'])
-                    ->src('../resources/logo.png')
-                    ->alt('Could not find Image')
-                    ->width('70')
-                    ->height('70')
+        $logo = $this->build('img')
+                    ->attr('class', $classList['logo'])
+                    ->attr('src', '../resources/logo.png')
+                    ->attr('alt', 'Could not find Image')
+                    ->attr('width', '70')
+                    ->attr('height', '70')
                     ->create();
 
-        $homeAnchor = $this->buildElement('a')
-                        ->classList($classList['logoContainer'])
-                        ->href('../index.php/home')
+        $homeAnchor = $this->build('a')
+                        ->attr('class', $classList['logoContainer'])
+                        ->attr('href', '../index.php/home')
                         ->content($logo)
                         ->create();
 
 
-        $menuBuilder = new Builders\MenuBuilder();
+        $menuBuilder = new MenuBuilder();
 
         $menu = $menuBuilder->createMenu($this->pageData, $classList, $this->tabIndex, $itemTitle, $itemLink);
 
         // die(var_dump($this->classList));
 
-        $navBar = $this->buildElement('div')
-                                ->id('navContent')
-                                ->classList($classList['menuContainer'])
-                                ->content($homeAnchor . $menu)
-                                ->create();
+        // $menu = '';
+
+        $navBar = $this->build('div')
+                        ->attr('id', 'navContent')
+                        ->attr('class', $classList['menuContainer'])
+                        ->content($homeAnchor . $menu)
+                        ->create();
 
         return $navBar;
     }

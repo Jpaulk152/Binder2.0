@@ -1,10 +1,10 @@
 <?php
 
-namespace Views\ViewModels\Builders;
+namespace Views;
 
 class MenuBuilder extends HtmlBuilder{
 
-    public function createMenu($menuItems, $classList=[], &$tabIndex=1, $itemTitle='name', $itemLink='link') 
+    public function createMenu($menuItems, $classList=[], &$tabIndex=1) 
     {
 
         if (is_array($menuItems) && count($menuItems) > 0)
@@ -16,40 +16,36 @@ class MenuBuilder extends HtmlBuilder{
             foreach ($menuItems as $item)
             {
                 
-                $item = $this->menuData($item, $itemTitle, $itemLink);
+                $item = $this->menuData($item);
 
                 // If the item is a menu build a submenu
                 if ($this->isMenu($item)) 
                 {
-
-
-
                     $i = $tabIndex;
                     $tabIndex++;
 
-                    $subMenu = $this->createMenu($item['child'], $classList, $tabIndex, $itemTitle, $itemLink);
+                    $subMenu = $this->createMenu($item['child'], $classList, $tabIndex);
 
-                    $caret = $this->buildElement('i')
-                                  ->id('menu-'. $i .'-caret')
-                                  ->classList($classList['caret'])
+                    $caret = $this->build('i')
+                                  ->attr('id', 'menu-'. $i .'-caret')
+                                  ->attr('class', 'navCaret fa fa-caret-down')
                                   ->create();
 
-                    $subMenuButton = $this->buildElement('button')
-                                          ->id('menu-'. $i)
-                                          ->classList($classList['subMenuButton'])
-                                          ->onclick("expand(this);location.href='" .$item['link']. "'")
-                                        //   ->onclick("expand(this);location.href='#'")
+                    $subMenuButton = $this->build('button')
+                                          ->attr('id', 'menu-'. $i)
+                                          ->attr('class', 'navSubMenuButton w3-button')
+                                          ->attr('onclick', "expand(this);location.href='" .$item['link']. "'")
                                           ->content($caret . '   ' . $item['name'])
                                           ->create();
 
-                    $subMenu = $this->buildElement('div')
-                                     ->classList($classList['subMenu'])
-                                     ->content($subMenu)
-                                     ->create();
+                    $subMenu = $this->build('div')
+                                    ->attr('class', 'navSubMenu w3-dropdown-content w3-bar-block w3-card-4')
+                                    ->content($subMenu)
+                                    ->create();
 
-                    $subMenuContainer = $this->buildElement('div')
-                                            ->classList($classList['subMenuContainer'])
-                                            ->tabindex($i)
+                    $subMenuContainer = $this->build('div')
+                                            ->attr('class', 'navSubMenuContainer w3-dropdown-hover w3-large')
+                                            ->attr('tabindex', $i)
                                             ->content($subMenuButton . $subMenu)
                                             ->create();
 
@@ -61,13 +57,12 @@ class MenuBuilder extends HtmlBuilder{
                 else if ($this->isButton($item))
                 { 
 
-                    $menuButton = $this->buildElement('a')
-                                    ->classList($classList['menuButton'])
-                                    ->href($item['link'])
-                                    ->tabindex($tabIndex++)
-                                    ->content($item['name'])
-                                    ->create();
-
+                    $menuButton = $this->build('a')
+                                        ->attr('class', 'navMenuButton w3-bar-item w3-button w3-large')
+                                        ->attr('href', $item['link'])
+                                        ->attr('tabindex', $tabIndex++)
+                                        ->content($item['name'])
+                                        ->create();
 
                     $menu .= $menuButton;
                     
@@ -76,10 +71,10 @@ class MenuBuilder extends HtmlBuilder{
                 else
                 {
 
-                    $menuButton = $this->buildElement('a')
-                                    ->classList($classList['menuButton'])
-                                    ->href('#')
-                                    ->tabindex($tabIndex++)
+                    $menuButton = $this->build('a')
+                                    ->attr('class', 'navMenuButton w3-bar-item w3-button w3-large')
+                                    ->attr('href', '#')
+                                    ->attr('tabindex', $tabIndex++)
                                     ->content('This resource was not found')
                                     ->create();
 
@@ -125,7 +120,7 @@ class MenuBuilder extends HtmlBuilder{
     }
 
 
-    public function menuData($item, $itemTitle, $itemLink)
+    public function menuData($item)
     {
         // die(var_dump($item));
 

@@ -4,7 +4,7 @@ namespace Views\ViewModels;
 
 use Views\ViewModels\Builders\HtmlBuilder;
 
-class SideViewModel extends HtmlBuilder implements ViewModel{
+class SideViewModel extends HtmlBuilder{
 
     public $pageData;
     public $tabIndex;

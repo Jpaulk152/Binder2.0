@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use Views\View;
+use Views\Template;
 
 class HomeController extends Controller
 {

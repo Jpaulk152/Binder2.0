@@ -29,11 +29,9 @@ class Router
 
         if (array_key_exists($uri, $this->routes[$method]))
         {
-
             $parameters = [];
             if($method == 'POST')
             {
-
                 $parameters = filter_input_array(INPUT_POST);
 
                 // foreach($_POST as $key=>$value)
@@ -43,10 +41,12 @@ class Router
             }
             if($method == 'GET')
             {
-                foreach($_GET as $key=>$value)
-                {
-                    $parameters[htmlspecialchars($key)] = htmlspecialchars($value);
-                }
+                $parameters = filter_input_array(INPUT_GET);
+
+                // foreach($_GET as $key=>$value)
+                // {
+                //     $parameters[htmlspecialchars($key)] = htmlspecialchars($value);
+                // }
             }
 
             $controller = $this->routes[$method][$uri]['controller'];

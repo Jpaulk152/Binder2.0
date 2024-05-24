@@ -25,8 +25,6 @@ class utilities {
     }
 
 
-
-
     public static function dd($object, $continue = false, $title='')
     {
 
@@ -50,5 +48,22 @@ class utilities {
         if (!$continue){die();}
         return;
     }
+}
 
+class ApplicationError
+{
+    public $errorType;
+    public $msg;
+
+    public function __construct($msg)
+    {
+        $this->msg = $this->errorType . ': ' . $msg;
+        $this->print();
+    }
+
+    public function print()
+    {
+        echo $this->msg;
+        exit(1);
+    }
 }
