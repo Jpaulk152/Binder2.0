@@ -6,7 +6,7 @@ class Response
 {
     private $content;
 
-    public function __construct($content='', $status=200, $headers=['Content-Type: text/html'])
+    public function __construct($content='', $status=200, $headers=['Content-Type: application/json'])
     {
         $this->content = $content;
 

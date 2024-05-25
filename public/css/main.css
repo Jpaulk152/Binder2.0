@@ -45,6 +45,7 @@ a:hover {
 
 
 
+
 .homeLayout {
     margin-top: 100px;
     width: 100%;
@@ -64,6 +65,14 @@ a:hover {
     width: 100%;
     height: 100%;
     position: absolute;
+}
+
+.testLayout {
+    margin-top: 100px;
+    width: 100%;
+    height: 90vh;
+    position: absolute;
+
 }
 
 

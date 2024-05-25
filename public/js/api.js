@@ -1,15 +1,18 @@
 
+function replace(target, element)
+{
+    document.getElementById(target).replaceChildren(element);
+}
+
 function update(parameters, target='mainContent')
 {
     var task = new Task(parameters, 'api/update', function(response){
 
         console.log(response);
 
-        var element = new DOMParser().parseFromString(response, "text/html").getElementById(target);
+        // console.log(response);
 
-        // console.log(element);
-
-        replace(target, element);
+        document.getElementById(target).innerHTML = response;
 
     }, 'POST')
 
@@ -18,7 +21,7 @@ function update(parameters, target='mainContent')
 
 
 
-function create(event)
+function create(event, target='mainContent')
 {
 
     // alert('here');
@@ -34,11 +37,9 @@ function create(event)
 
     var task = new Task({entity: entity, values: values}, 'api/create', function(response){
 
-        console.log(response);
+        // console.log(response);
 
-        var element = new DOMParser().parseFromString(response, "text/html").getElementById('mainContent');
-
-        replace('mainContent', element);
+        document.getElementById(target).innerHTML = response;
         
     }, 'POST')
 
@@ -54,11 +55,7 @@ function read(parameters, target='mainContent')
 
         // console.log(response);
 
-        var element = new DOMParser().parseFromString(response, "text/html").getElementById(target);
-
-        // console.log(element);
-
-        replace(target, element);
+        document.getElementById(target).innerHTML = response;
 
     }, 'POST')
 
@@ -78,11 +75,10 @@ function update(entity, id)
 {
     var task = new Task({entity: entity, id: id}, 'api/update', function(response){
 
-        console.log(response);
+        // console.log(response);
 
-        // var element = new DOMParser().parseFromString(response, "text/html").getElementById('mainContent');
-
-        // replace('mainContent', element);
+        document.getElementById(target).innerHTML = response;
+        
     }, 'POST')
 
     buffer.append(task);

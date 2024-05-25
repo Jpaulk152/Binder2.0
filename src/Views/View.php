@@ -2,145 +2,62 @@
 
 namespace Views;
 
-use Views\Includes\Includes;
-use Views\ViewModels\SideViewModel;
-use Views\ViewModels\NavViewModel;
+use \utilities as u;
 
-use Views\ViewModels\Builders\HtmlBuilder;
+/**
+ *  Template Class 
+ *  Expects:
+ * 
+*              $template:  a path to the template file relative to the location of Template.php
+*
+*              $data:      must be reference array where the value is either an array of objects or a single object.
+*                          [ checking if there are single or multiple is handled by the template file passed ]
+*/
 
+class View{
 
-// responsible for displaying data; expects page data and decides how to display it
-class View
-{
-    public $body = '';
-    public $page = null;
-    public $template = null;
-    public $tabIndex = 1;
-    public $contentClasses = '';
-    public $htmlBuilder;
-    public $content = '';
+    public $view;
+    public $data;
+    public $method;
 
-
-    public function __construct($page=null)
+    public function __construct($view, $data, $method='', &$tabIndex=1)
     {
-        $this->page = $page;
-        $this->htmlBuilder = new HtmlBuilder();
+        $this->view = $view;
+        $this->data = $data;
+        $this->method = $method;
     }
-
 
     public function render()
     {
-        echo '<!DOCTYPE html>
-                <html lang="en">
-                <head>
-                    <title>'.$this->page->title.'</title>';
-
-                    Includes::css();
-                    Includes::js();
-
-        echo    '</head>';
-
-        if(!isset($this->page))
+        if (!file_exists(__DIR__ . '\\' . $this->view))
         {
-            echo 'no data provided';
-            return;
+            new ViewError('<p style="color:red">view not found</p>');
         }
 
-        // expand viewModels with their data and classes
-        $this->renderChildren();
-
-        if(isset($this->page->template))
+        if (!$this->data)
         {
-            // add templates to the mainContent
-            $this->content .= $this->renderTemplate();
-        }
-        else
-        {
-            // otherwise, uses pages content property
-            $this->content .= $this->renderPageContent();
+            // new ViewError('<p style="color:red">data not found</p>');
         }
 
-        $this->body .= $this->htmlBuilder->buildElement('body')
-                                    ->id('layout')
-                                    ->classList('homeLayout')
-                                    ->content($this->content)
-                                    ->create();                
+        $method = $this->method;
 
-        echo $this->body;
-
-        include 'bottom.php';
-
-    }
-
-
-    public function renderChildren()
-    {
-        if(isset($this->page->children))
+        ob_start();
+        
+        if (is_array($this->data))
         {
-            foreach($this->page->children as $view=>$child)
+            foreach($this->data as $name => $entity)
             {
-                if ($view == 'side' && count($child['data']) > 0) 
-                {
-                    $this->contentClasses.=' mainContentToRight';
-                }
-                
-                $this->content .= $this->renderChildView($view);
+                include($this->view);
             }
         }
-    }
-
-
-    public function renderChildView($view, $itemTitle='name', $itemLink='link', $page = null)
-    {        
-        if ($page == null) $page = $this->page;
-        
-        if(isset($this->page->children[$view]))
-        {
-            $child = $this->page->children[$view];
-            $viewModel = 'Views\ViewModels\\' . ucfirst($view) . 'ViewModel';
-            $viewModel = new $viewModel($child['data'], $this->tabIndex);
-
-            return $viewModel->render($child['classes'], $itemTitle, $itemLink);
-        }
         else
         {
-            return '';
+            $name = 'entity';
+            $entity = $this->data;
+            include($this->view);
         }
-    }
-
-    public function renderTemplate()
-    {
-        if(isset($this->page->template))
-        {
-            $templateContent = '';
-            $templateContent .= $this->page->template->render();
-    
-            return $this->htmlBuilder->buildElement('div')
-                                    ->id('mainContent')
-                                    ->classList('w3-container mainContent' . $this->contentClasses)
-                                    ->content($templateContent)
-                                    ->create(); 
-        }
-        else
-        {
-            return '';
-        }
-    }
 
 
-    public function renderPageContent()
-    {
-        if(isset($this->page->content))
-        {
-            return $this->htmlBuilder->buildElement('div')
-                                    ->id('mainContent')
-                                    ->classList('w3-container mainContent' . $this->contentClasses)
-                                    ->content($this->page->content)
-                                    ->create(); 
-        }
-        else
-        {
-            return '';
-        }
+        return ob_get_clean();
     }
 }

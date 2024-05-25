@@ -6,7 +6,6 @@ use Views\Includes\Includes;
 use Views\Layout;
 use \utilities as u;
 
-
 /*
 ->setDoctype(\Pyrech\Layout::DOCTYPE_HTML5)
 ->addMeta('charset', 'utf-8')
@@ -23,76 +22,86 @@ use \utilities as u;
 ->addBodyClass(array('some-class', 'another-class')); // Array of classes or a string with several classes
  */
 
-
-
 class Page extends HTMLBuilder
 {
-    public $layout;
-    public $views;
+    public $content = null;
+    public $layout = null;
+    public $views = null;
+    public $title = 'Document';
 
-    public function __construct($layout=null, $views=[])
+
+    public function __construct($content=null)
     {
-        $this->layout = $layout;
-        $this->views = $views;
-
-        $this->layout = new Layout('homeLayout');
-        $this->layout->addZone($this->views[0])
-                    ->attr('class', 'navMenuContainer secondaryBackground w3-bar w3-card-4')
-                    ->attr('id', 'navContent');
-
-        $this->layout->addZone($this->views[1])
-                    ->attr('id', 'sideContent');
-
-
-
-        // $subLayout = new Layout('')
-
-
-        $this->layout->addZone()
-                    ->attr('class', 'w3-container mainContent mainContentToRight')
-                    ->attr('id', 'mainContent');
-
+        $this->content = $content;
     }
-
 
     public function render()
     {
         echo '<!DOCTYPE html>
                 <html lang="en">
-                <head>
-                    <title>testing new page</title>';
+                    <head>
+                        <title>'.$this->title.'</title>';
 
-                    Includes::css();
-                    Includes::js();
+                        Includes::css();
+                        Includes::js();
 
-        echo    '</head>';
+        echo        '</head>';
 
 
-        // echo '<body></body>';
-        // u::dd($this->layout);
-
-        if(empty($this->layout))
+        if(!empty($this->layout))
         {
-            new ViewError('No layout provided.');
+            $this->content = $this->layout->render();
         }
-        if(empty($this->views))
+        else if(!empty($this->views))
         {
-            new ViewError('No view provided.');
+            foreach($this->views as $view)
+            {
+                $this->content .= $view->render();
+            }
         }
-        if(empty($this->layout->zones))
+        else
         {
-            new ViewError('This layout has no zones. You may add them manually using the addZone() function');
+            $this->content = $this->build('div')
+                                    ->attr('class', 'w3-panel w3-blue')
+                                    ->content(!empty($this->content) ? $this->content : 'No content provided')
+                                    ->create();
         }
-
-
+       
 
         $body = $this->build('body')
-                        ->attr('class', 'homeLayout')
-                        ->content($this->layout->render())
-                        ->create();
+                    ->content($this->content)
+                    ->create();
 
         echo $body;
 
         echo '</html>';
+    }
+
+    public function setLayout($layout)
+    {
+        if((is_a($layout, 'Layouts\Layout')) || (get_parent_class($layout) == 'Views\Layouts\Layout'))
+        {
+            $this->layout = $layout;
+        }
+        else
+        {
+            new ViewError('setLayout passed parameter this is not of type Layout');
+        }
+    }
+
+    public function addView($view)
+    {
+        if (is_a($view, 'View'))
+        {
+            if (is_null($this->views))
+            {
+                $this->views = array();
+            }
+            array_push($this->views, $view);
+        }
+        else
+        {
+            new ViewError('addView passed parameter this is not of type View');
+        }
     }
 }

@@ -44,7 +44,7 @@ class Includes
     }
 
 
-    public function path($resource)
+    public static function path($resource)
     {
         switch($resource)
         {

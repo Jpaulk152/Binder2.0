@@ -265,10 +265,7 @@ function getView(view, target)
 }
 
 
-function replace(target, element)
-{
-    document.getElementById(target).replaceWith(element);
-}
+
 
 
 function getTable(table)

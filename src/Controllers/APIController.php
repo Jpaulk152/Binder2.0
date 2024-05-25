@@ -5,7 +5,6 @@ namespace Controllers;
 use Controllers\API\Request;
 use Controllers\API\Response;
 use Views\View;
-use Views\Templates\Template;
 
 class APIController extends Controller
 {
@@ -31,12 +30,12 @@ class APIController extends Controller
                 $objects = $this->dbContext->$entity->get()->objects();
 
                 // structure html with a template, optional method is for submitting forms
-                $template = new Template('tables/default.php', [$entity=>$objects]);
+                $view = new View('Tables/default.php', [$entity=>$objects]);
 
-                $page = (object) array('template' => $template);
-                $view = new View($page);
+                // $page = (object) array('template' => $template);
+                // $view = new View($page);
 
-                new Response($view->renderTemplate(), 200);
+                new Response($view->render(), 200);
                 return;
             }
             else
@@ -99,13 +98,10 @@ class APIController extends Controller
             }
 
            
-            // structure html with a template, optional method is for submitting forms
-            $template = new Template($template.'.php', [$entity=>$object], isset($method) ? $method : '');
+            // structure html with a view, optional method is for create, update, and delete methods
+            $view = new View($view.'.php', [$entity=>$object], isset($method) ? $method : '');
 
-            $page = (object) array('template' => $template);
-            $view = new View($page);
-
-            new Response($view->renderTemplate(), 200, ['Content-Type: application/json']);
+            new Response($view->render(), 200);
 
             return;
         }
@@ -134,15 +130,4 @@ class APIController extends Controller
         new Response('works', 200, ['Content-Type: application/json']);
     }
 
-
-
-
-
-    function childView()
-    {
-        $childView = filter_input(INPUT_GET, 'view', FILTER_SANITIZE_URL);
-
-        $view = new View($this->page);
-        echo json_encode($view->renderChildView($childView));
-    }
 }

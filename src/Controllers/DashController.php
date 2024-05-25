@@ -2,8 +2,11 @@
 
 namespace Controllers;
 
+use Views\Page;
+use Views\Layouts\DefaultLayout;
+use Views\Layouts\TestLayout;
 use Views\View;
-use Views\Templates\Template;
+
 use \utilities as u;
 
 class DashController extends Controller
@@ -14,15 +17,7 @@ class DashController extends Controller
     {
         parent::__construct();
 
-
-        // from here we should be able to hit any other controller strictly using ajax to pull:
-        // - views
-        // - content
-
-        // each controller should implement an interface that allows it to return these items
-
-
-        $nav1 = [
+        $testNavItems = [
             // tests
             (object) array ('name'=>'Unit Tests', 'link'=>'javascript:alert(`this is a test...`)', 'children' => 
                 [
@@ -44,42 +39,38 @@ class DashController extends Controller
                     (object)array('name'=>'Detach Side Bar', 'link'=>'javascript:detachChildView(`side`);'),
                 ]
             ),
-
-                // Tables
-                (object)array('name'=>'Tables', 'link'=>'#', 'children' =>
-                [
-                    (object)array('name'=>'Pages', 'link'=>'javascript:replaceContent(`mainContent`,`table`,`pages`);'),
-                    (object)array('name'=>'ClassLists', 'link'=>'javascript:replaceContent(`mainContent`,`table`,`classLists`);'),
-                ]
-            )
         ];
 
+        $tables = $this->dbContext->allTables();
+        $tableNavItem = [];
+        for ($i=0;$i<count($tables);$i++)
+        {
+            $params = '{entity: `'.$tables[$i].'`, view: `Tables/default`}';
+            $tableNavItem[$i] = (object)array('name'=>$tables[$i], 'link'=>'javascript:read('.$params.')');
 
-        $this->csvContext->Page->set(['title'=>'home']);
-        $nav2 = $this->csvContext->Page->get()->fields(['name','link', 'id'])->objects();
-        $nav2 = $this->addChildren($nav2, $this->csvContext->Page);
+            $params1 = '{entity: `'.$tables[$i].'`, view: `Forms/default`, method: `create`}';
+            $params2 = '{entity: `'.$tables[$i].'`, view: `Forms/default`, method: `create`, setPK: `true`}';
+            $tableNavItem[$i]->children = [
+                (object)array('name'=>'new', 'link'=>'javascript:read('.$params1.')'),
+                (object)array('name'=>'new (set primary key)', 'link'=>'javascript:read('.$params2.')'),
+            ];
+        }
 
-        $nav  = array_merge($nav1, $nav2);
+        $nav  = array_merge($testNavItems, $tableNavItem);
 
+        $data = $this->dbContext->page->new();
 
-        $this->page = (object) array('title'=>'Dashboard', 'content'=>'Test Index');        
-        $this->page->children['nav']['data'] = $nav;
-        $this->page->children['nav']['classes'] = $this->getClasses('nav');
+        $this->page = new Page();
+        $layout = new TestLayout([$nav], [$nav], $data);
+
+        $this->page->setLayout($layout);
+        $this->page->title = 'Dashboard';
 
     }
 
-
-    
     public function index()
     {
-        $view = new View($this->page);
-        $view->render();
-    }
-
-
-    public function testTemplate()
-    {
-        $this->index();
+        $this->page->render();
     }
 
 
@@ -87,23 +78,4 @@ class DashController extends Controller
     {
         phpinfo();
     }
-
-
-    public function get()
-    {
-        $table = 'file_table';
-
-        $context = $this->dbContext;
-        $data = ['objects' => [$table  => $context->$table->fetchAll()]];
-
-        echo '<body></body>';
-        u::dd($data);
-
-        $template = new Template('objects.php', $data);
-        $page = (object) array('template' => $template);
-        $page->title = $table ;
-        $view = new View($page);
-        $view->render();
-    }  
-
 }

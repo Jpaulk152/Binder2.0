@@ -60,7 +60,7 @@ class ApplicationError
         $this->msg = $this->errorType . ': ' . $msg;
         $this->print();
     }
-
+    
     public function print()
     {
         echo $this->msg;

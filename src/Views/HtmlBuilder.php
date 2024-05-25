@@ -24,9 +24,8 @@ class HtmlBuilder {
     }
 
 
-    public function createMenu($menuItems, $classList,  &$tabIndex=1) 
+    public function createMenu($menuItems, $classList, &$tabIndex=1) 
     {
-
         if (is_array($menuItems) && count($menuItems) > 0)
         {
             $menu = '';
