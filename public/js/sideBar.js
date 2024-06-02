@@ -3,7 +3,11 @@
 
 function expand(element){
     
+    console.log('here');
+
     accordian = element.nextSibling;
+
+
 
     var caret = document.getElementById(element.id + '-caret');
 
@@ -29,6 +33,8 @@ function expand(element){
 function accordian(element) {
 
     accordian = element.nextSibling;
+
+
 
     var caret = document.getElementById(element.id + '-caret');
 
@@ -68,13 +74,13 @@ function recursiveClose(node) {
     }
 }
 
-function openSideBar() {
-    document.getElementById("sideContent").style.display = "block";
-}
+// function openSideBar() {
+//     document.getElementById("sideContent").style.display = "block";
+// }
 
-function closeSideBar() {
-    document.getElementById("sideContent").style.display = "none";
-}
+// function closeSideBar() {
+//     document.getElementById("sideContent").style.display = "none";
+// }
 
 function removeSideBar() {
 

@@ -77,4 +77,59 @@ class Controller
         return $parents;
     }
 
+
+
+    public function create($name, \stdClass $entity)
+    {
+        $affectedRows = $this->dbContext->$name->insert($entity);
+        return $affectedRows();
+    }
+
+    public function read(string $controller='hc', string $function='menu', array $targets=['view2', 'view3'], array $parameters=[])
+    {
+        // $targets = '{0: `view2`, 1: `view3`}';
+
+        $t = '{';
+        for($i=0;$i<count($targets);$i++)
+        {
+            $t .= $i.': `'.$targets[$i].'`,';
+        }
+        $targets = $t.'}';
+
+        $p = '{';
+        for($i=0;$i<count($parameters);$i++)
+        {
+            $p .= $i.': `'.$parameters[$i].'`,';
+        }
+        $parameters = $p.'}';
+
+        $link = 'javascript:api(`'.$controller.'`, `'.$function.'`, '.$targets.', '.$parameters.')';
+
+        return $link;
+        
+        // for ($i=0;$i<count($navItems); $i++)
+        // {
+        //     // $filter = '{page_parent: `'.$navItems[$i]->page_id.'`, page_status: `true`, page_inmenu: `true`}';
+        //     $parameters = '{id: `'.$navItems[$i]->page_id.'`}';
+        //     // $params = '{id: `'.$navItems[$i]->page_id.'`}, `menu`, `view2`';
+        //     $nav[$i] = (object)array('name'=>$navItems[$i]->page_title, 'link'=>'javascript:api(`'.$controller.'`, `'.$function.'`, '.$targets.', '.$parameters.')');
+        // }
+    }
+
+    public function update($name, $id, $entity)
+    {
+
+    }
+
+    public function delete($name, $id)
+    {
+        
+    }
+
+    function toJSON($input)
+    {
+        return htmlspecialchars(json_encode($input), ENT_QUOTES, 'UTF-8');
+    }
+    
+
 }

@@ -2,6 +2,7 @@
 
 require_once('utilities.php');
 
+
 class config{
 
   // public static $currentPath = '/MVC';
@@ -27,8 +28,16 @@ class config{
     return utilities::switchSlash(self::doc_root() . self::$currentPath .'/src/', false);
   }
 
-  public static function public_root(){
-    return utilities::switchSlash(self::$currentPath . '/public/', false);
+  // public static function public_root(){
+  //   return utilities::switchSlash(self::doc_root() . self::$currentPath . '/public/', false);
+  // }
+
+  // public static function include_path(){
+  //   return utilities::switchSlash(self::$currentPath . '/../public/resources/', false);
+  // }
+
+  public static function app_root(){
+    return utilities::switchSlash(self::$currentPath . '/index.php/', false);
   }
 }
 

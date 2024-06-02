@@ -12,8 +12,6 @@ class Autoloader
 
     static function load($path, $className){
 
-        
-
         $path = utilities::switchSlash((config::src_root().$path));
 
         $file = $path.$className.'.php';

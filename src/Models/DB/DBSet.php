@@ -5,6 +5,7 @@ namespace Models\DB;
 use \stdClass;
 use \utilities as u;
 
+
 //Database Class
 //Info on this at https://codeshack.io/super-fast-php-mysql-database-class/
 /*
@@ -152,7 +153,7 @@ class DBSet extends DBContext {
 
     
     // READ ###############################################################################
-    public function get($fields = [])
+    public function get($fields = [], $callback = null)
     {
         $query = $this->buildSelect($fields);
 
@@ -164,7 +165,7 @@ class DBSet extends DBContext {
         try
         {
             // $this->enumerableArray = call_user_func_array(array($this, 'query'), $query)->fetchArray();
-            $this->enumerableArray = call_user_func_array(array($this, 'query'), $query)->fetchAll();
+            $this->enumerableArray = call_user_func_array(array($this, 'query'), $query)->fetchAll($callback);
         }
         catch(\Exception $e)
         {
@@ -282,6 +283,43 @@ class DBSet extends DBContext {
         {
             return false;
         }
+    }
+
+    function children(array $objects, string $foreignKey, array $fields=[], string $orderBy='')
+    {
+        $getFields = $fields;
+        $primaryKey = $this->getPrimaryKey();
+
+        if($primaryKey)
+        {
+            foreach($objects as $object)
+            {
+                if (empty($fields))
+                {
+                    $getFields = array_keys((array)$object);
+                }
+
+                if(!isset($object->$primaryKey))
+                {
+                    throw new \Exception('Incorrect object provided. Does not have this table\'s primary key', 1);
+                }
+
+                $result = $this->resolveRelation([$foreignKey => $object->$primaryKey], $orderBy);
+                if(!$result) {continue;}
+        
+                $children = $result->fields($getFields)->objects();
+                if(empty($children)) {continue;}
+        
+                $children = $this->children($children, $foreignKey, $fields);
+                $object->children = $children;
+            }
+        }
+        else
+        {
+            throw new \Exception('Table does not have a primary key', 1);
+        }       
+
+        return $objects;
     }
 
 
@@ -443,10 +481,15 @@ class DBSet extends DBContext {
     }
 
     // returns dbSet with objects based on foreign key relation, if any
-    function resolveRelation($parameters)
+    function resolveRelation($parameters, string $orderBy = '')
     {
         $dbSet = new DBSet($this->table, $this->properties);
         $dbSet->set($parameters); 
+
+        if (!empty($orderBy))
+        {
+            $dbSet->orderBy($orderBy);
+        }
 
         if (!$dbSet->get()->objectArray)
         {

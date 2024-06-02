@@ -22,86 +22,59 @@ use \utilities as u;
 ->addBodyClass(array('some-class', 'another-class')); // Array of classes or a string with several classes
  */
 
-class Page extends HTMLBuilder
+class Page extends Layout
 {
-    public $content = null;
-    public $layout = null;
-    public $views = null;
-    public $title = 'Document';
+    public string $docType = '<!DOCTYPE html>';
+    public string $meta = '<meta charset="UTF-8">';
+    // public string $meta = 'name="robots" content="noindex"';
+    // public string $meta = 'name="robots" content="noindex"';
+    // public string $meta = 'http-equiv="refresh" content="30"';\
+    public string $icon = '<link rel="icon" type="image/x-icon" href="/images/favicon.ico">';
+    public string $title = 'Document';
+    public int $tabIndex=1;
 
-
-    public function __construct($content=null)
+    public function __construct(array $views, array $attributes=[])
     {
-        $this->content = $content;
+        parent::__construct('layout', $views, $attributes);
     }
 
     public function render()
     {
-        echo '<!DOCTYPE html>
-                <html lang="en">
-                    <head>
-                        <title>'.$this->title.'</title>';
+        echo $this->docType;
 
-                        Includes::css();
-                        Includes::js();
+        echo '<html lang="en">';
+        echo    '<head>';
+        echo        '<title>'.$this->title.'</title>';        
 
-        echo        '</head>';
-
-
-        if(!empty($this->layout))
-        {
-            $this->content = $this->layout->render();
-        }
-        else if(!empty($this->views))
-        {
-            foreach($this->views as $view)
-            {
-                $this->content .= $view->render();
-            }
-        }
-        else
-        {
-            $this->content = $this->build('div')
-                                    ->attr('class', 'w3-panel w3-blue')
-                                    ->content(!empty($this->content) ? $this->content : 'No content provided')
-                                    ->create();
-        }
+        echo        Includes::css();
+        echo        Includes::js();
+        
+        echo    '</head>';
        
 
         $body = $this->build('body')
-                    ->content($this->content)
+                    ->content($this->element->create())
                     ->create();
 
         echo $body;
 
+
+
+
         echo '</html>';
     }
 
-    public function setLayout($layout)
-    {
-        if((is_a($layout, 'Layouts\Layout')) || (get_parent_class($layout) == 'Views\Layouts\Layout'))
-        {
-            $this->layout = $layout;
-        }
-        else
-        {
-            new ViewError('setLayout passed parameter this is not of type Layout');
-        }
-    }
+    // public function setLayout($layout)
+    // {
+    //     if((is_a($layout, 'Layouts\Layout')) || (get_parent_class($layout) == 'Views\Layouts\Layout'))
+    //     {
+    //         $layout->views = $this->layout->views;
+    //         $this->layout = $layout;
+    //     }
+    //     else
+    //     {
+    //         new ViewError('setLayout passed parameter this is not of type Layout');
+    //     }
+    // }
 
-    public function addView($view)
-    {
-        if (is_a($view, 'View'))
-        {
-            if (is_null($this->views))
-            {
-                $this->views = array();
-            }
-            array_push($this->views, $view);
-        }
-        else
-        {
-            new ViewError('addView passed parameter this is not of type View');
-        }
-    }
 }

@@ -1,13 +1,17 @@
-h1 {
+/* h1 {
     font-size: 80px;
     margin: 50px 15px;
-}
-
+} */
+/* 
 p {
     font-size: medium;
     font-family: Arial, Helvetica, sans-serif;
     line-height: 25px;
     text-indent: 15px;
+} */
+
+body {
+    padding-top:100px;
 }
 
 a:hover {
@@ -15,9 +19,6 @@ a:hover {
 }
 
 
-.primaryBackground > a:focus {
-    border-bottom: solid #35424E 5px;
-}
 
 .primaryBackground{
     background-color: #3A6FA0;
@@ -53,20 +54,6 @@ a:hover {
     position: absolute;
 }
 
-.lessonLayout {
-    margin-top: 100px;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-}
-
-.curriculumLayout {
-    margin-top: 100px;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-}
-
 .testLayout {
     margin-top: 100px;
     width: 100%;
@@ -77,63 +64,62 @@ a:hover {
 
 
 
-
-.navMenuContainer  {
+#nav {
     z-index: 2;
+    position: fixed;
     top: 0;
+}
+
+#side {
+    z-index: 1;
+    position: fixed;
+    top: 100px;
+}
+
+#main {
+
+}
+
+#main div {
+    height: 100%;
+    overflow: auto;
+}
+
+#nav div {
+    z-index: 2;
     position: fixed;
 }
 
-.navMenuButton {
-    /* margin-top: 40px; */
-}
 
-.navSubMenu {
+
+.sidebar {
+    font-size: small;
+    width: 400px;
+    height: 100%;
+    padding-top: 20px;
+    padding-bottom: 200px;
+
     position: fixed;
+    overflow: auto;
 }
-
-.navSubMenuContainer {
-    /* margin-top: 40px; */
-}
-
-.navSubMenuButton {
-
-}
-
-.w3-bar-block .navMenuButton {
-    margin-top: 0;
-}
-
-.w3-bar-block .navSubMenuContainer {
-    
-}
-
-.navCaret {
-
-}
-
-.navLogo {
-
-}
-
-.navLogoContainer {
-    
-}
-
-
-
-
 
 
 .sideMenuButton {
-
+    border-radius: 5px;
 }
+
+
+.sideMenuButton:focus {
+    border-bottom: solid black 5px;
+}
+
+
 
 .sideMenuContainer {
     font-size: small;
     padding-top: 20px;
     padding-bottom: 200px;
-    width: 300px;
+    /* width: 300px; */
 }
 
 .sideSubMenuButton{
@@ -147,34 +133,11 @@ a:hover {
     min-height: 75px;
 }
 
+
 .sideSubMenuContainer {
-
+    border: none;
 }
 
-.sideSubMenu {
-
-}
-
-
-.sideCaret {
-
-}
-
-.sideOpenButton {
-
-}
-
-.sideCloseButton {
-
-}
-
-.sideLogo {
-
-}
-
-.sideLogoContainer {
-    
-}
 
 
 .caret {
@@ -183,42 +146,9 @@ a:hover {
     margin-right: 20px;
 }
 
+
 .accordian {
     margin: -10px 0 0 30px;
-    z-index: -1;
-    overflow: hidden;
+    /* z-index: -1;
+    overflow: hidden; */
 }
-
-
-
-.mainContent {
-    height: 100%;
-}
-
-
-
-@media screen and (min-width: 840px){
-    .bioInfo {
-        float: right;
-    }
-}
-
-@media screen and (min-width: 922px){
-    .mainContentToRight {
-        margin-left: 300px;
-    }
-}
-
-/* @media screen and (max-width: 578px){
-    #layout {
-        margin-top: 300px;
-    }
-} */
-
-@media screen and (max-width: 1310px){
-    #layout {
-        margin-top: 170px;
-    }
-}
-
-

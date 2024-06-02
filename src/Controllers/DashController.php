@@ -3,11 +3,10 @@
 namespace Controllers;
 
 use Views\Page;
-use Views\Layouts\DefaultLayout;
-use Views\Layouts\TestLayout;
-use Views\View;
-
-use \utilities as u;
+use Views\Defaults\Form;
+use Views\Menus\Navbar;
+use Views\Menus\Sidebar;
+use Views\Layout;
 
 class DashController extends Controller
 {
@@ -19,7 +18,7 @@ class DashController extends Controller
 
         $testNavItems = [
             // tests
-            (object) array ('name'=>'Unit Tests', 'link'=>'javascript:alert(`this is a test...`)', 'children' => 
+            (object) array ('name'=>'Unit Tests', 'link'=>'#', 'children' => 
                 [
                     (object)array('name'=>'test whatever', 'link'=>'dash/test'),
                     (object)array('name'=>'getHomeNav', 'link'=>'javascript:getView(`nav`, `navContent`);'),
@@ -45,11 +44,11 @@ class DashController extends Controller
         $tableNavItem = [];
         for ($i=0;$i<count($tables);$i++)
         {
-            $params = '{entity: `'.$tables[$i].'`, view: `Tables/default`}';
+            $params = '{entity: `'.$tables[$i].'`, view: `Table`}';
             $tableNavItem[$i] = (object)array('name'=>$tables[$i], 'link'=>'javascript:read('.$params.')');
 
-            $params1 = '{entity: `'.$tables[$i].'`, view: `Forms/default`, method: `create`}';
-            $params2 = '{entity: `'.$tables[$i].'`, view: `Forms/default`, method: `create`, setPK: `true`}';
+            $params1 = '{entity: `'.$tables[$i].'`, view: `Form`, method: `create`}';
+            $params2 = '{entity: `'.$tables[$i].'`, view: `Form`, method: `create`, setPK: `true`}';
             $tableNavItem[$i]->children = [
                 (object)array('name'=>'new', 'link'=>'javascript:read('.$params1.')'),
                 (object)array('name'=>'new (set primary key)', 'link'=>'javascript:read('.$params2.')'),
@@ -58,19 +57,31 @@ class DashController extends Controller
 
         $nav  = array_merge($testNavItems, $tableNavItem);
 
-        $data = $this->dbContext->page->new();
+        $data = $this->dbContext->page_table->get()->objects();
 
-        $this->page = new Page();
-        $layout = new TestLayout([$nav], [$nav], $data);
 
-        $this->page->setLayout($layout);
+
+        $forms = array();
+        for($i=0;$i<count($data);$i++)
+        {
+            $form = new Form($data[$i]->page_title, $data[$i]);
+            $forms[$i] = $form;
+        }
+
+
+        $main = new Layout($forms, 'mainContent mainContentToRight w3-container');
+        $sideBar = new Sidebar($nav);
+        $navBar = new Navbar($nav);
+
+
+        $this->page = new Page([$navBar, $sideBar, $main], 'homeLayout');
         $this->page->title = 'Dashboard';
-
+        $this->page->render();
     }
 
     public function index()
     {
-        $this->page->render();
+        // $this->page->render();
     }
 
 

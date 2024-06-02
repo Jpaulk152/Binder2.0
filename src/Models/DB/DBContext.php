@@ -113,7 +113,7 @@ class DBContext
     }
 
 
-    public function thisFuckingTableIsNamedGroups($query)
+    public function thisF345ingTableIsNamedGroups($query)
     {
         $query = explode(" ", $query);
 
@@ -127,7 +127,7 @@ class DBContext
         return false;
     }
 
-    public function putSpecialFuckingQuotesAroundThisSpecialFuckingTable($query)
+    public function putSpecialF345ingQuotesAroundThisSpecialF345ingTable($query)
     {
         $query = explode(" ", $query);
 
@@ -147,9 +147,9 @@ class DBContext
     public function query($query) {
 
     
-        if($this->thisFuckingTableIsNamedGroups($query))
+        if($this->thisF345ingTableIsNamedGroups($query))
         {
-            $query = $this->putSpecialFuckingQuotesAroundThisSpecialFuckingTable($query);
+            $query = $this->putSpecialF345ingQuotesAroundThisSpecialF345ingTable($query);
         }
 
         // die(var_dump($query));

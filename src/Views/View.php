@@ -2,62 +2,62 @@
 
 namespace Views;
 
+use Views\Includes\Includes;
 use \utilities as u;
 
-/**
- *  Template Class 
- *  Expects:
- * 
-*              $template:  a path to the template file relative to the location of Template.php
-*
-*              $data:      must be reference array where the value is either an array of objects or a single object.
-*                          [ checking if there are single or multiple is handled by the template file passed ]
-*/
+class View extends HtmlBuilder {
 
-class View{
+    public string $id = '';
+    public $entity;
+    public string $classes = '';
+    public array $attributes = [];
+    public string $method = '';
 
-    public $view;
-    public $data;
-    public $method;
-
-    public function __construct($view, $data, $method='', &$tabIndex=1)
+    public function __construct(string $id, $entity, array $attributes=[])
     {
-        $this->view = $view;
-        $this->data = $data;
-        $this->method = $method;
+        $this->id = $id;
+        $this->entity = $entity;
+        $this->attributes = $attributes;
+
+        $this->element = $this->createView();
     }
 
-    public function render()
+
+    protected function createView()
     {
-        if (!file_exists(__DIR__ . '\\' . $this->view))
+        $this->element = $this->build('div');
+        $this->element->attr('id', $this->id);
+
+        foreach ($this->attributes as $attribute => $value)
         {
-            new ViewError('<p style="color:red">view not found</p>');
+            $this->element->attr($attribute, $value);
         }
 
-        if (!$this->data)
+        switch($this->entity) 
         {
-            // new ViewError('<p style="color:red">data not found</p>');
+            case is_string($this->entity):
+                return $this->element->content($this->entity);
+                break;
+
+            case is_array($this->entity):
+                return $this->element->content(print_r($this->entity, true));
+                break;
+
+            case is_a($this->entity, 'Views\Layout'):
+                return $this->element->content($this->entity->element->create());
+                break;
+
+            case is_a($this->entity, 'Views\View'):
+                return $this->entity->element;
+                break;
+
+            default:
+                return $this->element->content('No content provided');
         }
+    }
 
-        $method = $this->method;
-
-        ob_start();
-        
-        if (is_array($this->data))
-        {
-            foreach($this->data as $name => $entity)
-            {
-                include($this->view);
-            }
-        }
-        else
-        {
-            $name = 'entity';
-            $entity = $this->data;
-            include($this->view);
-        }
-
-
-        return ob_get_clean();
+    public function create()
+    {
+        return $this->element->create();
     }
 }

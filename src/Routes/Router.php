@@ -2,6 +2,8 @@
 
 namespace Routes;
 
+use \utilities as u;
+
 class Router
 {
     protected $routes = [];
@@ -23,6 +25,9 @@ class Router
 
     public function dispatch()
     {
+        // echo '<body></body';
+        // u::dd($_SERVER['REQUEST_URI']);
+
         $uri = strtok($_SERVER['REQUEST_URI'], '?');
 
         $method = $_SERVER['REQUEST_METHOD'];
@@ -33,20 +38,10 @@ class Router
             if($method == 'POST')
             {
                 $parameters = filter_input_array(INPUT_POST);
-
-                // foreach($_POST as $key=>$value)
-                // {
-                //     $parameters[htmlspecialchars($key)] = htmlspecialchars($value);
-                // }
             }
             if($method == 'GET')
             {
                 $parameters = filter_input_array(INPUT_GET);
-
-                // foreach($_GET as $key=>$value)
-                // {
-                //     $parameters[htmlspecialchars($key)] = htmlspecialchars($value);
-                // }
             }
 
             $controller = $this->routes[$method][$uri]['controller'];
