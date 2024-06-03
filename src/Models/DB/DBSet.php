@@ -169,7 +169,7 @@ class DBSet extends DBContext {
         }
         catch(\Exception $e)
         {
-            u::dd($e);
+            // u::dd($e);
         }
 
 
@@ -246,9 +246,16 @@ class DBSet extends DBContext {
 
 
     // Returns an array of objects of type $this->model
-    function objects()
-    {        
+    function objects($callback=null)
+    {
+
         $objects = array_values($this->objectArray);
+
+        if (!is_null($callback))
+        {
+            $callback($objects);
+        }
+
         $this->purgeSet();
         return $objects;
     }
@@ -301,6 +308,7 @@ class DBSet extends DBContext {
 
                 if(!isset($object->$primaryKey))
                 {
+                    // continue;
                     throw new \Exception('Incorrect object provided. Does not have this table\'s primary key', 1);
                 }
 

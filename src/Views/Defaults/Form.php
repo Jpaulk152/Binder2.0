@@ -47,9 +47,6 @@ class Form extends View
         $this->name = $name;
         $this->method = $method;
 
-        $this->cssBundle = '';
-        $this->jsBundle = '';
-
         $this->element = $this->createForm($entity, $type);
     }
 

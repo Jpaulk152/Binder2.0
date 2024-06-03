@@ -1,10 +1,10 @@
 <?php
 
-namespace Views\Defaults;
+namespace Views\Buttons;
 
 use Views\View;
 
-class ExpandButton extends View
+class Dropdown extends View
 {
     public function __construct(string $content, string $children, string $onclick='')
     {
@@ -14,25 +14,24 @@ class ExpandButton extends View
         if(!empty($children))
         {
             $caret = $this->build('i')
-                            ->attr('class', 'fa fa-caret-right caret')
+                            ->attr('class', 'fa fa-caret-down')
                             ->create();
 
             $subMenu = $this->build('div')
-                            ->attr('class', 'w3-hide accordian w3-animate-zoom')
+                            ->attr('class', 'w3-dropdown-content w3-bar-block w3-card-4')
                             ->content($children)
                             ->create();
-
-            $onclick='expand(this);'.$onclick;
         }
         
-        $subMenuButton = $this->build('button')
-                                ->attr('class', 'sideSubMenuButton secondaryBackground w3-button w3-block w3-border w3-card-4')
+        $button = $this->build('button')
+                                ->attr('class', 'w3-button')
                                 ->attr('onclick', $onclick)
                                 ->content($caret . ' ' . $content)
                                 ->create();
 
         $this->element = $this->build('div')
-                                ->content($subMenuButton . $subMenu);
+                                ->attr('class', 'dropdown w3-dropdown-hover')
+                                ->content($button . $subMenu);
     }
 
 }

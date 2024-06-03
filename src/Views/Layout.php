@@ -14,6 +14,10 @@ class Layout extends View{
     {
         $this->id = $id;
         $this->attributes = $attributes;
+        if (!isset($this->bundle))
+        {
+            $this->bundle = [];
+        }
 
         $this->addViews($views);
         $this->createLayout();
@@ -32,6 +36,7 @@ class Layout extends View{
     protected function addView(View $view)
     {
         $this->views[$view->id] = $view;
+        $this->addBundle($view->bundle);
     }
 
     protected function addViews(array $views)
@@ -39,6 +44,21 @@ class Layout extends View{
         foreach($views as $view)
         {
             $this->addView($view);
+        }
+    }
+
+    protected function addBundle(array $bundle)
+    {
+        foreach ($bundle as $name => $set)
+        {
+            if (!isset($this->bundle[$name]))
+            {
+                $this->bundle[$name] = $set;
+            }
+            else
+            {
+                $this->bundle[$name] = array_unique(array_merge($this->bundle[$name], $set));
+            }
         }
     }
 

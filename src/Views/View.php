@@ -2,7 +2,6 @@
 
 namespace Views;
 
-use Views\Includes\Includes;
 use \utilities as u;
 
 class View extends HtmlBuilder {
@@ -11,6 +10,12 @@ class View extends HtmlBuilder {
     public $entity;
     public string $classes = '';
     public array $attributes = [];
+
+    public array $css;
+    public array $js;
+
+    public array $bundle;
+
     public string $method = '';
 
     public function __construct(string $id, $entity, array $attributes=[])
@@ -19,9 +24,13 @@ class View extends HtmlBuilder {
         $this->entity = $entity;
         $this->attributes = $attributes;
 
+        if (!isset($this->bundle))
+        {
+            $this->bundle = [];
+        }
+
         $this->element = $this->createView();
     }
-
 
     protected function createView()
     {

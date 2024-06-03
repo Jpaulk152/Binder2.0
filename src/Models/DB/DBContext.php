@@ -218,6 +218,7 @@ class DBContext
             if ($callback != null && is_callable($callback)) {
                 $value = call_user_func($callback, $r);
                 if ($value == 'break') break;
+                $result[] = $value;
             } else {
                 $result[] = $r;
             }

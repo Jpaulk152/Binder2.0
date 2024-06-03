@@ -3,8 +3,8 @@
 namespace Views\Menus;
 
 use Views\View;
-use Views\Defaults\MenuButton;
-use Views\Defaults\DropdownButton;
+use Views\Buttons\MenuButton;
+use Views\Buttons\Dropdown;
 use Views\Includes\Includes;
 
 class Navbar extends View
@@ -26,7 +26,7 @@ class Navbar extends View
         $tabIndex = $GLOBALS['tabIndex'];
 
         $menuBuilder = new MenuBuilder();
-        $menu = $menuBuilder->createMenu($this->entities, MenuButton::class, DropdownButton::class, $tabIndex);
+        $menu = $menuBuilder->createMenu($this->entities, MenuButton::class, Dropdown::class, $tabIndex);
         
         $logo = $this->build('img')
                     ->attr('src', Includes::path('logo'))
