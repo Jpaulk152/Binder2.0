@@ -26,9 +26,11 @@ class Router
     public function dispatch()
     {
         // echo '<body></body';
-        // u::dd($_SERVER['REQUEST_URI']);
+        // u::dd($_SERVER['REQUEST_URI'], true);
 
         $uri = strtok($_SERVER['REQUEST_URI'], '?');
+
+        
 
         $method = $_SERVER['REQUEST_METHOD'];
 
@@ -52,6 +54,8 @@ class Router
         }
         else
         {
+            // u::dd('redirected', true);
+
             // hand API redirections
 
             $home = new \Controllers\HomeController();

@@ -1,17 +1,23 @@
-function openSideBar(main = 'mainView', side = 'side', width = '400px') {
-    document.getElementById(main).style.marginLeft = width;
+function openSideBar(main = 'main', side = 'side', width = '400px') {
+    main = document.getElementById(main);
+    if (main)
+    {
+        main.style.marginLeft = width;
+    }
 
     side = document.getElementById(side);
     side.children[1].style.width = width;
-    // side.children[1].classList.add('w3-sidebar');
     side.children[1].style.display = 'block';
 }
 
-function closeSideBar(main = 'mainView', side = 'side') {
-    main = document.getElementById(main).style.marginLeft = '0';
+function closeSideBar(main = 'main', side = 'side') {
+    main = document.getElementById(main);
+    if (main)
+    {
+        main.style.marginLeft = '0';
+    }
 
     side = document.getElementById(side);
-    // side.children[1].classList.remove('w3-sidebar');
     side.children[1].style.display = 'none';
 }
 

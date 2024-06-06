@@ -4,7 +4,15 @@ function hcMenu(parameters, target)
 {
     var task = new Task('api/hc/menu', parameters, function(response){
 
-        var response = new DOMParser().parseFromString(response, "text/html").getElementById(target);
+        // console.log(response[1]);
+
+        
+        var dom = new DOMParser().parseFromString(response[0]+response[1], "text/html");
+        // console.log(dom);
+        var response = dom.getElementById(target);
+        var bundle = dom.getElementsByTagName('style')[0];
+
+        // console.log(bundle);
 
         if(response)
         {
@@ -16,10 +24,23 @@ function hcMenu(parameters, target)
             else
             {
                 var nav = document.getElementById('nav');
-                nav.insertAdjacentElement('beforebegin', response);
+                nav.insertAdjacentElement('afterend', response);
             }
 
+            var body = document.getElementsByTagName('body')[0];
+            body.insertAdjacentElement('afterend', bundle);
+
             openSideBar();
+
+            // var task = new Task('api/home/insert', {id: response[0], entity: response[1], bundle: response[2]}, function(success){
+
+            //     if (success)
+            //     {
+            //         openSideBar();
+            //     }
+
+            // }, 'POST');
+            // buffer.append(task);
         }
        
 
@@ -36,15 +57,28 @@ function hcPageContent(parameters, target, event)
 {
     var task = new Task('api/hc/pageContent', parameters, function(response){
 
-        // console.log(response);
-
         if (response != lastResponse)
         {
             lastResponse = response;
-            var response = new DOMParser().parseFromString(response, "text/html").getElementById(target);
+            var dom  = new DOMParser().parseFromString(response, "text/html");
+
+            var response = dom.getElementById(target);
+            imgs = dom.getElementsByTagName('img');
+
+            for (i=0; i<imgs.length; i++)
+            {
+                // console.log(imgs[i].src);
+                path = imgs[i].src.split('media/')[1];
+
+                imgs[i].src = '../public/media/' + path;
+
+                // console.log(path);
+            }
+
+            
 
             document.getElementById(target).innerHTML = response;
-
+            
             var view = document.getElementById(target);
             if(view)
             {

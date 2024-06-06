@@ -292,43 +292,7 @@ class DBSet extends DBContext {
         }
     }
 
-    function children(array $objects, string $foreignKey, array $fields=[], string $orderBy='')
-    {
-        $getFields = $fields;
-        $primaryKey = $this->getPrimaryKey();
 
-        if($primaryKey)
-        {
-            foreach($objects as $object)
-            {
-                if (empty($fields))
-                {
-                    $getFields = array_keys((array)$object);
-                }
-
-                if(!isset($object->$primaryKey))
-                {
-                    // continue;
-                    throw new \Exception('Incorrect object provided. Does not have this table\'s primary key', 1);
-                }
-
-                $result = $this->resolveRelation([$foreignKey => $object->$primaryKey], $orderBy);
-                if(!$result) {continue;}
-        
-                $children = $result->fields($getFields)->objects();
-                if(empty($children)) {continue;}
-        
-                $children = $this->children($children, $foreignKey, $fields);
-                $object->children = $children;
-            }
-        }
-        else
-        {
-            throw new \Exception('Table does not have a primary key', 1);
-        }       
-
-        return $objects;
-    }
 
 
     // override parent fetchAll function
@@ -347,8 +311,6 @@ class DBSet extends DBContext {
 
     public function numRows() {
 
-        // u::dd($this->objectArray);
-
         if (!empty($this->objectArray))
         {
             return count($this->objectArray);
@@ -358,13 +320,6 @@ class DBSet extends DBContext {
             return 0;
         }
 
-        // if ($this->query == null)
-        // {
-        //     $this->query('SELECT * FROM ' . $this->table);
-        // }
-
-        // $result = parent::numRows();
-		// return $result;
 	}
 
 	public function affectedRows() {
@@ -462,18 +417,6 @@ class DBSet extends DBContext {
     }
 
 
-    // UPDATE #############################################################################
-
-
-    // DELETE #############################################################################
-
-
-
-
-
-
-
-    // UTILITY ############################################################################
 
 
     // Runs query of the csv that matches the model's name, 
@@ -486,25 +429,6 @@ class DBSet extends DBContext {
         $this->set();
 
         return $array;
-    }
-
-    // returns dbSet with objects based on foreign key relation, if any
-    function resolveRelation($parameters, string $orderBy = '')
-    {
-        $dbSet = new DBSet($this->table, $this->properties);
-        $dbSet->set($parameters); 
-
-        if (!empty($orderBy))
-        {
-            $dbSet->orderBy($orderBy);
-        }
-
-        if (!$dbSet->get()->objectArray)
-        {
-            return false;
-        }
-
-        return $dbSet;
     }
 
 
@@ -531,6 +455,66 @@ class DBSet extends DBContext {
 
         return $parentDbSet;
     }
+
+
+    function getChildren(array $objects, string $foreignKey, string $orderBy='', array $fields=[], $callback=null)
+    {
+        $getFields = $fields;
+        $primaryKey = $this->getPrimaryKey();
+
+        if($primaryKey)
+        {
+            foreach($objects as $object)
+            {
+                if (empty($fields))
+                {
+                    $getFields = array_keys((array)$object);
+                }
+
+                if(!isset($object->$primaryKey))
+                {
+                    // continue;
+                    throw new \Exception('Incorrect object provided. Does not have this table\'s primary key', 1);
+                }
+
+                $result = $this->resolveRelation([$foreignKey => $object->$primaryKey], $orderBy, $getFields, $callback);
+                if(!$result) {continue;}
+        
+                $children = $result->objects();
+                if(empty($children)) {continue;}
+        
+                $children = $this->getChildren($children, $foreignKey, $orderBy, $fields, $callback);
+                $object->children = $children;
+            }
+        }
+        else
+        {
+            throw new \Exception('Table does not have a primary key', 1);
+        }       
+
+        return $objects;
+    }
+
+
+    // returns dbSet with objects based on foreign key relation, if any
+    function resolveRelation($parameters, string $orderBy = '', $fields=[], $callback=null)
+    {
+        $dbSet = new DBSet($this->table, $this->properties);
+        $dbSet->set($parameters);
+
+        if (!empty($orderBy))
+        {
+            $dbSet->orderBy($orderBy);
+        }
+
+        if (!$dbSet->get($fields, $callback)->objectArray)
+        {
+            return false;
+        }
+
+        return $dbSet;
+    }
+
 
     function enumToObjects($array)
     {

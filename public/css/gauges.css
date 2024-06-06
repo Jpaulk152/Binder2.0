@@ -1,0 +1,33 @@
+.circular-progress circle 
+{
+    cx: var(--half-size);
+    cy: var(--half-size);
+    r: var(--radius);
+    stroke-width: var(--stroke-width);
+    fill: none;
+    stroke-linecap: round;
+}
+
+.circular-progress text {
+    cursor: pointer;
+}
+
+@property --progress {
+    syntax: "<number>";
+    inherits: false;
+    initial-value: 0;
+}
+
+.circular-progress circle.bg {
+    stroke: #ddd;
+}
+
+.circular-progress circle.fg {
+    /* stroke: #56BCFF; */
+    stroke: #7BF558;
+    /* stroke: #56BCFF; */
+}
+
+.sidebar .menubutton svg text {
+    fill: white;
+}

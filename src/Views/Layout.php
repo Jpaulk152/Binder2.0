@@ -10,10 +10,11 @@ class Layout extends View{
     // public string $id;
     public array $views = array();
 
-    public function __construct(string $id, array $views, array $attributes=[])
+    public function __construct(string $id, array $views, array $attributes=[], string $tagName='div')
     {
         $this->id = $id;
         $this->attributes = $attributes;
+        $this->tagName = $tagName;
         if (!isset($this->bundle))
         {
             $this->bundle = [];
@@ -30,7 +31,7 @@ class Layout extends View{
         {
             $layout .= $view->create();
         }
-        parent::__construct($this->id, $layout, $this->attributes);
+        parent::__construct($this->id, $layout, $this->attributes, $this->tagName);
     }
 
     protected function addView(View $view)
@@ -47,25 +48,13 @@ class Layout extends View{
         }
     }
 
-    protected function addBundle(array $bundle)
-    {
-        foreach ($bundle as $name => $set)
-        {
-            if (!isset($this->bundle[$name]))
-            {
-                $this->bundle[$name] = $set;
-            }
-            else
-            {
-                $this->bundle[$name] = array_unique(array_merge($this->bundle[$name], $set));
-            }
-        }
-    }
-
     public function setView(View $view)
     {
+
         $this->addView($view);
-        $this->element = $this->createLayout();
+        // echo '<body></body>';
+        // u::dd($this->views['main']);
+        $this->createLayout();
     }
 }
 

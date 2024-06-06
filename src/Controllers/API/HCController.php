@@ -5,11 +5,12 @@ namespace Controllers\API;
 use Controllers\Controller;
 use Controllers\API\HTTP\Response;
 use Controllers\API\HTTP\Request;
+
 use Views\View;
+use Views\Layout;
 use Views\Defaults\Form;
 use Views\Defaults\Table;
-use Views\Menus\Sidebar;
-use Views\Menus\ProgressView;
+use Views\Defaults\Gauge;
 
 class HCController extends Controller
 {
@@ -22,44 +23,20 @@ class HCController extends Controller
     public function menu($parameters)
     {
         // new Response('<p style="color:red">data not found</p>', 404);
-        //   new Response($parameters, 300);
-        // return;
-
-        $function = 'hcPageContent';
-        $target = 'mainView';
+        // new Response($parameters, 300);
+        // return;    
 
         extract($parameters);
 
-        if (isset($id))
+        if (isset($id) && isset($view))
         {
-            $objects = $this->dbContext->page_table->set(['page_parent'=>$id, 'page_status'=>'true', 'page_inmenu'=>'true'])->orderBy(['page_title'])->get(['page_title', 'page_id'])->objects();           
-            $objects = $this->dbContext->page_table->children($objects, foreignKey: 'page_parent', fields: ['page_title', 'page_id'], orderBy: 'page_title');
+            $menu = $this->getMenu($id, $view);
+            
+            // $response = [$menu->bundle];
 
-            $parameters = array();
-            $sideItems = array();
-            for ($i=0;$i<count($objects); $i++)
-            {
-                // $filter = '{page_parent: `'.$navItems[$i]->page_id.'`, page_status: `true`, page_inmenu: `true`}';
-                $parameters['id'] = $objects[$i]->page_id;
+            $bundle = $menu->getBundle('style');
 
-                $link =  $function . '('.$this->toJSON($parameters).', `'.$target.'`, event)';
-
-                // $params = '{id: `'.$navItems[$i]->page_id.'`}, `menu`, `view2`';
-                $sideItems[$i] = (object)array('name'=>$objects[$i]->page_title, 'link'=> $link);
-                if (isset($objects[$i]->children))
-                {
-                    $sideItems[$i]->children = $objects[$i]->children;
-                }
-            }
-
-            $sideBar = '';
-            if (!empty($sideItems))
-            {
-                $sideBar = new Sidebar('side', $sideItems, [], $GLOBALS['style']);
-                $sideBar = $sideBar->create();
-            }            
-
-            new Response($sideBar, 200);
+            new Response([$menu->create(), $bundle], 200);
         }
         else
         {
@@ -78,7 +55,7 @@ class HCController extends Controller
             $pageContent = '';
             if ($page)
             {
-                $pageContent = new View('mainView', urldecode($page->page_content), ['class'=>'w3-container']);
+                $pageContent = new View('main', urldecode($page->page_content), ['class'=>'w3-container']);
             }
 
             new Response($pageContent->create(), 200);
@@ -87,5 +64,73 @@ class HCController extends Controller
         {
             new Response('<p style="color:red">data not found</p>', 404);
         }        
+    }
+
+
+    protected function getMenu($id, $view) : View
+    {
+        $objects = $this->dbContext
+        
+        ->page_table
+        ->set(['page_parent'=>$id, 'page_status'=>'true', 'page_inmenu'=>'true'])
+        ->orderBy('page_title')
+        ->get(['page_title', 'page_id'], function ($object){
+                return $this->addView($object);
+            }
+        )
+        ->objects();
+
+        $objects = $this->dbContext->page_table->getChildren($objects, 'page_parent', 'page_title');
+
+        $this->addLinks($objects);
+
+        return new $view('side', $objects);
+    }
+
+
+    public function addView($object)
+    {
+
+        $progress = new Gauge(
+            id: $object['page_id'].'-ind', 
+            progress: strlen($object['page_title'])*2, 
+            attributes: ['class'=>'w3-container w3-third'], 
+            onclick: '', 
+            size: 50, 
+            strokeWidth: 30
+        );
+
+        $title = new View(
+            id: 'title', 
+            entity: $object['page_title'], 
+            attributes: ['class'=>'w3-container w3-twothird']
+        );
+
+        $display = new Layout(
+            id: 'disp', 
+            views: [$title, $progress], 
+            attributes: ['style'=>'display:flex; align-items:center; width: 100%']
+        );
+
+        return [ 'page_title'=>$display, 'page_id'=>$object['page_id'] ];
+    }
+
+    public function addLinks(array $objects)
+    {
+        foreach($objects as $object)
+        {
+            $function = 'hcPageContent';
+            $target = 'main';
+
+            $params = ['id'=>$object->page_id];
+            $link = $function . '('.$this->toJSON($params).', `'.$target.'`)';
+
+            $object->page_id = $link;
+
+            if (property_exists($object, 'children'))
+            {
+                $this->addLinks($object->children);
+            }
+        }
     }
 }

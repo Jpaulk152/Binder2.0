@@ -7,6 +7,7 @@ use Controllers\HomeController;
 use Controllers\TableController;
 use Controllers\TestController;
 use Controllers\DashController;
+use Controllers\ExampleController;
 use Controllers\API\APIController;
 use Controllers\API\ReadController;
 use Controllers\API\HCController;
@@ -43,6 +44,13 @@ $router->get(\config::app_root() . 'info', DashController::class, 'info');
 $router->post(\config::app_root() . 'api/hc/menu', HCController::class, 'menu');
 $router->post(\config::app_root() . 'api/hc/childMenu', HCController::class, 'childMenu');
 $router->post(\config::app_root() . 'api/hc/pageContent', HCController::class, 'pageContent');
+
+$router->post(\config::app_root() . 'api/home/insert', HomeController::class, 'insert');
+
+
+$router->get(\config::app_root() . 'examples', ExampleController::class, 'index');
+
+
 
 
 $router->dispatch();

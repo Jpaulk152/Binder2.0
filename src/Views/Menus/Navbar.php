@@ -3,6 +3,7 @@
 namespace Views\Menus;
 
 use Views\View;
+use Views\Layout;
 use Views\Buttons\MenuButton;
 use Views\Buttons\Dropdown;
 use Views\Includes\Includes;
@@ -17,6 +18,7 @@ class Navbar extends View
         $this->entities = $entities;
         $this->attributes = $attributes;
 
+        $this->extractBundle($this->entities);
         $this->createNavbar();
     }
 
@@ -42,6 +44,26 @@ class Navbar extends View
                             ->create();
 
         parent::__construct($this->id, $homeButton . $menu, $this->attributes);
+    }
+
+
+    protected function extractBundle(array $entities)
+    {
+        foreach($entities as $entity)
+        {
+            foreach($entity as $name=>$field)
+            {
+                if (is_a($field, View::class) || is_a($field, Layout::class))
+                {
+                    $this->addBundle($field->bundle);
+                }
+
+                if ($name == 'children')
+                {
+                    $this->extractBundle($field);
+                }
+            }
+        }
     }
 }
 

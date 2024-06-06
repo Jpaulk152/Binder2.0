@@ -16,17 +16,6 @@ class Controller
 
 
 
-    function addView($view, $dbSet)
-    {
-        $dbSet->set($view['parameters']);
-
-        $childView['data'] = $dbSet->get()->fields($view['fields'])->objects();
-        $childView['data'] = $this->addChildren($childView['data'], $dbSet, $view['primaryKey'], $view['foreignKey'], $view['fields']);
-        $childView['classes'] = $this->getClasses($view['classes']);
-
-        return $childView;
-    }
-
 
     public function getClasses($view)
     {

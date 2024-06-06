@@ -1,5 +1,8 @@
 body {
     padding-top:100px;
+
+
+    height: 100vh;
 }
 
 a:hover {
@@ -14,7 +17,7 @@ a:hover {
 }
 
 .primaryBackground > a:hover {
-    background-color: #7E90A1;
+    background-color: #2D4B73;
     color: white;
 }
 
@@ -51,6 +54,20 @@ a:hover {
 }
 
 
+#layout {
+    height:100%;
+/* 
+    max-width: 60em;
+    padding: 0 20px;
+    margin: 6em auto 19em;
+    background: #fff;
+    color: #333;
+    font: 1.156em / 1.3 My Gill Sans, Lato, sans-serif;
+    font-size-adjust: 0.45;
+    position: relative;
+    box-shadow: 0 .3em 1em #000; */
+}
+
 
 #nav {
     z-index: 2;
@@ -62,18 +79,31 @@ a:hover {
     z-index: 1;
     position: fixed;
     top: 100px;
+    
 }
+
 
 #main {
+    /* height: 100%; */
+    /* overflow: auto; */
+
+    
 
 }
 
-#main div {
-    height: 100%;
-    overflow: auto;
+#main .panel {
+    max-width: 85em;
+    padding: 0 20px;
+    margin: 6em auto 19em;
+    background: #fff;
+    color: #333;
+    /* font: 1.156em / 1.3 My Gill Sans, Lato, sans-serif; */
+    font-size-adjust: 0.45;
+    position: relative;
+    box-shadow: 0 .3em 1em #000;
 }
 
-#nav div {
+#nav .w3-dropdown-content {
     z-index: 2;
     position: fixed;
 }
@@ -85,28 +115,17 @@ a:hover {
     height: 100%;
     padding-top: 20px;
     padding-bottom: 200px;
+    border-radius: 0 10px 0 0;
 
     position: fixed;
     overflow: auto;
 }
 
 
-.sideMenuButton {
-    border-radius: 5px;
-}
-
-
-.sideMenuButton:focus {
-    border-bottom: solid black 5px;
-}
-
-
-
 .sideMenuContainer {
     font-size: small;
     padding-top: 20px;
     padding-bottom: 200px;
-    /* width: 300px; */
 }
 
 .sideSubMenuButton{
@@ -148,11 +167,17 @@ a:hover {
 }
 
 .sidebar .menubutton:focus {
-    border-top: solid black 5px;
-    border-bottom: solid black 5px;
-    border-left: solid black 1px;
-    border-right: solid black 1px;
+    border-top: solid #FFD70F 1px;
+    border-bottom: solid #FFD70F 1px;
 }
+
+.sidebar .menubutton:hover {
+    background-color: #33638F !important;
+    color: white !important;
+}
+
+
+
 
 
 

@@ -3,8 +3,11 @@
 namespace Views\Menus;
 
 use Views\View;
+use Views\Layout;
 use Views\Buttons\MenuButton;
 use Views\Buttons\Expander;
+use \utilities as u;
+
 
 class Sidebar extends View
 {
@@ -18,6 +21,10 @@ class Sidebar extends View
         $this->entities = $entities;
         $this->attributes = $attributes;
         $this->width = $width;
+
+        $this->extractBundle($this->entities);
+
+        // u::dd($this->bundle['style']);
 
         $this->createSidebar();
     }
@@ -33,13 +40,13 @@ class Sidebar extends View
                             ->attr('id', 'sideContentButton')
                             ->attr('class', 'w3-bar-item w3-button w3-large')
                             ->attr('style', 'float:left')
-                            ->attr('onclick', 'openSideBar(`mainView`, `side`, `'.$this->width.'`)')
+                            ->attr('onclick', 'openSideBar(`main`, `side`, `'.$this->width.'`)')
                             ->content('&#9776')
                             ->create();
 
         $closeButton = $this->build('button')
                             ->attr('class', 'w3-bar-item w3-button w3-medium')
-                            ->attr('onclick', 'closeSideBar(`mainView`, `side`)')
+                            ->attr('onclick', 'closeSideBar(`main`, `side`)')
                             ->content('Close &times;')
                             ->create();
 
@@ -50,6 +57,26 @@ class Sidebar extends View
                         ->create();
 
         parent::__construct($this->id, $openButton . $sidebar, $this->attributes);
+    }
+
+
+    protected function extractBundle(array $entities)
+    {
+        foreach($entities as $entity)
+        {
+            foreach($entity as $name=>$field)
+            {
+                if (is_a($field, View::class) || is_a($field, Layout::class))
+                {
+                    $this->addBundle($field->bundle);
+                }
+
+                if ($name == 'children')
+                {
+                    $this->extractBundle($field);
+                }
+            }
+        }
     }
 }
 

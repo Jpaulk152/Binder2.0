@@ -4,15 +4,15 @@ namespace Views\Defaults;
 
 use Views\View;
 
-class ProgressCircle extends View
+class Gauge extends View
 {
     public int $progress;
-    public int $size;
+    public ?int $size;
     public int $strokeWidth;
     public float $speed;
     public string $onclick;
 
-    public function __construct(string $id, int $progress, int $size, int $strokeWidth=30, float $speed=0.3, string $onclick='', array $attributes=[])
+    public function __construct(string $id, int $progress, array $attributes=[], string $onclick='', int $size=null, int $strokeWidth=30, float $speed=0.3)
     {
         $this->id = $id;
         $this->progress = $progress;
@@ -36,9 +36,7 @@ class ProgressCircle extends View
 
         parent::__construct($this->id, $svg, $this->attributes);
 
-        $this->bundle['css'] = [
-
-            '.circular-progress text {cursor: pointer;}',
+        $this->bundle['style'] = [
 
             '#'.$this->id.' .circular-progress 
             {
@@ -51,31 +49,14 @@ class ProgressCircle extends View
                 animation: '.$this->id.'-animation 0.5s linear 0s 1 forwards;
             }',
 
-            '.circular-progress circle 
-            {
-                cx: var(--half-size);
-                cy: var(--half-size);
-                r: var(--radius);
-                stroke-width: var(--stroke-width);
-                fill: none;
-                stroke-linecap: round;
-            }',
-
-            '.circular-progress circle.bg {stroke: #ddd;}',
-
             '#'.$this->id.' .circular-progress circle.fg {
                 transform: rotate(-90deg);
                 transform-origin: var(--half-size) var(--half-size);
                 stroke-dasharray: var(--dash) calc(var(--circumference) - var(--dash));
                 transition: stroke-dasharray '.$this->speed.'s linear 0s;
-                stroke: #5394fd;
+
             }',
 
-            '@property --progress {
-                syntax: "<number>";
-                inherits: false;
-                initial-value: 0;
-            }',
 
             ' @keyframes '.$this->id.'-animation {
                 from {
@@ -85,7 +66,7 @@ class ProgressCircle extends View
                 --progress: '.$this->progress.';
                 }
             }'
-
+            
         ];     
     }
 }

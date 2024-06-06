@@ -4,6 +4,7 @@ namespace Views;
 
 use Views\Includes\Includes;
 use Views\Layout;
+use Views\View;
 use \utilities as u;
 
 /*
@@ -22,46 +23,81 @@ use \utilities as u;
 ->addBodyClass(array('some-class', 'another-class')); // Array of classes or a string with several classes
  */
 
-class Page extends Layout
+class Page extends View
 {
     public string $docType = '<!DOCTYPE html>';
+    public string $lang;
+    public string $title = 'Document';
     public string $meta = '<meta charset="UTF-8">';
+    public int $tabIndex=1;
+
     // public string $meta = 'name="robots" content="noindex"';
     // public string $meta = 'name="robots" content="noindex"';
     // public string $meta = 'http-equiv="refresh" content="30"';\
-    public string $icon = '<link rel="icon" type="image/x-icon" href="/images/favicon.ico">';
-    public string $title = 'Document';
-    public int $tabIndex=1;
+    // public string $icon = '<link rel="icon" type="image/x-icon" href="/images/favicon.ico">';
 
-    public function __construct(array $views, array $attributes=[])
+    public Layout $layout;
+
+    public function __construct(array $views, array $attributes=[], string $docType='html', $lang='en', $title='Document', array $meta=['charset="UTF-8"'], array $bundle=[])
     {
-        parent::__construct('layout', $views, $attributes);
+        $this->docType = $docType;
+        $this->lang = $lang;
+        $this->title = $title;
+        foreach($meta as $tag)
+        {
+            $this->meta .= '<meta '.$tag.'>';
+        }
+        // $this->bundle = $bundle;
+        $this->layout = new Layout(id: 'layout', views: $views, attributes: $attributes, tagName: 'body');
+
+        // $this->bundle = array_merge($bundle, $this->body->bundle);
+
+        $this->addBundle($bundle);
+        $this->addBundle($this->layout->bundle);
     }
 
-    public function render()
+    public function createPage()
     {
-        echo $this->docType;
+        $page =  '<!DOCTYPE '.$this->docType.'>';
 
-        echo '<html lang="en">';
-        echo    '<head>';
-        echo        '<title>'.$this->title.'</title>';        
+        // $page .= '<'.$this->docType.' lang="en">';
+        $head =     '<head>';
+        $head .=        '<title>'.$this->title.'</title>';
+        $head .=        $this->meta;
+        $head .=        Includes::css();
+        $head .=        Includes::js();
+        $head .=    '</head>';
 
-        echo        Includes::css();
-        echo        Includes::js();
-        
-        echo    '</head>';
+        $page .= $head;
        
+        // $page .= $this->body->create();
 
-        $body = $this->build('body')
-                    ->content($this->element->create())
+        $page .= $this->build('body')
+                    ->content($this->layout->create())
                     ->create();
 
-        echo $body;
+        // echo $body;
+
+        foreach($this->bundle as $name=>$set)
+        {
+            $page .= '<'.$name.'>';
+            foreach ($set as $item)
+            {
+                $page .=  $item;
+            }
+            $page .=  '</'.$name.'>';
+        }
+
+        $page .=  '</html>';
 
 
-
-
-        echo '</html>';
+        parent::__construct('', $page, [], $this->docType.' lang="en"');
+    }
+    
+    public function render()
+    {
+        $this->createPage();
+        echo $this->create();
     }
 
     // public function setLayout($layout)
@@ -78,3 +114,92 @@ class Page extends Layout
     // }
 
 }
+
+
+// <?php
+
+// namespace Views;
+
+// use Views\Includes\Includes;
+// use Views\Layout;
+// use \utilities as u;
+
+// /*
+// ->setDoctype(\Pyrech\Layout::DOCTYPE_HTML5)
+// ->addMeta('charset', 'utf-8')
+// ->addTitle('My wonderful title')
+// ->addMeta('description', 'Description of your page')
+// ->addMeta('robot', 'index')
+// ->addMeta('http-equiv:refresh', '60') // If the key attribute is not 'name', prefix the value by the attribute then ':''
+// ->addIcon('/favicon.png', 'png')
+// ->addIcon('/favicon.ico', 'ico')
+// ->addStyle('/my-stylesheet.css') // Default media is 'all'
+// ->addStyle('/print.css', 'print')
+// ->addScript('/my-javascript.js', \Pyrech\Layout::SCRIPT_DEFER)
+// ->addScript('alert("Hello World!");', \Pyrech\Layout::SCRIPT_INTERNAL)
+// ->addBodyClass(array('some-class', 'another-class')); // Array of classes or a string with several classes
+//  */
+
+// class Page extends Layout
+// {
+//     public string $docType = '<!DOCTYPE html>';
+//     public string $meta = '<meta charset="UTF-8">';
+//     // public string $meta = 'name="robots" content="noindex"';
+//     // public string $meta = 'name="robots" content="noindex"';
+//     // public string $meta = 'http-equiv="refresh" content="30"';\
+//     public string $icon = '<link rel="icon" type="image/x-icon" href="/images/favicon.ico">';
+//     public string $title = 'Document';
+//     public int $tabIndex=1;
+
+//     public function __construct(array $views, array $attributes=[])
+//     {
+//         parent::__construct('layout', $views, $attributes);
+//     }
+
+//     public function render()
+//     {
+//         echo $this->docType;
+
+//         echo '<html lang="en">';
+//         echo    '<head>';
+//         echo        '<title>'.$this->title.'</title>';        
+
+//         echo        Includes::css();
+//         echo        Includes::js();
+        
+//         echo    '</head>';
+       
+
+//         $body = $this->build('body')
+//                     ->content($this->element->create())
+//                     ->create();
+
+//         echo $body;
+
+//         foreach($this->bundle as $name=>$set)
+//         {
+//             echo '<'.$name.'>';
+//             foreach ($set as $item)
+//             {
+//                 echo $item;
+//             }
+//             echo '</'.$name.'>';
+//         }
+
+//         echo '</html>';
+//     }
+
+//     // public function setLayout($layout)
+//     // {
+//     //     if((is_a($layout, 'Layouts\Layout')) || (get_parent_class($layout) == 'Views\Layouts\Layout'))
+//     //     {
+//     //         $layout->views = $this->layout->views;
+//     //         $this->layout = $layout;
+//     //     }
+//     //     else
+//     //     {
+//     //         new ViewError('setLayout passed parameter this is not of type Layout');
+//     //     }
+//     // }
+
+// }

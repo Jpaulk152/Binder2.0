@@ -35,5 +35,4 @@ class IndexController extends Controller
         $this->page->content = '<p style="color:red">No route found for URI: ' . $uri . '</p>';
         $this->index();
     }
-
 }

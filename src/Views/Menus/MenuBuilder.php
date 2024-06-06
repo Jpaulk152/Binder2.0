@@ -3,6 +3,8 @@
 namespace Views\Menus;
 
 use Views\HtmlBuilder;
+use Views\View;
+use Views\Layout;
 
 class MenuBuilder extends HTMLBuilder
 {
@@ -93,8 +95,9 @@ class MenuBuilder extends HTMLBuilder
 
         $itemArray = array_values((array)$item);
 
-        $menuItem['name'] = $itemArray[0];
-        $menuItem['link'] = $itemArray[1];
+        $menuItem['name'] = $this->isView($itemArray[0]);
+        $menuItem['link'] = $this->isView($itemArray[1]);
+
 
 
         if(isset($item->children))
@@ -105,6 +108,19 @@ class MenuBuilder extends HTMLBuilder
 
         return $menuItem;
 
+    }
+
+
+    function isView($item)
+    {
+        if (is_a($item, View::class) || is_a($item, Layout::class))
+        {
+            return $item->create();
+        }
+        else
+        {
+            return $item;
+        }
     }
     
 }
