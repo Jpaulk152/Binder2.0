@@ -1,26 +1,52 @@
-function openSideBar(main = 'main', side = 'side', width = '400px') {
-    main = document.getElementById(main);
-    if (main)
+
+$(document).ready(function(){
+    width = '400px';
+
+    rows = document.getElementsByClassName('layout');
+    columns = 3;
+
+    for(i=0;i<rows.length;i++)
+    {
+        styles = window.getComputedStyle(rows[i], null);
+
+        rowWidth = parseInt(styles.getPropertyValue('width')) - parseInt(styles.getPropertyValue('padding-left')) - parseInt(styles.getPropertyValue('padding-right')) - 20;
+
+        colWidth = rowWidth / columns;
+        elements = rows[i].children;
+
+        for(j=0;j<elements.length;j++)
+        {
+            elements[j].style.width = colWidth + 'px';
+        }
+    }
+});
+
+function openSideBar(event) {
+
+    sidebar = event.target.nextSibling;
+    main = sidebar.parentElement.nextSibling;
+
+    if (main && main.getAttribute('id') === 'main')
     {
         main.style.marginLeft = width;
     }
 
-    side = document.getElementById(side);
-    side.children[1].style.width = width;
-    side.children[1].style.display = 'block';
+    sidebar.style.width = width;
+    sidebar.style.display = 'block';
 }
 
-function closeSideBar(main = 'main', side = 'side') {
-    main = document.getElementById(main);
-    if (main)
+function closeSideBar(event) {
+
+    sidebar = event.target.parentElement;
+    width = sidebar.style.width;
+    sidebar.style.display = 'none';
+
+    sibling = sidebar.parentElement.nextSibling;
+    if (sibling)
     {
-        main.style.marginLeft = '0';
-    }
-
-    side = document.getElementById(side);
-    side.children[1].style.display = 'none';
+        sibling.style.marginLeft = '0';
+    }   
 }
-
 
 
 function expand(element){

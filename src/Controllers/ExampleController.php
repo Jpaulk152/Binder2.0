@@ -8,9 +8,12 @@ use Views\View;
 
 use Views\Menus\Navbar;
 use Views\Menus\Sidebar;
+use Views\Menus\Sidebar2;
 
 use Views\Defaults\Card;
 use Views\Defaults\Gauge;
+
+use Views\Buttons\MenuButton;
 
 
 use Views\Layout;
@@ -68,35 +71,29 @@ class ExampleController extends Controller
         $nav = new Navbar('nav', $objects, ['class'=>'w3-card-4 w3-bar w3-white']);
 
 
-        // $circ1 = new ProgressCircle(id: 'ind1', progress: 100, attributes: ['class'=>'w3-container w3-col', 'style'=>'width:10%']);
-        // $circ2 = new ProgressCircle(id: 'ind2', progress: 14, attributes: ['class'=>'w3-container w3-col', 'style'=>'width:10%'], onclick: '', size: 50);
-        // $circ3 = new ProgressCircle(id: 'ind3', progress: 76, attributes: ['class'=>'w3-container w3-col', 'style'=>'width:10%'], onclick: '', size: 60);
-        // $circ4 = new ProgressCircle(id: 'ind4', progress: 13, attributes: ['class'=>'w3-container w3-col', 'style'=>'width:10%'], onclick: '', size: 70);
-        // $circ5 = new ProgressCircle(id: 'ind5', progress: 34, attributes: ['class'=>'w3-container w3-col', 'style'=>'width:10%'], onclick: '', size: 80);
-        // $circ6 = new ProgressCircle(id: 'ind6', progress: 34, attributes: ['class'=>'w3-container w3-col', 'style'=>'width:10%'], onclick: '', size: 90);
-        // $circ7 = new ProgressCircle(id: 'ind7', progress: 56, attributes: ['class'=>'w3-container w3-col', 'style'=>'width:10%'], onclick: '', size: 100);
-        // $circ8 = new ProgressCircle(id: 'ind8', progress: 76, attributes: ['class'=>'w3-container w3-col', 'style'=>'width:10%'], onclick: '', size: 130);
-        // $circ9 = new ProgressCircle(id: 'ind9', progress: 13, attributes: ['class'=>'w3-container w3-col', 'style'=>'width:10%']);
-
-        // $main = new Layout('main', [$circ1, $circ2, $circ3, $circ4, $circ5,$circ6, $circ7, $circ8, $circ9, $circ1], ['class'=>'w3-center w3-row']);
-
-        // $main = new Layout('main', [$circ1], ['class'=>'w3-center w3-row']);
-
         $circ2 = new Gauge(id: 'ind2', progress: 14, attributes: [], onclick: '', size: 50);
         $circ3 = new Gauge(id: 'ind3', progress: 76, attributes: [], onclick: '', size: 60);
         $circ4 = new Gauge(id: 'ind4', progress: 13, attributes: [], onclick: '', size: 70);
         $circ5 = new Gauge(id: 'ind5', progress: 34, attributes: [], onclick: '', size: 80);
 
         $objects = $this->dbContext->page_table->set(['page_parent'=>'none'])->get(['page_title', 'page_id'])->objects();
-        $testMenu = new Sidebar('testMenu', $objects, ['style'=>'height: 100%;']);
 
-        // ob_start();
-        // include('src/Views/Defaults/Card.php');
 
-        $cardStyle = ['class'=>'w3-container w3-col' , 'style'=>'width:25em; height: 25em; padding: 1em 16px;'];
-        $layoutStyle = ['class'=>'w3-row panel', 'style'=>'padding: 64px;'];
+        $function = 'hcPageContent';
 
-        // $card = ob_get_clean();
+        foreach($objects as &$object)
+        {
+
+            $params = ['id'=>$object->page_id];
+            $link = $function . '('.$this->toJSON($params).', `main`)';
+
+            $object = new View($object->page_id, $object->page_title, ['class'=>'menubutton w3-bar-item w3-button', 'onclick'=>$link]);
+        }
+
+        $testMenu = new Sidebar2('testMenu', $objects, ['style'=>'position: fixed; z-index: 1; border: 5px solid green']);
+
+        $cardStyle = ['class'=>'w3-container w3-col' , 'style'=>'width:25em; height: 25em; padding: 1em 16px; border: solid 5px orange;'];
+        $layoutStyle = ['class'=>'layout w3-row panel', 'style'=>'padding: 64px; border: solid 5px blue;'];
 
         // $path = Includes::path('logo');
         // $path = '../public/resources/pic1.jpg';
@@ -110,11 +107,15 @@ class ExampleController extends Controller
             new Card('card3', 'card3', [$circ2], $cardStyle),
             new Card('card4', 'card4', [$circ3], $cardStyle),
             new Card('card5', 'card5', [$circ5], $cardStyle),
-            // new Card('card6', 'card6', [$testMenu], $cardStyle)
         ];
 
 
-        $sidebars = [$testMenu];
+        $sidebars = [
+
+            new Sidebar2('testMenu1', $objects, ['class'=>'w3-row w3-half', 'style'=>'position: relative; z-index: 1; overflow: hidden; border: 5px solid red']),
+            new Sidebar2('testMenu2', $objects, ['class'=>'w3-row w3-half', 'style'=>'position: relative; z-index: 1; overflow: hidden; border: 5px solid green'])
+
+        ];
 
 
 
@@ -122,15 +123,60 @@ class ExampleController extends Controller
         // $card2 = new View('card2', $card, ['class'=>'w3-container w3-col' , 'style'=>'width:30%']);
         $cards = new Layout ('cards', $cards, $layoutStyle);
         $sidebars = new Layout ('sidebars', $sidebars, $layoutStyle);
-        $main = new Layout ('main', [$cards, $sidebars], ['class'=>'w3-row']);
-        $this->page = new Page(views: [$nav, $main], attributes: [], docType: 'html', lang: 'en', title: 'Examples', meta: ['charset="UTF-8"'], bundle: []);
-
-
-        // $this->page = new Page([$main]);
-
-
+        $main = new Layout ('main', [$cards, $sidebars], ['class'=>'']);
+        $this->page = new Page(views: [$nav, $testMenu, $main], attributes: [], docType: 'html', lang: 'en', title: 'Examples', meta: ['charset="UTF-8"'], bundle: []);
 
     }
+
+
+    public function addView($object)
+    {
+
+        $progress = new Gauge(
+            id: $object['page_id'].'-ind', 
+            progress: strlen($object['page_title'])*2, 
+            attributes: ['class'=>'w3-container w3-third'], 
+            onclick: '', 
+            size: 50, 
+            strokeWidth: 30
+        );
+
+        $title = new View(
+            id: 'title', 
+            entity: $object['page_title'], 
+            attributes: ['class'=>'w3-container w3-twothird']
+        );
+
+        $display = new Layout(
+            id: 'disp', 
+            views: [$title, $progress], 
+            attributes: ['style'=>'display:flex; align-items:center; width: 100%']
+        );
+
+        return [ 'page_title'=>$display, 'page_id'=>$object['page_id'] ];
+    }
+
+
+    public function addLinks(array $objects)
+    {
+        foreach($objects as $object)
+        {
+            $function = 'hcPageContent';
+            $target = 'main';
+
+            $params = ['id'=>$object->page_id];
+            $link = $function . '('.$this->toJSON($params).', `'.$target.'`)';
+
+            $object->page_id = $link;
+
+            if (property_exists($object, 'children'))
+            {
+                $this->addLinks($object->children);
+            }
+        }
+    }
+
+
 
     public function index()
     {

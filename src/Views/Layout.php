@@ -8,7 +8,7 @@ use \utilities as u;
 class Layout extends View{
 
     // public string $id;
-    public array $views = array();
+    public array $views = [];
 
     public function __construct(string $id, array $views, array $attributes=[], string $tagName='div')
     {
@@ -24,7 +24,7 @@ class Layout extends View{
         $this->createLayout();
     }
 
-    protected function createLayout()
+    protected function createLayout() : void
     {
         $layout = '';
         foreach($this->views as $view)
@@ -34,13 +34,13 @@ class Layout extends View{
         parent::__construct($this->id, $layout, $this->attributes, $this->tagName);
     }
 
-    protected function addView(View $view)
+    protected function addView(View $view) : void
     {
         $this->views[$view->id] = $view;
         $this->addBundle($view->bundle);
     }
 
-    protected function addViews(array $views)
+    protected function addViews(array $views) : void
     {
         foreach($views as $view)
         {
@@ -48,7 +48,7 @@ class Layout extends View{
         }
     }
 
-    public function setView(View $view)
+    public function setView(View $view) : void
     {
 
         $this->addView($view);

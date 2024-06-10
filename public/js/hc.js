@@ -89,7 +89,7 @@ function hcPageContent(parameters, target, event)
                 document.body.firstChild.appendChild(response);
             }
 
-            openSideBar();
+            // openSideBar(event);
         }
 
     }, 'POST')

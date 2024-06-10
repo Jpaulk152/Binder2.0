@@ -53,7 +53,7 @@ class View extends HtmlBuilder {
                 return $this->element->content($this->entity);
                 break;
 
-            case is_array($this->entity):
+            case is_array($this->entity) || is_object($this->entity):
                 return $this->element->content(print_r($this->entity, true));
                 break;
 
