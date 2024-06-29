@@ -39,5 +39,24 @@ class config{
   public static function app_root(){
     return utilities::switchSlash(self::$currentPath . '/index.php/', false);
   }
+
+
+  public static function includes(array ...$includes)
+  {
+    foreach($includes as $include)
+    {
+        foreach($include as $name => $value)
+        {
+            if (isset($_SESSION[$name]))
+            {
+                $_SESSION[$name] .= !str_contains($_SESSION[$name], $value) ? $value : '';
+            }
+            else
+            {
+                $_SESSION[$name] = $value;
+            }
+        }
+    }
+  }
 }
 

@@ -3,12 +3,13 @@
 namespace Models\DB;
 
 use Models\DB\SQLConfig;
+use \mysqli;
 use \utilities as u;
 
 #[\AllowDynamicProperties]
 class DBContext
 {
-    protected $connection;
+    protected mysqli $connection;
 	protected $query;
     protected $show_errors = TRUE;
     protected $query_closed = TRUE;
@@ -23,14 +24,16 @@ class DBContext
 
     function createConnection($charset = 'utf8')
     {
-        $this->connection = new \mysqli(SQLConfig::$serverName, SQLConfig::$userName, SQLConfig::$password, SQLConfig::$databaseName);
+        $this->connection = new mysqli(SQLConfig::$serverName, SQLConfig::$userName, SQLConfig::$password, SQLConfig::$databaseName);
 
 		if ($this->connection->connect_error) 
         {
 			$this->error('Failed to connect to MySQL - ' . $this->connection->connect_error);
 		}
 
-		return $this->connection->set_charset($charset);
+        $this->connection->set_charset($charset);
+
+		return $this->connection;
     }
 
 
@@ -199,8 +202,7 @@ class DBContext
     }
 
 
-	public function fetchAll($callback = null) {
-
+    public function fetchAll($callback = null) {
 	    $params = array();
         $row = array();
 	    $meta = $this->query->result_metadata();
@@ -212,12 +214,17 @@ class DBContext
         $result = array();
         while ($this->query->fetch()) {
             $r = array();
+
+            
             foreach ($row as $key => $val) {
                 $r[$key] = $val;
             }
+
             if ($callback != null && is_callable($callback)) {
+                
                 $value = call_user_func($callback, $r);
                 if ($value == 'break') break;
+
                 $result[] = $value;
             } else {
                 $result[] = $r;

@@ -3,6 +3,7 @@
 namespace Routes;
 
 use Controllers\IndexController;
+use Controllers\IncludesController;
 use Controllers\HomeController;
 use Controllers\TableController;
 use Controllers\TestController;
@@ -27,6 +28,11 @@ $router = new Router();
 // Index
 $router->get(\config::app_root(), IndexController::class, 'index');
 $router->get(\config::app_root() . 'index', IndexController::class, 'index');
+
+
+// Includes
+$router->get(\config::app_root() . 'includes/app.css', IncludesController::class, 'stylesheet');
+$router->get(\config::app_root() . 'includes/app.js', IncludesController::class, 'jscripts');
 
 
 // Home

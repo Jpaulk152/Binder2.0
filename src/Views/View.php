@@ -4,109 +4,94 @@ namespace Views;
 
 use \utilities as u;
 use Views\Layout;
+use Models\Entity;
+use Views\Elements\Element;
 
-class View extends HtmlBuilder {
+// A collection of Elements to be displayed together.
+class View extends Element {
 
-    public string $id = '';
-    public $entity;
-    public string $classes = '';
-    public array $attributes = [];
-    public string $tagName;
-
-    public array $css;
-    public array $js;
-
-    public array $bundle;
-
-    public string $method = '';
-
-    public function __construct(string $id, $entity, array $attributes=[], string $tagName='div')
+    public array $elements = [];
+    
+    public function __construct(...$elements)
     {
-        $this->id = $id;
-        $this->entity = $entity;
-        $this->attributes = $attributes;
-        $this->tagName = $tagName;
+        parent::__construct('div');
 
-        if (!isset($this->bundle))
-        {
-            $this->bundle = [];
-        }
-
-        $this->element = $this->createView();
-
-        // echo $this->create();
+        $this->addElements(...$elements);
     }
 
-    protected function createView()
+    public function __clone()
     {
-        $this->element = $this->build($this->tagName);
-        $this->element->attr('id', $this->id);
-
-        foreach ($this->attributes as $attribute => $value)
+        foreach($this->elements as &$element)
         {
-            $this->element->attr($attribute, $value);
-        }
-
-        switch($this->entity) 
-        {
-            case is_string($this->entity):
-                return $this->element->content($this->entity);
-                break;
-
-            case is_array($this->entity) || is_object($this->entity):
-                return $this->element->content(print_r($this->entity, true));
-                break;
-
-            case is_a($this->entity, Layout::class):
-                $this->addBundle($this->entity->bundle);
-                return $this->element->content($this->entity->element->create());
-                break;
-
-            case is_a($this->entity, View::class):
-                return $this->entity->element;
-                break;
-
-            default:
-                return $this->element->content('No content provided');
+            $element = clone $element;
         }
     }
 
-    protected function addBundle(array $bundle)
+    public function addElement($element) : Element
     {
-        foreach ($bundle as $name => $set)
+        if (is_object($element))
         {
-            if (!isset($this->bundle[$name]))
+            $element = clone $element;
+        }
+
+        if (!is_a($element, Element::class))
+        {
+            switch($element)
             {
-                $this->bundle[$name] = $set;
-            }
-            else
-            {
-                $this->bundle[$name] = array_unique(array_merge($this->bundle[$name], $set));
+                case is_string($element):
+                    $element = new Element('div', $element);
+                    break;
+    
+                case is_a($element, View::class) || is_a($element, Layout::class):
+                    $element = new Element('div', $element->create());
+                    break;
+    
+                case is_array($element):
+                    $element = new View(...$element);
+                    // $element = new Element('div', print_r($element, true));
+                    break;
+    
+                default:
+                    $element = new Element('div', 'No content provided');
             }
         }
+        array_push($this->elements, $element);
+
+        return $element;
     }
 
-    public function create()
+    public function addElements(...$elements)
     {
-        return $this->element->create();
-    }
-
-    public function getBundle(string $name)
-    {
-        if(isset($this->bundle[$name]))
-        {
-            $set = '<'.$name.'>';
-            foreach($this->bundle[$name] as $item)
+        foreach($elements as $element)
+        {        
+            // u::dd($element, true);
+            if (!empty($element))
             {
-                $set .= $item;
+                $this->addElement($element);
             }
-            $set .= '</'.$name.'>';
-
-            return $set;
-        }
-        return false;
+        }  
     }
 
+    public function create() : string
+    {
+        $content = '';
+        foreach($this->elements as $element)
+        {
+            $content .= $element->create();
+        }
+        $this->content($content);
+        return parent::create();
+    }
+
+    public function unpackage() : string
+    {
+        $content = '';
+        foreach($this->elements as $element)
+        {
+            $content .= $element->create();
+        }
+        return $content;
+    }
 
     public function error($msg)
     {

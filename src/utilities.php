@@ -25,7 +25,7 @@ class utilities {
     }
 
 
-    public static function dd($object, $continue = false, $title='')
+    public static function dd($object, $continue = false, $from='')
     {
 
         echo '<script language="javascript" type="text/javascript" src="/MVC/public/js/buffer.js"></script>';
@@ -43,7 +43,7 @@ class utilities {
         }
         
 
-        echo '<script>insertDebug(`' .$title. '`,`'. json_encode(print_r($object,true),true). '`,`'.$type.'`,`'.$count.'`)</script>';
+        echo '<script>insertDebug(`' .$from. '`,`'. json_encode(print_r($object,true),true). '`,`'.$type.'`,`'.$count.'`)</script>';
         
         if (!$continue){die();}
         return;

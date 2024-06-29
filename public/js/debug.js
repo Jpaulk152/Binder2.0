@@ -37,7 +37,7 @@ debugStyles = [
 ]
 
 
-function insertDebug(title='', content='', type='', count='')
+function insertDebug(from='', content='', type='', count='')
 {
     debugContainer = document.getElementById('debugContainer');
     if (debugContainer === null)
@@ -59,13 +59,13 @@ function insertDebug(title='', content='', type='', count='')
         div.style.cssText += item;
     });
 
-    if(title.length > 0)
+    if(from.length > 0)
     {
-        objectTitle = 'title: ' + title + '<br><br>';
+        objectFrom = 'from: ' + from + '<br><br>';
     }
     else 
     {
-        objectTitle = '';
+        objectFrom = '';
     }
 
     if(content.length > 0)
@@ -97,7 +97,7 @@ function insertDebug(title='', content='', type='', count='')
     }
     
 
-    div.innerHTML += objectTitle;
+    div.innerHTML += objectFrom;
     div.innerHTML += objectType;
     div.innerHTML += objectCount;
     div.innerHTML += objectContent;

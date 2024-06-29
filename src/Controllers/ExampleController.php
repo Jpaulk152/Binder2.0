@@ -2,25 +2,24 @@
 
 namespace Controllers;
 
-use Views\Layouts\DefaultLayout;
 use Views\Page;
-use Views\View;
-
-use Views\Menus\Navbar;
-use Views\Menus\Sidebar;
-use Views\Menus\Sidebar2;
-
-use Views\Defaults\Card;
-use Views\Defaults\Gauge;
-
-use Views\Buttons\MenuButton;
-
-
 use Views\Layout;
+use Views\View;
+use Views\Elements\Element;
+use Views\Elements\Panel;
+use Views\Elements\Navbar;
+use Views\Elements\Sidebar;
+use Views\Elements\Card;
+use Views\Elements\Gauge;
+use Views\Elements\Button;
+use Views\Elements\Dropdown;
+use Views\Elements\Expander;
+use Views\Elements\Image;
+use Views\Elements\Form;
+use Views\Elements\Table;
+
 
 use \utilities as u;
-use Views\Defaults\Image;
-use Views\Includes\Includes;
 
 class ExampleController extends Controller
 {
@@ -30,151 +29,70 @@ class ExampleController extends Controller
     {
         parent::__construct();
 
-        // echo '<script src="public/js/debug.js"></script>';
+        // echo '<script src="../public/js/debug.js"></script>';
         // echo '<body></body>';
 
-        $params = [
-            'id' => 'none',
-            'view' => Sidebar::class,
-        ];
+        $table = $this->dbContext->page_table;
 
-        $params = $this->toJSON($params);
-
-        $dashboard =  (object)array(
-            'name'=>'Dashboard',
-            'link'=>'dash'
-        );
-        $index = (object)array(
-            'name'=>'Index',
-            'link'=>'index'
-        );
-        $materials = (object)array(
-            'name'=>'Materials',
-            'link'=>'hcMenu('.$this->toJSON(['id' => 'none','view' => Sidebar::class]).', `side`)',
-            'children'=>array(
-                (object)array(
-                    'name'=>'AFJROTC Curriculum',
-                    'link'=>'hcMenu('.$this->toJSON(['id' => 'afjrotc_css','view' => Sidebar::class]).', `side`)'
-                ),
-                (object)array(
-                    'name'=>'AFROTC Materials',
-                    'link'=>'hcMenu('.$this->toJSON(['id' => 'rotc_curriculum','view' => Sidebar::class]).', `side`)'
-                ),
-                (object)array(
-                    'name'=>'Faculty and Staff Development',
-                    'link'=>'hcMenu('.$this->toJSON(['id' => 'faculty_staff_development','view' => Sidebar::class]).', `side`)'
-                )
-            )
-        );
-        
-        $objects = [$materials];
-        $nav = new Navbar('nav', $objects, ['class'=>'w3-card-4 w3-bar w3-white']);
+        $pages = $table->set(['page_parent'=>'none', 'page_status'=>'true', 'page_inmenu'=>'true'])
+                        ->orderBy(['page_title'])
+                        ->get(['page_title', 'page_id'])
+                        ->with($table, 'children', ['page_parent'=>'page_id'], ['page_title', 'page_id', 'page_parent'], ['page_title'], true)
+                        ->toArray();
 
 
-        $circ2 = new Gauge(id: 'ind2', progress: 14, attributes: [], onclick: '', size: 50);
-        $circ3 = new Gauge(id: 'ind3', progress: 76, attributes: [], onclick: '', size: 60);
-        $circ4 = new Gauge(id: 'ind4', progress: 13, attributes: [], onclick: '', size: 70);
-        $circ5 = new Gauge(id: 'ind5', progress: 34, attributes: [], onclick: '', size: 80);
+        $nav = new Navbar(...$pages);
+        $sidebar =  new Sidebar(...$pages);
 
-        $objects = $this->dbContext->page_table->set(['page_parent'=>'none'])->get(['page_title', 'page_id'])->objects();
+        $sidebar1 = clone $sidebar; $sidebar1->attr('class', 'w3-red');
+        $sidebar2 = clone $sidebar; $sidebar2->attr('class', 'w3-blue');
+        $sidebar3 = clone $sidebar; $sidebar3->attr('class', 'w3-green');
+        $sidebar4 = clone $sidebar; $sidebar4->attr('class', 'w3-orange');
+        $sidebar5 = clone $sidebar; $sidebar5->attr('class', 'w3-purple');
+        $sidebar6 = clone $sidebar; $sidebar6->attr('class', 'w3-yellow');
 
+        $sidebars = new Panel('sidebars', [$sidebar1, $sidebar2, $sidebar3, $sidebar4]);
+        $sidebar->attr('style', 'z-index:1;');
 
-        $function = 'hcPageContent';
+        $element = new Element('div', 'content', ['class'=>'w3-container w3-green', 'style'=>'width:100%;height:100%; overflow:wrap']);
+        $card = new Card('card', $element,$element,$element,$element);
+        $cards = new Panel('cards', [$card, $card, $card]);
 
-        foreach($objects as &$object)
-        {
+        $gauge1 = new Gauge('gauge1', 65);
+        $gauge2 = new Gauge('gauge2', 70);
+        $gauge3 = new Gauge('gauge3', 75);
+        $gauge4 = new Gauge('gauge4', 80);
+        $gauge5 = new Gauge('gauge4', 100);
 
-            $params = ['id'=>$object->page_id];
-            $link = $function . '('.$this->toJSON($params).', `main`)';
-
-            $object = new View($object->page_id, $object->page_title, ['class'=>'menubutton w3-bar-item w3-button', 'onclick'=>$link]);
-        }
-
-        $testMenu = new Sidebar2('testMenu', $objects, ['style'=>'position: fixed; z-index: 1; border: 5px solid green']);
-
-        $cardStyle = ['class'=>'w3-container w3-col' , 'style'=>'width:25em; height: 25em; padding: 1em 16px; border: solid 5px orange;'];
-        $layoutStyle = ['class'=>'layout w3-row panel', 'style'=>'padding: 64px; border: solid 5px blue;'];
-
-        // $path = Includes::path('logo');
-        // $path = '../public/resources/pic1.jpg';
-        // $image1 = new Image('image1', $path);
-        // $path = '../public/resources/pic2.jpg';
-        // $image2 = new Image('image2', $path);
+        $card1 = new Card('AFJROTC Curriculum', $gauge1);
+        $card1->addAttributes(['class'=>'w3-container w3-col' , 'style'=>'width:25em; height: 25em; padding: 1em 16px;']);
 
         $cards = [
-            new Card('card1', 'AFJROTC Curriculum', [$circ4],  $cardStyle),
-            new Card('card2', 'AFROTC Materials', [new View('someText', 'this is example')], $cardStyle),
-            new Card('card3', 'card3', [$circ2], $cardStyle),
-            new Card('card4', 'card4', [$circ3], $cardStyle),
-            new Card('card5', 'card5', [$circ5], $cardStyle),
+            $card1,
+            new Card('AFROTC Materials', [new View('this is example')]),
+            new Card('AFROTC Materials', [new View('this is an example')]),
         ];
 
-
-        $sidebars = [
-
-            new Sidebar2('testMenu1', $objects, ['class'=>'w3-row w3-half', 'style'=>'position: relative; z-index: 1; overflow: hidden; border: 5px solid red']),
-            new Sidebar2('testMenu2', $objects, ['class'=>'w3-row w3-half', 'style'=>'position: relative; z-index: 1; overflow: hidden; border: 5px solid green'])
-
-        ];
+        $gauges = new Panel('gauges', [$gauge1->attr('size', '100'), $gauge2, $gauge3, $gauge4, $gauge5], $cards);
+        $gauges->addAttributes(['class'=>'w3-white']);
 
 
 
-        // $card1 = new View('card1', $card, ['class'=>'w3-container w3-col' , 'style'=>'width:30%']);
-        // $card2 = new View('card2', $card, ['class'=>'w3-container w3-col' , 'style'=>'width:30%']);
-        $cards = new Layout ('cards', $cards, $layoutStyle);
-        $sidebars = new Layout ('sidebars', $sidebars, $layoutStyle);
-        $main = new Layout ('main', [$cards, $sidebars], ['class'=>'']);
-        $this->page = new Page(views: [$nav, $testMenu, $main], attributes: [], docType: 'html', lang: 'en', title: 'Examples', meta: ['charset="UTF-8"'], bundle: []);
+        // $page_table = new Table($this->dbContext->page_table);
+        // $admin_table = new Table($this->dbContext->admin_table);
+        // $tables = new Panel('tables', 1, $page_table, $admin_table);
 
+
+        $sidebar->addAttributes(['class'=>'w3-col primaryBackground']);
+        $main = new Layout($gauges, $sidebars, [$card, $card], [$card, $card, $card], $cards);
+        $main->addAttributes(['class'=>'w3-rest', 'style'=>'height:100%;overflow:auto;']);
+
+        $rowView = new View($sidebar, $main);
+        $rowView->addAttributes(['class'=>'w3-row', 'style'=>'position:relative; height:100%;']);
+
+        $this->page = new Page($nav, $rowView);
     }
 
-
-    public function addView($object)
-    {
-
-        $progress = new Gauge(
-            id: $object['page_id'].'-ind', 
-            progress: strlen($object['page_title'])*2, 
-            attributes: ['class'=>'w3-container w3-third'], 
-            onclick: '', 
-            size: 50, 
-            strokeWidth: 30
-        );
-
-        $title = new View(
-            id: 'title', 
-            entity: $object['page_title'], 
-            attributes: ['class'=>'w3-container w3-twothird']
-        );
-
-        $display = new Layout(
-            id: 'disp', 
-            views: [$title, $progress], 
-            attributes: ['style'=>'display:flex; align-items:center; width: 100%']
-        );
-
-        return [ 'page_title'=>$display, 'page_id'=>$object['page_id'] ];
-    }
-
-
-    public function addLinks(array $objects)
-    {
-        foreach($objects as $object)
-        {
-            $function = 'hcPageContent';
-            $target = 'main';
-
-            $params = ['id'=>$object->page_id];
-            $link = $function . '('.$this->toJSON($params).', `'.$target.'`)';
-
-            $object->page_id = $link;
-
-            if (property_exists($object, 'children'))
-            {
-                $this->addLinks($object->children);
-            }
-        }
-    }
 
 
 
@@ -199,12 +117,11 @@ class ExampleController extends Controller
         // return;
 
         $view = new View($id, $entity);
-        $view->bundle = $bundle;
 
 
         // echo print_r($view, true);
 
-        $this->page->layout->setView($view);
+        // $this->page->layout->setView($view);
 
         $this->index();
     }

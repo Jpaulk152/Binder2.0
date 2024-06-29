@@ -55,7 +55,7 @@ class HCController extends Controller
             $pageContent = '';
             if ($page)
             {
-                $pageContent = new View('main', urldecode($page->page_content), ['class'=>'w3-container']);
+                $pageContent = new View(urldecode($page->page_content), ['id'=>'main', 'class'=>'w3-container']);
             }
 
             new Response($pageContent->create(), 200);
@@ -73,14 +73,14 @@ class HCController extends Controller
         
         ->page_table
         ->set(['page_parent'=>$id, 'page_status'=>'true', 'page_inmenu'=>'true'])
-        ->orderBy('page_title')
+        ->orderBy(['page_title'])
         ->get(['page_title', 'page_id'], function ($object){
                 return $this->addView($object);
             }
         )
-        ->objects();
+        ->toEntities();
 
-        $objects = $this->dbContext->page_table->getChildren($objects, 'page_parent', 'page_title');
+        // $objects = $this->dbContext->page_table->getChildren($objects, 'page_parent', 'page_title');
 
         $this->addLinks($objects);
 
@@ -101,15 +101,13 @@ class HCController extends Controller
         );
 
         $title = new View(
-            id: 'title', 
             entity: $object['page_title'], 
-            attributes: ['class'=>'w3-container w3-twothird']
+            attributes: ['id'=>'title', 'class'=>'w3-container w3-twothird']
         );
 
         $display = new Layout(
-            id: 'disp', 
             views: [$title, $progress], 
-            attributes: ['style'=>'display:flex; align-items:center; width: 100%']
+            attributes: ['id'=>'disp','style'=>'display:flex; align-items:center; width: 100%']
         );
 
         return [ 'page_title'=>$display, 'page_id'=>$object['page_id'] ];
@@ -122,10 +120,10 @@ class HCController extends Controller
             $function = 'hcPageContent';
             $target = 'main';
 
-            $params = ['id'=>$object->page_id];
+            $params = ['id'=>$object->id];
             $link = $function . '('.$this->toJSON($params).', `'.$target.'`)';
 
-            $object->page_id = $link;
+            $object->id = $link;
 
             if (property_exists($object, 'children'))
             {

@@ -1,7 +1,3 @@
-
-
-
-
 class Buffer {
     constructor(handler) {
         var queue = [];
@@ -35,10 +31,6 @@ $(document).ready(function(){
 
     lastResponse = '';
 });
-
-
-
-
 
 // small Task containing item, URL, and optional callback
 class Task {
@@ -75,7 +67,7 @@ function ajaxTaskHandler(task, callback){
         
     }).fail(function(response){
         
-        insertDebug('from ajaxTaskHandler', JSON.stringify(response), '', '');
+        insertDebug('ajaxTaskHandler', JSON.stringify(response), '', '');
 
         console.log(response);
 
@@ -83,7 +75,7 @@ function ajaxTaskHandler(task, callback){
 
         if (response.status == 300)
         {
-            insertDebug('from ajaxTaskHandler', JSON.stringify(response), '', '');
+            insertDebug('ajaxTaskHandler', JSON.stringify(response), '', '');
 
             console.log(response);
         }

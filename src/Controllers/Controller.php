@@ -10,12 +10,11 @@ class Controller
 
     public function __construct()
     {
+        session_start();
+
         $this->csvContext = $GLOBALS['_csvContext'];
         $this->dbContext = $GLOBALS['_dbContext'];
     }
-
-
-
 
     public function getClasses($view)
     {

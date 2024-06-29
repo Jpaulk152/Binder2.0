@@ -2,26 +2,21 @@
 
 namespace Controllers;
 
-use Views\Layouts\DefaultLayout;
 use Views\Page;
-use Views\View;
-use Views\Containers\Resizer;
-
-use Views\Menus\Navbar;
-use Views\Menus\Sidebar;
-
-use Views\Defaults\Table;
-use Views\Defaults\Form;
-use Views\Defaults\Card;
-use Views\Defaults\Gauge;
-
-use Controllers\API\HTTP\Response;
-
 use Views\Layout;
-
-use \utilities as u;
-use Views\Defaults\Image;
-use Views\Includes\Includes;
+use Views\View;
+use Views\Elements\Element;
+use Views\Elements\Panel;
+use Views\Elements\Navbar;
+use Views\Elements\Sidebar;
+use Views\Elements\Card;
+use Views\Elements\Gauge;
+use Views\Elements\Button2;
+use Views\Elements\Dropdown;
+use Views\Elements\Expander;
+use Views\Elements\Image;
+use Views\Elements\Form;
+use Views\Elements\Table;
 
 class HomeController extends Controller
 {
@@ -31,70 +26,27 @@ class HomeController extends Controller
     {
         parent::__construct();
 
-        // echo '<script src="public/js/debug.js"></script>';
-        // echo '<body></body>';
+        echo '<script src="public/js/debug.js"></script>';
+        echo '<body></body>';
 
-        $params = [
-            'id' => 'none',
-            'view' => Sidebar::class,
-        ];
+        $dashboard = new Element('a', 'Dashboard', ['href'=>'dash', 'class'=>'w3-button']);
 
-        $params = $this->toJSON($params);
+        $index = new Element('a', 'Index', ['href'=>'index', 'class'=>'w3-button']);
+        $examples = new Element('a', 'Examples', ['href'=>'examples', 'class'=>'w3-button']);
 
-        $dashboard =  (object)array(
-            'name'=>'Dashboard',
-            'link'=>'dash'
-        );
-        $index = (object)array(
-            'name'=>'Index',
-            'link'=>'index'
-        );
-        $materials = (object)array(
-            'name'=>'Materials',
-            'link'=>'hcMenu('.$this->toJSON(['id' => 'none','view' => Sidebar::class]).', `side`)',
-            'children'=>array(
-                (object)array(
-                    'name'=>'AFJROTC Curriculum',
-                    'link'=>'hcMenu('.$this->toJSON(['id' => 'afjrotc_css','view' => Sidebar::class]).', `side`)'
-                ),
-                (object)array(
-                    'name'=>'AFROTC Materials',
-                    'link'=>'hcMenu('.$this->toJSON(['id' => 'rotc_curriculum','view' => Sidebar::class]).', `side`)'
-                ),
-                (object)array(
-                    'name'=>'Faculty and Staff Development',
-                    'link'=>'hcMenu('.$this->toJSON(['id' => 'faculty_staff_development','view' => Sidebar::class]).', `side`)'
-                )
-            )
-        );
-        $examples = (object)array(
-            'name'=>'Examples',
-            'link'=>'example'
-        );
-        
-        $objects = [$index, $dashboard, $materials, $examples];
-        $nav = new Navbar('nav', $objects, ['class'=>'w3-card-4 w3-bar w3-white']);
 
-        $circ2 = new Gauge(id: 'ind2', progress: 14, attributes: [], onclick: '', size: 50);
-        $circ3 = new Gauge(id: 'ind3', progress: 76, attributes: [], onclick: '', size: 60);
-        $circ4 = new Gauge(id: 'ind4', progress: 13, attributes: [], onclick: '', size: 70);
-        $circ5 = new Gauge(id: 'ind5', progress: 34, attributes: [], onclick: '', size: 80);
+        $page = $this->dbContext->page_table->get(['page_title', 'page_id'])->firstOrDefault();
 
-        $cardStyle = ['class'=>'w3-container w3-col' , 'style'=>'width:25em; height: 25em; padding: 1em 16px;'];
-        $layoutStyle = ['class'=>'w3-row panel', 'style'=>'padding: 64px;'];
+        $button2 = new Button2($page['page_title'], "alert", $page);
 
-        $cards = [
-            new Card('card1', 'AFJROTC Curriculum', [$circ4],  $cardStyle),
-            new Card('card2', 'AFROTC Materials', [new View('someText', 'this is home')], $cardStyle),
-            new Card('card3', 'card3', [$circ2], $cardStyle),
-            new Card('card4', 'card4', [$circ3], $cardStyle),
-            new Card('card5', 'card5', [$circ5], $cardStyle)
-        ];
+        $nav = new Navbar($index, $dashboard, $examples, $button2);
 
-        $cards = new Layout ('cards', $cards, $layoutStyle);
-        $main = new Layout ('main', [$cards], ['class'=>'w3-row']);
+        $image = new Image('../public/resources/BioCantwell.JPG');
+        $div = new Element('div', '<p>thiasawrgarg a bunch of tddddddddddddddddddddddddddddextasgl;awugha;rauhr;gaorgah;rgo<br><br>awrelguiahwrglaiughalweirhelguiah</p>');
+        $bio = new Panel('Welcome to the .....', [$image, $div]);
 
-        $this->page = new Page([$nav, $main]);
+
+        $this->page = new Page($nav, $bio);
     }
 
     public function index()
@@ -104,10 +56,10 @@ class HomeController extends Controller
     
     function redirect($uri)
     {
-        $msg = '<p style="color:red">No route found for URI: ' . $uri . '</p>';
-        $this->page->layout->setView(new View('main', $msg));
+        // $msg = '<p style="color:red">No route found for URI: ' . $uri . '</p>';
+        // $this->page->layout->setView(new View('main', $msg));
 
-        $this->index();
+        // $this->index();
     }
 
     function insert($parameters)
@@ -117,15 +69,15 @@ class HomeController extends Controller
         // new Response($parameters, 300);
         // return;
 
-        $view = new View($id, $entity);
-        $view->bundle = $bundle;
+        // $view = new View($id, $entity);
+        // $view->bundle = $bundle;
 
 
         // echo print_r($view, true);
 
-        $this->page->layout->setView($view);
+        // $this->page->layout->setView($view);
 
-        $this->index();
+        // $this->index();
     }
 
 }

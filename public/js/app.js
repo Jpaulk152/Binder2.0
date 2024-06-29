@@ -1,25 +1,119 @@
+function pxToVw(px)
+{
+    return (px / window.innerWidth) * 100 + 'vw';
+}
+
+function vwToPx(vw)
+{
+    return (vw / 100) * window.innerWidth + 'px';
+}
+
+function pxToEm(px, base=15)
+{
+    return parseFloat(px)/base + 'em';
+}
+
+function getColumnWidth(row, columns, unit, baseFont=15)
+{
+    styles = window.getComputedStyle(row, null);
+
+    parentWidth = parseInt(styles.getPropertyValue('width'));
+    margins = parseInt(styles.getPropertyValue('margin-left')) + parseInt(styles.getPropertyValue('margin-right'));
+    padding = parseInt(styles.getPropertyValue('padding-left')) + parseInt(styles.getPropertyValue('padding-right'))
+
+    rowWidth = parentWidth - margins - padding;
+    colWidth = (rowWidth / columns);
+
+
+    // console.log(row, columns, unit, baseFont, colWidth);
+
+    switch(unit)
+    {
+        case 'vw':
+            return pxToVw(colWidth);
+        case 'em':
+            return pxToEm(colWidth, baseFont);
+        default:
+            return colWidth;       
+    }
+
+}
+
+
+function collapseCol(col, row)
+{
+    // console.log(collapseCol.style.width);
+
+    columns = row.children;
+    widthGain = (col.style.width - 64) / (columns.length-1);
+    col.style.width = 'fit-content';
+
+    for(i=0;i<columns.length;i++)
+    {
+        if (columns[i] !== col)
+        {
+            // console.log(columns[i]);
+            columns[i].style.width += widthGain;
+        }
+    }
+}
+
+function expandCol(col, row, width)
+{
+    columns = row.children;
+    widthLoss = (col.style.width + width) / (columns.length-1);
+    col.style.width = width;
+
+    for(i=0;i<columns.length;i++)
+    {
+        if (columns[i] !== col)
+        {
+            console.log(columns[i]);
+            columns[i].style.width -= widthLoss;
+        }
+    }
+}
+
+
+            // expandSidebar(width)
+            // {
+            //     columns = row.children;
+            //     widthLoss = (col.style.width + width) / (columns.length-1);
+            //     col.style.width = width;
+
+            //     for(i=0;i<columns.length;i++)
+            //     {
+            //         if (columns[i] !== col)
+            //         {
+            //             console.log(columns[i]);
+            //             columns[i].style.width -= widthLoss;
+            //         }
+            //     }
+            // }
+
+            // collapseSidebar(width)
+            // {
+            //     columns = row.children;
+            //     widthGain = (col.style.width - 64) / (columns.length-1);
+            //     col.style.width = 'fit-content';
+
+            //     for(i=0;i<columns.length;i++)
+            //     {
+            //         if (columns[i] !== col)
+            //         {
+            //             // console.log(columns[i]);
+            //             columns[i].style.width += widthGain;
+            //         }
+            //     }
+            // }
 
 
 
-// $parameters = array(
-//     'controller'=>'hc',
-//     'function'=>'menu',
-//     'targets'=>array(
-//         'view2'
-//     ),
-//     'parameters'=>array(
-//         'filter'=>array(
-//             'page_status'=>'true',
-//             'page_inmenu'=>'true',
-//             'page_parent'=>'none'
-//         ),
-//         'orderBy'=>'page_title',
-//         'fields'=>array(
-//             'page_title',
-//             'page_id'
-//         )
-//     )
-// );
+
+
+
+
+
 
 
 
