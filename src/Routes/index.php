@@ -29,29 +29,25 @@ $router = new Router();
 $router->get(\config::app_root(), IndexController::class, 'index');
 $router->get(\config::app_root() . 'index', IndexController::class, 'index');
 
-
 // Includes
 $router->get(\config::app_root() . 'includes/app.css', IncludesController::class, 'stylesheet');
 $router->get(\config::app_root() . 'includes/app.js', IncludesController::class, 'jscripts');
-
 
 // Home
 $router->get(\config::app_root(), HomeController::class, 'index');
 $router->get(\config::app_root() . 'home', HomeController::class, 'index');
 // $router->get(\config::public_root(). 'index.php/home/childView', HomeController::class, 'childView');
 
-
 // Dashboard
 $router->get(\config::app_root() . 'dash', DashController::class, 'index');
 $router->get(\config::app_root() . 'info', DashController::class, 'info');
-
 
 // API
 $router->post(\config::app_root() . 'api/hc/menu', HCController::class, 'menu');
 $router->post(\config::app_root() . 'api/hc/childMenu', HCController::class, 'childMenu');
 $router->post(\config::app_root() . 'api/hc/pageContent', HCController::class, 'pageContent');
 
-$router->post(\config::app_root() . 'api/home/insert', HomeController::class, 'insert');
+$router->post(\config::app_root() . 'app/read/table', ReadController::class, 'table');
 
 
 $router->get(\config::app_root() . 'examples', ExampleController::class, 'index');

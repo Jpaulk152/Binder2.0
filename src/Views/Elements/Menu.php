@@ -22,7 +22,7 @@ class Menu extends View
             if (is_a($rows[$i], Element::class))
             {
                 $buttons[$i] = clone $rows[$i];
-                $buttons[$i]->addAttributes($mainAttributes);
+                $buttons[$i]->addAttributes($mainAttributes, ['class'=>'w3-bar-item']);
             }
             else if (array_key_exists($subMenuName, $rows[$i]))
             {
@@ -38,7 +38,7 @@ class Menu extends View
             {
                 $buttons[$i] = new $menuButton(...$rows[$i]);
                 $buttons[$i]->setOnclick($function);
-                $buttons[$i]->addAttributes($mainAttributes);
+                $buttons[$i]->addAttributes($mainAttributes, ['class'=>'w3-bar-item']);
             }
 
             

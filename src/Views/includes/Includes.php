@@ -46,6 +46,9 @@ class Includes
 
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
             <script src="'. self::$includePath .'js/app.js"></script>
+            <script src="'. self::$includePath .'js/hc.js"></script>
+            <script src="'. self::$includePath .'js/debug.js"></script>
+            <script src="'. self::$includePath .'js/api.js"></script>
             <script src="includes/app.js"></script>
         ';
 

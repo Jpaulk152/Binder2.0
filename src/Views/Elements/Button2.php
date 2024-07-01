@@ -10,15 +10,27 @@ class Button2 extends Element
     public string $function;
     public string $parameters;
 
-    public function __construct(string $name, string $function, array ...$parameters)
+    public function __construct(string $name, string $function, ...$parameters)
     {
         $this->name = $name;
         $this->function = $function;
 
         if (!empty($parameters))
         {
-            $this->parameters = $this->toJSON($parameters);
-            $this->function .= "('".$this->parameters."')";
+            foreach($parameters as &$parameter)
+            {
+                if (is_array($parameter))
+                {
+                    $parameter = $this->toJSON($parameter);
+                }
+            }
+
+            $this->parameters = "(". implode(', ', $parameters) .")";
+
+
+            // u::dd($this->parameters);
+
+            $this->function .= $this->parameters;
         }
 
         parent::__construct('button', $this->name);

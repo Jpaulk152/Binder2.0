@@ -33,6 +33,7 @@ class Navbar extends View
 
                 $buttons[$i]->elements[0]->setOnclick($subFunction);
                 $buttons[$i]->addAttributes([]);
+                $buttons[$i]->elements[1]->addAttributes(['style'=>'width:300px;max-height:80vh;overflow:auto;']);
             }
             else
             {

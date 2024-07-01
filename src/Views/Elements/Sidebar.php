@@ -10,7 +10,7 @@ class Sidebar extends View
     public Menu $menu;
     public Element $openButton;
 
-    public function __construct(array ...$rows)
+    public function __construct(...$rows)
     {
         $closeButton = new Element('button', 'Close &times;', ['class'=>'closeButton w3-bar-item w3-button w3-medium', 'onclick'=>'closeSideBar(event)']);
 

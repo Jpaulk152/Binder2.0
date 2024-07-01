@@ -110,7 +110,20 @@ function expandCol(col, row, width)
 
 
 
+function appTable(parameters, target)
+{
+    console.log(target)
 
+    var task = new Task('app/read/table', parameters, function(response){
+
+        console.log(response);
+
+        document.getElementById(target).innerHTML = response;
+
+    }, 'POST')
+
+    buffer.append(task);
+}
 
 
 

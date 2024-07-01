@@ -18,6 +18,8 @@ use Views\Elements\Image;
 use Views\Elements\Form;
 use Views\Elements\Table;
 
+use \utilities as u;
+
 class HomeController extends Controller
 {
     public $page;
@@ -29,24 +31,25 @@ class HomeController extends Controller
         echo '<script src="public/js/debug.js"></script>';
         echo '<body></body>';
 
-        $dashboard = new Element('a', 'Dashboard', ['href'=>'dash', 'class'=>'w3-button']);
-
-        $index = new Element('a', 'Index', ['href'=>'index', 'class'=>'w3-button']);
-        $examples = new Element('a', 'Examples', ['href'=>'examples', 'class'=>'w3-button']);
-
-
         $page = $this->dbContext->page_table->get(['page_title', 'page_id'])->firstOrDefault();
+        $buttons = [
 
-        $button2 = new Button2($page['page_title'], "alert", $page);
+            new Button2('Dashboard', "location.href='dash'"),
+            new Button2('Index', "location.href='index'"),
+            new Button2('Examples', "location.href='examples'"),
 
-        $nav = new Navbar($index, $dashboard, $examples, $button2);
+            new Button2($page['page_title'], "hcPageContent", $page)
+        ];
+
+
+        $nav = new Navbar(...$buttons);
 
         $image = new Image('../public/resources/BioCantwell.JPG');
         $div = new Element('div', '<p>thiasawrgarg a bunch of tddddddddddddddddddddddddddddextasgl;awugha;rauhr;gaorgah;rgo<br><br>awrelguiahwrglaiughalweirhelguiah</p>');
         $bio = new Panel('Welcome to the .....', [$image, $div]);
 
-
         $this->page = new Page($nav, $bio);
+        $this->page->title='Home';
     }
 
     public function index()

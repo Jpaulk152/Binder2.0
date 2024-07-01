@@ -39,6 +39,8 @@ class Router
             $parameters = [];
             if($method == 'POST')
             {
+                // u::dd(INPUT_POST);
+
                 $parameters = filter_input_array(INPUT_POST);
             }
             if($method == 'GET')

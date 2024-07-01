@@ -105,10 +105,10 @@ class DBContext
 
         $tables = array();
         $i = 0;
+
         while($tableName = $tableNames->fetch_array())
         {
             $tables[$i] = $tableName[0];
-
             $i++;
         }
 

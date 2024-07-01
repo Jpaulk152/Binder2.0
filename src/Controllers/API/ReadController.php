@@ -6,9 +6,8 @@ use Controllers\Controller;
 use Controllers\API\HTTP\Response;
 use Controllers\API\HTTP\Request;
 use Views\View;
-use Views\Defaults\Form;
-use Views\Defaults\Table;
-use Views\Menus\ProgressView;
+use Views\Elements\Form;
+use Views\Elements\Table;
 
 class ReadController extends Controller
 {
@@ -29,23 +28,20 @@ class ReadController extends Controller
 
         extract($parameters);
 
-        // new Response($parameters, 300);
+        // new Response($table, 300);
         // return;
 
-        if (isset($entity))
+        if (isset($table))
         {
-            $objects = $this->read($entity, $filter, $orderBy);
 
-            $table = new Table($entity, $objects);
+            $table = new Table($this->dbContext->$table);
 
             new Response($table->create(), 200);
         }
         else
         {
-            new Response('<p id="mainContent" style="color:red">data not found</p>', 404);
+            new Response('<p id="main" style="color:red">data not found</p>', 404);
         }
-
-        
     }
 
 

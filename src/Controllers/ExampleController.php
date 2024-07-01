@@ -11,7 +11,7 @@ use Views\Elements\Navbar;
 use Views\Elements\Sidebar;
 use Views\Elements\Card;
 use Views\Elements\Gauge;
-use Views\Elements\Button;
+use Views\Elements\Button2;
 use Views\Elements\Dropdown;
 use Views\Elements\Expander;
 use Views\Elements\Image;
@@ -29,8 +29,8 @@ class ExampleController extends Controller
     {
         parent::__construct();
 
-        // echo '<script src="../public/js/debug.js"></script>';
-        // echo '<body></body>';
+        echo '<script src="../public/js/debug.js"></script>';
+        echo '<body></body>';
 
         $table = $this->dbContext->page_table;
 
@@ -83,14 +83,27 @@ class ExampleController extends Controller
         // $tables = new Panel('tables', 1, $page_table, $admin_table);
 
 
+        $tables = $this->dbContext->allTables();
+
+        foreach($tables as &$table)
+        {
+            $table = new Button2($table, 'appTable', ['table'=>$table], '`main`');
+        }
+
+
+        $tableSidebar = new Sidebar(...$tables);
+        $tableSidebar->addAttributes(['class'=>'w3-col primaryBackground']);
+
+
         $sidebar->addAttributes(['class'=>'w3-col primaryBackground']);
         $main = new Layout($gauges, $sidebars, [$card, $card], [$card, $card, $card], $cards);
-        $main->addAttributes(['class'=>'w3-rest', 'style'=>'height:100%;overflow:auto;']);
+        $main->addAttributes(['id'=>'main', 'class'=>'w3-rest', 'style'=>'height:100%;overflow:auto;']);
 
-        $rowView = new View($sidebar, $main);
+        $rowView = new View($tableSidebar, $main);
         $rowView->addAttributes(['class'=>'w3-row', 'style'=>'position:relative; height:100%;']);
 
         $this->page = new Page($nav, $rowView);
+        $this->page->title = 'Examples';
     }
 
 

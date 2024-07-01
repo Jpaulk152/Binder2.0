@@ -55,46 +55,57 @@ $(document).ready(function(){
 
 function hcPageContent(parameters, target, event)
 {
-    var task = new Task('api/hc/pageContent', parameters, function(response){
 
-        if (response != lastResponse)
-        {
-            lastResponse = response;
-            var dom  = new DOMParser().parseFromString(response, "text/html");
+    parameters = JSON.parse(parameters);
 
-            var response = dom.getElementById(target);
-            imgs = dom.getElementsByTagName('img');
+    row = parameters[0];
 
-            for (i=0; i<imgs.length; i++)
-            {
-                // console.log(imgs[i].src);
-                path = imgs[i].src.split('media/')[1];
+    var pk = Object.keys(row)[1];
+    var pkValue = Object.values(row)[1];
 
-                imgs[i].src = '../public/media/' + path;
+    console.log(pk, pkValue);
 
-                // console.log(path);
-            }
+
+    // var task = new Task('api/hc/pageContent', parameters, function(response){
+
+    //     if (response != lastResponse)
+    //     {
+    //         lastResponse = response;
+    //         var dom  = new DOMParser().parseFromString(response, "text/html");
+
+    //         var response = dom.getElementById(target);
+    //         imgs = dom.getElementsByTagName('img');
+
+    //         for (i=0; i<imgs.length; i++)
+    //         {
+    //             // console.log(imgs[i].src);
+    //             path = imgs[i].src.split('media/')[1];
+
+    //             imgs[i].src = '../public/media/' + path;
+
+    //             // console.log(path);
+    //         }
 
             
 
-            document.getElementById(target).innerHTML = response;
+    //         document.getElementById(target).innerHTML = response;
             
-            var view = document.getElementById(target);
-            if(view)
-            {
-                view.replaceWith(response);
-            }
-            else
-            {
-                document.body.firstChild.appendChild(response);
-            }
+    //         var view = document.getElementById(target);
+    //         if(view)
+    //         {
+    //             view.replaceWith(response);
+    //         }
+    //         else
+    //         {
+    //             document.body.firstChild.appendChild(response);
+    //         }
 
-            // openSideBar(event);
-        }
+    //         // openSideBar(event);
+    //     }
 
-    }, 'POST')
+    // }, 'POST')
 
-    buffer.append(task);
+    // buffer.append(task);
 }
 
 function hc(event, parameters)
