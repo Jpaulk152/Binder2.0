@@ -7,36 +7,32 @@ use \utilities as u;
 class Button2 extends Element
 {
     public string $name;
+    public string $id;
+    public array $row;
 
-    public function __construct(string $name, string ...$functions)
+    public function __construct(...$row)
     {
-        $this->name = $name;
-
-        // if (!empty($parameters))
-        // {
-        //     foreach($parameters as &$parameter)
-        //     {
-        //         if (is_array($parameter))
-        //         {
-        //             $parameter = $this->toJSON($parameter);
-        //         }
-        //     }
-
-        //     $this->parameters = "(". implode(', ', $parameters) .")";
-
-
-        //     // u::dd($this->parameters);
-
-        //     $this->function .= $this->parameters;
-        // }
+        $this->row = $row;
+        $this->name = array_values($this->row)[0];
+        $this->id = array_values($this->row)[1];
 
         parent::__construct('button', $this->name);
 
         $this->addAttributes(
             [
                 'class'=>'w3-button',
-                'onclick'=>implode('; ', $functions)
-            ]
+            ],
+        );
+    }
+
+
+
+    public function setOnclick(string $function)
+    {
+        $this->addAttributes(
+            [
+                'onclick'=> $function . '('.$this->toJSON(['id'=>$this->id]).');',
+            ],
         );
     }
 }

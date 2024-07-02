@@ -7,6 +7,7 @@ use Controllers\API\HTTP\Response;
 use Controllers\API\HTTP\Request;
 use Views\View;
 use Views\Elements\Form;
+use Views\Elements\Button;
 use Views\Elements\Panel;
 use Views\Elements\Sidebar;
 use Views\Elements\Table;
@@ -46,17 +47,32 @@ class ReadController extends Controller
             {
                 $table = $this->dbContext->page_table;
 
-                $pages =  $table->set(['page_parent'=>$id, 'page_status'=>'true', 'page_inmenu'=>'true'])
-                                ->orderBy(['page_title'])
-                                ->get(['page_title', 'page_id'])
-                                ->with($table, 'children', ['page_parent'=>'page_id'], ['page_title', 'page_id', 'page_parent'], ['page_title'], true)
-                                ->toArray();
+                $pages =  $table->set(
+                    ['page_parent'=>$id, 'page_status'=>'true', 'page_inmenu'=>'true'], 
+                    function($page)
+                    {
+                        return new Button(
+                            name: $page['page_title'], 
+                            // function1: 'appMenu('.$this->toJSON(['id'=>$page['page_id']]).', `side`)', 
+                            function2: 'appPageContent('.$this->toJSON(['id'=>$page['page_id']]).', `main`);',
+                        );
+                    })
+
+                        ->orderBy(['page_title'])
+                        ->get(['page_title', 'page_id'])
+                        ->with($table, 'children', ['page_parent'=>'page_id'], ['page_title', 'page_id', 'page_parent'], ['page_title'], true)
+                        ->toAlternate();
 
                 if ($pages)
                 {
                     $sidebar = new Sidebar(false, ...$pages);
                     $sidebar->addAttributes(['class'=>'w3-col primaryBackground']);
                     new Response($sidebar->create(), 200);
+                    return;
+                }
+                else
+                {
+                    new Response(false, 200);
                     return;
                 }
             }

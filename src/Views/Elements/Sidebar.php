@@ -14,7 +14,8 @@ class Sidebar extends View
     {
         $closeButton = new Element('button', 'Close &times;', ['class'=>'closeButton w3-bar-item w3-button w3-medium', 'onclick'=>'closeSideBar(event)']);
 
-        $this->menu = new Menu(Button::class, 'hcPageContent', [], Expander::class,  'hcPageContent', [], 'children', ...$rows);
+        $this->menu = new Menu($rows);
+        // $this->menu = new Menu(Button::class, 'hcPageContent', [], Expander::class,  'hcPageContent', [], 'children', ...$rows);
         $this->menu->addAttributes(['class'=>'menu w3-container w3-bar-block', 'width'=>'300px', 'height'=>'100%', 'style'=>$open ? 'display:block;' : 'display:none;']);
         array_unshift($this->menu->elements, $closeButton);
 

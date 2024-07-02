@@ -57,14 +57,6 @@ class Page
         // $this->body->addAttributes(['class'=>'w3-row', 'style'=>'position:relative;height:100%;']);
         $this->body->setTagName('body');
         
-        $css = '
-            body {
-                padding-top:100px;
-                height: 100vh;
-            }
-        ';
-
-        config::includes(['stylesheet'=>$css]);
     }
 
     

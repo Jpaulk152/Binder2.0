@@ -31,10 +31,6 @@ class HCController extends Controller
         if (isset($id) && isset($view))
         {
             $menu = $this->getMenu($id, $view);
-            
-            // $response = [$menu->bundle];
-
-            $bundle = $menu->getBundle('style');
 
             new Response([$menu->create(), $bundle], 200);
         }

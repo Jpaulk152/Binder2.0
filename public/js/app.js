@@ -1,114 +1,3 @@
-function pxToVw(px)
-{
-    return (px / window.innerWidth) * 100 + 'vw';
-}
-
-function vwToPx(vw)
-{
-    return (vw / 100) * window.innerWidth + 'px';
-}
-
-function pxToEm(px, base=15)
-{
-    return parseFloat(px)/base + 'em';
-}
-
-function getColumnWidth(row, columns, unit, baseFont=15)
-{
-    styles = window.getComputedStyle(row, null);
-
-    parentWidth = parseInt(styles.getPropertyValue('width'));
-    margins = parseInt(styles.getPropertyValue('margin-left')) + parseInt(styles.getPropertyValue('margin-right'));
-    padding = parseInt(styles.getPropertyValue('padding-left')) + parseInt(styles.getPropertyValue('padding-right'))
-
-    rowWidth = parentWidth - margins - padding;
-    colWidth = (rowWidth / columns);
-
-
-    // console.log(row, columns, unit, baseFont, colWidth);
-
-    switch(unit)
-    {
-        case 'vw':
-            return pxToVw(colWidth);
-        case 'em':
-            return pxToEm(colWidth, baseFont);
-        default:
-            return colWidth;       
-    }
-
-}
-
-
-function collapseCol(col, row)
-{
-    // console.log(collapseCol.style.width);
-
-    columns = row.children;
-    widthGain = (col.style.width - 64) / (columns.length-1);
-    col.style.width = 'fit-content';
-
-    for(i=0;i<columns.length;i++)
-    {
-        if (columns[i] !== col)
-        {
-            // console.log(columns[i]);
-            columns[i].style.width += widthGain;
-        }
-    }
-}
-
-function expandCol(col, row, width)
-{
-    columns = row.children;
-    widthLoss = (col.style.width + width) / (columns.length-1);
-    col.style.width = width;
-
-    for(i=0;i<columns.length;i++)
-    {
-        if (columns[i] !== col)
-        {
-            console.log(columns[i]);
-            columns[i].style.width -= widthLoss;
-        }
-    }
-}
-
-
-            // expandSidebar(width)
-            // {
-            //     columns = row.children;
-            //     widthLoss = (col.style.width + width) / (columns.length-1);
-            //     col.style.width = width;
-
-            //     for(i=0;i<columns.length;i++)
-            //     {
-            //         if (columns[i] !== col)
-            //         {
-            //             console.log(columns[i]);
-            //             columns[i].style.width -= widthLoss;
-            //         }
-            //     }
-            // }
-
-            // collapseSidebar(width)
-            // {
-            //     columns = row.children;
-            //     widthGain = (col.style.width - 64) / (columns.length-1);
-            //     col.style.width = 'fit-content';
-
-            //     for(i=0;i<columns.length;i++)
-            //     {
-            //         if (columns[i] !== col)
-            //         {
-            //             // console.log(columns[i]);
-            //             columns[i].style.width += widthGain;
-            //         }
-            //     }
-            // }
-
-
-
 
 function appTable(parameters, target)
 {
@@ -152,43 +41,46 @@ function appPageContent(parameters, target)
 function appMenu(parameters, target)
 {
     var task = new Task('app/read/menu', parameters, function(response){
-
-        // console.log(response);
-
-        if (lastMenu !== response)
+        element = document.getElementById(target);
+        if (response)
         {
-            var sidebar = new DOMParser().parseFromString(response, "text/html").getElementsByClassName('sidebar')[0];
-            sidebar.id = target;
-
-            element = document.getElementById(target);
-
-            if (element)
+            if (lastMenu !== response)
             {
-                element.replaceWith(sidebar);
-            }
-            else
-            {
-                main = document.getElementById('main');
-                main.parentElement.prepend(sidebar);
-            }
-
-
-            openButton = sidebar.children[1];
-            openButton.style.display = 'none';
-
-            setTimeout(function(){
-                menu = sidebar.children[0];
-                
-                sidebar.style.width = menu.getAttribute('width');
-                sidebar.style.height = menu.getAttribute('height');
     
-                menu.style.display = 'block';
-            }, 50)
-
-           
-
-            lastMenu = response;
+                var sidebar = new DOMParser().parseFromString(response, "text/html").getElementsByClassName('sidebar')[0];
+                sidebar.id = target;
+    
+                if (element)
+                {
+                    element.replaceWith(sidebar);
+                }
+                else
+                {
+                    main = document.getElementById('main');
+                    main.parentElement.prepend(sidebar);
+                }
+    
+    
+                openButton = sidebar.children[1];
+                openButton.style.display = 'none';
+    
+                setTimeout(function(){
+                    menu = sidebar.children[0];
+                    
+                    sidebar.style.width = menu.getAttribute('width');
+                    sidebar.style.height = menu.getAttribute('height');
+        
+                    menu.style.display = 'block';
+                }, 50)
+            }
         }
+        else
+        {
+            if (element){element.remove();}
+        }
+           
+        lastMenu = response;
+        
     }, 'POST')
 
     buffer.append(task);
@@ -275,3 +167,80 @@ function closeSideBar(event) {
     openButton.style.display = 'block'; 
     menu.style.display = 'none';
 };
+
+function pxToVw(px)
+{
+    return (px / window.innerWidth) * 100 + 'vw';
+}
+
+function vwToPx(vw)
+{
+    return (vw / 100) * window.innerWidth + 'px';
+}
+
+function pxToEm(px, base=15)
+{
+    return parseFloat(px)/base + 'em';
+}
+
+function getColumnWidth(row, columns, unit, baseFont=15)
+{
+    styles = window.getComputedStyle(row, null);
+
+    parentWidth = parseInt(styles.getPropertyValue('width'));
+    margins = parseInt(styles.getPropertyValue('margin-left')) + parseInt(styles.getPropertyValue('margin-right'));
+    padding = parseInt(styles.getPropertyValue('padding-left')) + parseInt(styles.getPropertyValue('padding-right'))
+
+    rowWidth = parentWidth - margins - padding;
+    colWidth = (rowWidth / columns);
+
+
+    // console.log(row, columns, unit, baseFont, colWidth);
+
+    switch(unit)
+    {
+        case 'vw':
+            return pxToVw(colWidth);
+        case 'em':
+            return pxToEm(colWidth, baseFont);
+        default:
+            return colWidth;       
+    }
+
+}
+
+
+function collapseCol(col, row)
+{
+    // console.log(collapseCol.style.width);
+
+    columns = row.children;
+    widthGain = (col.style.width - 64) / (columns.length-1);
+    col.style.width = 'fit-content';
+
+    for(i=0;i<columns.length;i++)
+    {
+        if (columns[i] !== col)
+        {
+            // console.log(columns[i]);
+            columns[i].style.width += widthGain;
+        }
+    }
+}
+
+function expandCol(col, row, width)
+{
+    columns = row.children;
+    widthLoss = (col.style.width + width) / (columns.length-1);
+    col.style.width = width;
+
+    for(i=0;i<columns.length;i++)
+    {
+        if (columns[i] !== col)
+        {
+            console.log(columns[i]);
+            columns[i].style.width -= widthLoss;
+        }
+    }
+}
+

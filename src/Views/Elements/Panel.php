@@ -26,7 +26,7 @@ class Panel extends View
             .panel {
                 max-width: 98%;
                 padding: 0 20px;
-                margin: 1em auto 5em;
+                margin: 0 auto 5em;
                 background: #fff;
                 color: #333;
                 /* font: 1.156em / 1.3 My Gill Sans, Lato, sans-serif; */

@@ -15,10 +15,13 @@ class DBSet extends DBContext {
 
     protected array $array;
 
+    protected array $alternate;
     protected array $properties;
     protected array $cache;
 
     public int $iter = 0;
+
+    public $callback;
 
     protected $orderBy;
 
@@ -40,8 +43,10 @@ class DBSet extends DBContext {
 
 
     // Set or unset the values of the model
-    function set($values=[])
+    function set($values=[], $callback=null)
     {
+        $this->callback = $callback;
+        $this->alternate = [];
         $this->purgeSet();
 
         foreach($this->model as $property=>$value)
@@ -111,18 +116,16 @@ class DBSet extends DBContext {
 
     
     // READ ###############################################################################
-    public function get(?array $fields=null, $callback=null) : DBSet
+    public function get(?array $fields=null) : DBSet
     {
-        $callback = null;
         $query = $this->buildSelect($fields);
-
 
         if(!$query)
         {
             return $this;
         }
 
-        call_user_func_array([$this, 'query'], $query)->fetchAll($callback);
+        call_user_func_array([$this, 'query'], $query)->fetchAll($this->callback, $this->alternate);
 
 		return $this;
     }
@@ -135,8 +138,12 @@ class DBSet extends DBContext {
         {
             return $this;
         }
+
+
+        // $dbSet = clone $dbSet;
         $dbSet = new DBSet($dbSet->table, $dbSet->properties);
 
+        $i = 0;
         foreach ($this->array as &$row)
         {
             $relation = [];
@@ -145,7 +152,7 @@ class DBSet extends DBContext {
                 $relation[$key] = $row[$value];
             }
 
-            $result = $dbSet->set($relation)->orderBy($orderBy)->get($fields);
+            $result = $dbSet->set($relation, $this->callback)->orderBy($orderBy)->get($fields);
             if (!empty($result->array))
             {
                 if ($recursive)
@@ -156,7 +163,11 @@ class DBSet extends DBContext {
                 {
                     $row[$as] = $result->toArray();
                 }
+
+                $this->alternate[$i] = [$this->alternate[$i], $as=>$dbSet->alternate];
             }
+
+            $i++;
         }
         return $this;
     }
@@ -169,16 +180,17 @@ class DBSet extends DBContext {
     }
 
 
-    public function toArray(string $class=null) : array
+    public function toArray() : array
     {
         $array = array_values($this->array);
-        if(!is_null($class))
-        {
-            foreach($array as &$row)
-            {
-                $row = new $class(...$row);
-            }
-        }
+
+        return $array;
+    }
+
+    public function toAlternate() : array
+    {
+        $array = array_values($this->alternate);
+
         return $array;
     }
 
@@ -197,50 +209,19 @@ class DBSet extends DBContext {
         }
     }
 
-    // protected function toEntities()
-    // {
-    //     $pk = $this->getPrimaryKey();
-    //     $table = $this->table;
-
-    //     foreach($this->array as &$row)
-    //     {
-    //         $fields = array_values($row);
-
-    //         $properties = ['id'=>$fields[0], 'name'=>$fields[1], 'table'=>$table, 'primaryKey'=>$pk];
-    //         $entity = new Entity($properties);
-            
-    //         foreach($row as $key=>$value)
-    //         {
-    //             $entity->$key = $value;
-    //         }
-
-    //         $row = $entity;
-    //     }
-
-    //     return $this->array;
-    // }
-
 
     // override parent fetchAll function
-    public function fetchAll($callback = null) : array
+    public function fetchAll($callback = null, &$alternate = []) : array
     {
         if ($this->query == null)
         {
             $this->query('SELECT * FROM ' . $this->table);
         }
 
-        $this->array = parent::fetchAll($callback);
+        $this->array = parent::fetchAll($this->callback, $this->alternate);
 
         return $this->array;
     }
-
-
-
-
-
-
-
- 
 
 
     public function numRows() {

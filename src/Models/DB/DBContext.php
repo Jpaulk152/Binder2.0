@@ -202,7 +202,7 @@ class DBContext
     }
 
 
-    public function fetchAll($callback = null) {
+    public function fetchAll($callback = null, array &$alternate=[]) {
 	    $params = array();
         $row = array();
 	    $meta = $this->query->result_metadata();
@@ -215,21 +215,23 @@ class DBContext
         while ($this->query->fetch()) {
             $r = array();
 
-            
             foreach ($row as $key => $val) {
                 $r[$key] = $val;
             }
 
+            $result[] = $r;
+
             if ($callback != null && is_callable($callback)) {
                 
+
                 $value = call_user_func($callback, $r);
                 if ($value == 'break') break;
 
-                $result[] = $value;
-            } else {
-                $result[] = $r;
+                $alternate[] = $value;
             }
         }
+
+        // u::dd($alternate);
 
         $this->query->close();
         $this->query_closed = TRUE;
