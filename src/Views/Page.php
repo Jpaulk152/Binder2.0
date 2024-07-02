@@ -46,22 +46,15 @@ class Page
 
     public function __construct(...$elements)
     {
-
-        $count = count($elements);
-        for($i=0;$i<$count;$i++)
-        {
-            if ($i = $count-1)
-            {
-                $elements[$i]->attr('class', 'w3-rest');
-            }
-            else
-            {
-                $elements[$i]->attr('class', 'w3-col');
-            }
-        }
+        // $count = count($elements);
+        // $elements[$count-1]->addAttributes(['class'=>'w3-rest', 'style'=>'position:relative;height:100%;overflow:auto;']);
+        // for($i=$count-2;$i>0;$i--)
+        // {
+        //     $elements[$i]->addAttributes(['class'=>'w3-col', 'style'=>'position:relative;height:100%;overflow:auto;']);
+        // }
 
         $this->body = new View(...$elements);
-        $this->body->addAttributes(['class'=>'w3-row']);
+        // $this->body->addAttributes(['class'=>'w3-row', 'style'=>'position:relative;height:100%;']);
         $this->body->setTagName('body');
         
         $css = '

@@ -104,7 +104,15 @@ class Layout extends View {
 
                 for($i=0;$i<count($row);$i++)
                 {
-                    $column = new View(clone $row[$i]);
+                    if (is_a($row[$i], Element::class))
+                    {
+                        $column = new View(clone $row[$i]);
+                    }
+                    else
+                    {
+                        $column = new View($row[$i]);
+                    }
+                    
                     $column->attr('class', 'w3-cell w3-mobile');
                     $newRow->addElement($column);
                 }

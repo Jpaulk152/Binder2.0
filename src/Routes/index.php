@@ -48,6 +48,9 @@ $router->post(\config::app_root() . 'api/hc/childMenu', HCController::class, 'ch
 $router->post(\config::app_root() . 'api/hc/pageContent', HCController::class, 'pageContent');
 
 $router->post(\config::app_root() . 'app/read/table', ReadController::class, 'table');
+$router->post(\config::app_root() . 'app/read/menu', ReadController::class, 'menu');
+$router->post(\config::app_root() . 'app/read/pageContent', ReadController::class, 'pageContent');
+
 
 
 $router->get(\config::app_root() . 'examples', ExampleController::class, 'index');

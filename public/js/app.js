@@ -112,11 +112,11 @@ function expandCol(col, row, width)
 
 function appTable(parameters, target)
 {
-    console.log(target)
+    // console.log(target)
 
     var task = new Task('app/read/table', parameters, function(response){
 
-        console.log(response);
+        // console.log(response);
 
         document.getElementById(target).innerHTML = response;
 
@@ -127,48 +127,81 @@ function appTable(parameters, target)
 
 
 
-
-
-
-function appMenu(parameters, target, event)
+function appPageContent(parameters, target)
 {
-    var task = new Task('api/app/menu', parameters, function(response){
+    var task = new Task('app/read/pageContent', parameters, function(response){
+
+        // console.log(target);
+
+        if (response !== lastContent)
+        {
+            element = document.getElementById(target);
+
+            if (element)
+            {
+                element.innerHTML = response;
+            }
+        }
+
+    }, 'POST')
+
+    buffer.append(task);
+}
+
+
+function appMenu(parameters, target)
+{
+    var task = new Task('app/read/menu', parameters, function(response){
 
         // console.log(response);
 
-        document.getElementById(target).innerHTML = response;
-
-        content = document.getElementById('view3');
-        if (!content.classList.contains("mainContentToRight"))
+        if (lastMenu !== response)
         {
-            content.classList.add('mainContentToRight');
-        }
+            var sidebar = new DOMParser().parseFromString(response, "text/html").getElementsByClassName('sidebar')[0];
+            sidebar.id = target;
 
+            element = document.getElementById(target);
+
+            if (element)
+            {
+                element.replaceWith(sidebar);
+            }
+            else
+            {
+                main = document.getElementById('main');
+                main.parentElement.prepend(sidebar);
+            }
+
+
+            openButton = sidebar.children[1];
+            openButton.style.display = 'none';
+
+            setTimeout(function(){
+                menu = sidebar.children[0];
+                
+                sidebar.style.width = menu.getAttribute('width');
+                sidebar.style.height = menu.getAttribute('height');
+    
+                menu.style.display = 'block';
+            }, 50)
+
+           
+
+            lastMenu = response;
+        }
     }, 'POST')
 
     buffer.append(task);
 }
 
 $(document).ready(function(){
+    lastMenu = '';
+    lastContent = '';
+
     lastResponse = '';
 });
 
-function appPageContent(parameters, target, event)
-{
-    var task = new Task('api/app/pageContent', parameters, function(response){
 
-        // console.log(response);
-
-        if (response != lastResponse)
-        {
-            document.getElementById(target).innerHTML = response;
-            lastResponse = response;
-        }
-
-    }, 'POST')
-
-    buffer.append(task);
-}
 
 function app(parameters, event)
 {
@@ -202,3 +235,43 @@ function app(parameters, event)
         console.log('incorrect parameters');
     }
 }
+
+
+
+
+
+
+
+
+/** Sidebar **/
+function openSideBar(event) {
+
+    openButton = event.target;
+    sidebar = event.target.parentNode;
+    menu = sidebar.children[0];
+
+    
+    sidebar.style.width = menu.getAttribute('width');
+    sidebar.style.height = menu.getAttribute('height');
+
+    openButton.style.display = 'none';
+    menu.style.display = 'block';
+};
+
+
+
+function closeSideBar(event) {
+
+    menu = event.target.parentNode;
+    openButton = menu.nextSibling;
+    sidebar = menu.parentNode;
+    
+
+    // console.log(openButton.getAttribute('width'), openButton.getAttribute('height'))
+
+    sidebar.style.width = openButton.getAttribute('width');
+    sidebar.style.height = openButton.getAttribute('height');
+
+    openButton.style.display = 'block'; 
+    menu.style.display = 'none';
+};

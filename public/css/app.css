@@ -26,28 +26,11 @@ a:hover {
     color: white;
 }
 
-
-
-#nav {
-    z-index: 2;
-    position: fixed;
-    top: 0;
-}
-
-#side {
-    z-index: 1;
-    position: fixed;
-    top: 100px;
-    
+body em {
+    font-style: italic;
 }
 
 
-
-
-#nav .w3-dropdown-content {
-    z-index: 2;
-    position: fixed;
-}
 
 
 
@@ -72,30 +55,6 @@ a:hover {
 
 
 
-.expander .submenu {
-    /* margin: -10px 0 0 30px; */
-
-    /* background-color: #3A6FA0;
-    color: white; */
-}
-
-/* .sidebar .button, .sidebar .menubutton {
-    border-radius: 10px;
-} */
-
-/* .sidebar .menubutton:focus {
-    border-top: solid #FFD70F 1px;
-    border-bottom: solid #FFD70F 1px;
-}
-
-.sidebar .menubutton:hover {
-    background-color: #33638F !important;
-    color: white !important;
-} */
-
-
-
-
 
 
 .sideSubMenuContainer {
@@ -108,4 +67,39 @@ a:hover {
     color: black;
     float: left;
     margin-right: 20px;
+}
+
+
+
+/* Sidebar */
+
+.openButton {
+    float:left;
+    width:54px;
+    height:54px;
+}
+
+.closeButton {
+    float:left;
+    margin-bottom:10px;
+}
+
+.sidebar {
+    height:54px;
+    width:54px;
+
+    position:relative;
+    transition: width 500ms, height 500ms;
+    border-radius:0 10px 10px 0;
+    overflow:hidden;
+}
+
+.sidebar .menu {
+    width:300px;
+    height:100%;
+    font-size:small;
+    padding-top:10px;
+    padding-bottom:200px;
+    overflow:auto;
+    float:left;
 }

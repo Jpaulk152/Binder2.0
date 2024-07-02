@@ -7,6 +7,8 @@ use Controllers\API\HTTP\Response;
 use Controllers\API\HTTP\Request;
 use Views\View;
 use Views\Elements\Form;
+use Views\Elements\Panel;
+use Views\Elements\Sidebar;
 use Views\Elements\Table;
 
 class ReadController extends Controller
@@ -18,30 +20,69 @@ class ReadController extends Controller
         parent::__construct();       
     }
 
-    
 
     public function table($parameters)
     {
-        // new Response('<p style="color:red">data not found</p>', 404);
-        // new Request($parameters);
-        // return;
-
-        extract($parameters);
-
-        // new Response($table, 300);
-        // return;
-
-        if (isset($table))
+        if ($parameters)
         {
-
-            $table = new Table($this->dbContext->$table);
-
-            new Response($table->create(), 200);
+            extract($parameters);
+            if (isset($table) && isset($this->dbContext->$table))
+            {
+                $table = new Table($this->dbContext->$table);
+                new Response($table->create(), 200);
+                return; 
+            }
         }
-        else
+        new Response('<p id="main" style="color:red">data not found</p>', 404);
+    }
+
+
+    public function menu($parameters)
+    {
+        if ($parameters)
         {
-            new Response('<p id="main" style="color:red">data not found</p>', 404);
+            extract($parameters);
+            if(isset($id))
+            {
+                $table = $this->dbContext->page_table;
+
+                $pages =  $table->set(['page_parent'=>$id, 'page_status'=>'true', 'page_inmenu'=>'true'])
+                                ->orderBy(['page_title'])
+                                ->get(['page_title', 'page_id'])
+                                ->with($table, 'children', ['page_parent'=>'page_id'], ['page_title', 'page_id', 'page_parent'], ['page_title'], true)
+                                ->toArray();
+
+                if ($pages)
+                {
+                    $sidebar = new Sidebar(false, ...$pages);
+                    $sidebar->addAttributes(['class'=>'w3-col primaryBackground']);
+                    new Response($sidebar->create(), 200);
+                    return;
+                }
+            }
         }
+        new Response('<p id="main" style="color:red">data not found</p>', 404);
+    }
+
+
+    public function pageContent($parameters)
+    {
+        if ($parameters)
+        {
+            extract($parameters);
+            if(isset($id))
+            {
+                $page = $this->dbContext->page_table->set(['page_id'=>$id])->get(['page_title', 'page_content'])->firstOrDefault();
+                if ($page)
+                {
+                    $panel = new Panel($page['page_title'], [urldecode($page['page_content'])]);
+
+                    new Response($panel->create(), 200);
+                    return;
+                }
+            }
+        }
+        new Response('<p id="main" style="color:red">data not found</p>', 404);
     }
 
 

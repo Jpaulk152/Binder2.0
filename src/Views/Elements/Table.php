@@ -35,9 +35,9 @@ class Table extends View
 
         parent::__construct($header, $body);
         $this->setTagName('table');
-        $this->addAttributes(['class'=>'w3-table-all w3-container w3-round-medium w3-card-4 w3-padding-16', 'style'=>'display: inline-block;height:80%;width:80%; overflow: hidden;']);
+        $this->addAttributes(['class'=>'w3-table-all w3-container w3-round-medium w3-card-4 w3-padding-16', 'style'=>'display: inline-block;height:75vh;width:70%; overflow: auto;']);
 
-        $dbSet->purgeSet();
+        // $dbSet->purgeSet();
     }
 
 

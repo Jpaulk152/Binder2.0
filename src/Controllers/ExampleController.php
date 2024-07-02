@@ -29,8 +29,8 @@ class ExampleController extends Controller
     {
         parent::__construct();
 
-        echo '<script src="../public/js/debug.js"></script>';
-        echo '<body></body>';
+        // echo '<script src="../public/js/debug.js"></script>';
+        // echo '<body></body>';
 
         $table = $this->dbContext->page_table;
 
@@ -42,7 +42,7 @@ class ExampleController extends Controller
 
 
         $nav = new Navbar(...$pages);
-        $sidebar =  new Sidebar(...$pages);
+        $sidebar =  new Sidebar(false, ...$pages);
 
         $sidebar1 = clone $sidebar; $sidebar1->attr('class', 'w3-red');
         $sidebar2 = clone $sidebar; $sidebar2->attr('class', 'w3-blue');
@@ -76,37 +76,30 @@ class ExampleController extends Controller
         $gauges = new Panel('gauges', [$gauge1->attr('size', '100'), $gauge2, $gauge3, $gauge4, $gauge5], $cards);
         $gauges->addAttributes(['class'=>'w3-white']);
 
-
-
-        // $page_table = new Table($this->dbContext->page_table);
-        // $admin_table = new Table($this->dbContext->admin_table);
-        // $tables = new Panel('tables', 1, $page_table, $admin_table);
-
-
-        $tables = $this->dbContext->allTables();
-
-        foreach($tables as &$table)
-        {
-            $table = new Button2($table, 'appTable', ['table'=>$table], '`main`');
-        }
-
-
-        $tableSidebar = new Sidebar(...$tables);
-        $tableSidebar->addAttributes(['class'=>'w3-col primaryBackground']);
-
+        $page_table = new Table($this->dbContext->page_table, ['page_parent'=>'none', 'page_status'=>'true', 'page_inmenu'=>'true']);
+        $admin_table = new Table($this->dbContext->admin_table);
+        $tablePanel = new Panel('tables', [$page_table], [$admin_table]);
+        $tablePanel->addAttributes(['class'=>'w3-cell']);
 
         $sidebar->addAttributes(['class'=>'w3-col primaryBackground']);
+
+        $tables = $this->dbContext->allTables();
+        foreach($tables as &$table)
+        {
+            $table = new Button2(name: $table, functions: 'appTable('.$this->toJSON(['table'=>$table]).', `main`)');
+        }
+        $sidebar = new Sidebar(false, ...$tables);
+        $sidebar->addAttributes(['class'=>'w3-col primaryBackground']);
+
         $main = new Layout($gauges, $sidebars, [$card, $card], [$card, $card, $card], $cards);
         $main->addAttributes(['id'=>'main', 'class'=>'w3-rest', 'style'=>'height:100%;overflow:auto;']);
 
-        $rowView = new View($tableSidebar, $main);
-        $rowView->addAttributes(['class'=>'w3-row', 'style'=>'position:relative; height:100%;']);
+        $content = new View($sidebar, $main);
+        $content->addAttributes(['class'=>'w3-row', 'style'=>'position:relative; height:100%;']);
 
-        $this->page = new Page($nav, $rowView);
+        $this->page = new Page($nav, $content);
         $this->page->title = 'Examples';
     }
-
-
 
 
     public function index()
