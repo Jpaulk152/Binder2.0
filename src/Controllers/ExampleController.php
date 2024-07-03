@@ -11,7 +11,7 @@ use Views\Elements\Navbar;
 use Views\Elements\Sidebar;
 use Views\Elements\Card;
 use Views\Elements\Gauge;
-use Views\Elements\Button2;
+use Views\Elements\Button;
 use Views\Elements\Dropdown;
 use Views\Elements\Expander;
 use Views\Elements\Image;
@@ -35,13 +35,40 @@ class ExampleController extends Controller
         $table = $this->dbContext->page_table;
 
         $pages = $table->set(['page_parent'=>'none', 'page_status'=>'true', 'page_inmenu'=>'true'])
+
                         ->orderBy(['page_title'])
                         ->get(['page_title', 'page_id'])
-                        ->with($table, 'children', ['page_parent'=>'page_id'], ['page_title', 'page_id', 'page_parent'], ['page_title'], true)
                         ->toArray();
+
+                        foreach($pages as &$page)
+                        {
+                            $page = new Button(
+                                name: $page['page_title'], 
+                                function1: 'appMenu(`event`, '.$this->toJSON(['id'=>$page['page_id']]).', `side`)', 
+                                function2: 'appPageContent(`event`, '.$this->toJSON(['id'=>$page['page_id']]).', `main`)',
+                            );
+                        }
 
 
         $nav = new Navbar(...$pages);
+                        
+        $pages =  $table->set(
+            ['page_parent'=>'none', 'page_status'=>'true', 'page_inmenu'=>'true'], 
+            function($page)
+            {
+                return new Button(
+                    name: $page['page_title'], 
+                    // function1: 'appMenu('.$this->toJSON(['id'=>$page['page_id']]).', `side`)', 
+                    function2: 'appPageContent(`event`, '.$this->toJSON(['id'=>$page['page_id']]).', `main`);',
+                );
+            })
+
+                ->orderBy(['page_title'])
+                ->get(['page_title', 'page_id'])
+                ->with($table, 'children', ['page_parent'=>'page_id'], ['page_title', 'page_id', 'page_parent'], ['page_title'], true)
+                ->toAlternate();
+
+        
         $sidebar =  new Sidebar(false, ...$pages);
 
         $sidebar1 = clone $sidebar; $sidebar1->attr('class', 'w3-red');
@@ -83,13 +110,13 @@ class ExampleController extends Controller
 
         $sidebar->addAttributes(['class'=>'w3-col primaryBackground']);
 
-        $tables = $this->dbContext->allTables();
-        foreach($tables as &$table)
-        {
-            $table = new Button2(name: $table, functions: 'appTable('.$this->toJSON(['table'=>$table]).', `main`)');
-        }
-        $sidebar = new Sidebar(false, ...$tables);
-        $sidebar->addAttributes(['class'=>'w3-col primaryBackground']);
+        // $tables = $this->dbContext->allTables();
+        // foreach($tables as &$table)
+        // {
+        //     $table = new Button2(name: $table, functions: 'appTable('.$this->toJSON(['table'=>$table]).', `main`)');
+        // }
+        // $sidebar = new Sidebar(false, ...$tables);
+        // $sidebar->addAttributes(['class'=>'w3-col primaryBackground']);
 
         $main = new Layout($gauges, $sidebars, [$card, $card], [$card, $card, $card], $cards);
         $main->addAttributes(['id'=>'main', 'class'=>'w3-rest', 'style'=>'height:100%;overflow:auto;']);
