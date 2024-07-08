@@ -29,7 +29,7 @@ class Navbar extends View
         }
 
 
-        $logo = new Element('img', '', ['src'=>Includes::path('logo'), 'alt'=>'Could not find Image', 'width'=>'70', 'height'=>'70']);
+        $logo = new Element('img', '', ['src'=>'resources/media/test_media/logo.png', 'alt'=>'Could not find Image', 'width'=>'70', 'height'=>'70']);
         $homeButton = new Element('a', $logo->create(), ['class'=>'w3-bar-item w3-button w3-large', 'href'=>'../index.php/home']);
 
         parent::__construct($homeButton, ...$buttons);

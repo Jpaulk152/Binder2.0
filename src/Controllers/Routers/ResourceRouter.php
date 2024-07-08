@@ -3,17 +3,44 @@
 namespace Controllers\Routers;
 
 use Controllers\ResourceController;
+use Controllers\Routers\MediaRouter;
 use Controllers\Routers\HTTP\Response;
 
 class ResourceRouter extends Router
 {
     public function __construct()
     {   
+        // $this->default(ResourceController::class, 'media');
+        
+        $this->get('temp.css', ResourceController::class, 'stylesheet');
+        $this->get('temp.js', ResourceController::class, 'jscripts');
+        
+        $this->get('app.css', ResourceController::class, 'css');
+        $this->get('app.js', ResourceController::class, 'js');
 
-        parent::__construct(ResourceController::class, 'media');
+        $this->addRoute('media', MediaRouter::class, 'GET');
+    }
 
-        $this->get('app.css', ResourceController::class, 'stylesheet');
-        $this->get('app.js', ResourceController::class, 'jscripts');
+
+    // public function defaultAction()
+    // {
+    //     $this->printInfo(__FUNCTION__, $this->uri);
+
+    //     parent::defaultAction();
+    // }
+
+    // public function controllerAction() : bool
+    // {
+    //     $this->printInfo(__FUNCTION__, $this->uri);
+
+    //     return parent::controllerAction();
+    // }
+
+    public function routerAction($uri) : bool
+    {
+        $this->writeInfo(__FUNCTION__, $uri);
+
+        return parent::routerAction($uri);
     }
 
 
@@ -22,15 +49,8 @@ class ResourceRouter extends Router
         $controller = new $controller();
         if (!$controller->$action($parameters))
         {
-            
-                new Response('resource not found', 404);
-            
+            new Response('resource not found', 404);   
         }
-
-
-
-
-        
     }
 }
 

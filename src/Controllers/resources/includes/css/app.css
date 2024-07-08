@@ -1,0 +1,140 @@
+body {
+    padding-top:100px;
+    height: 100vh;
+}
+
+body em {
+    font-style: italic;
+}
+
+a {
+    color: #0087ff
+}
+
+a:hover {
+    cursor:pointer;
+}
+
+.primaryBackground{
+    background-color: #3A6FA0;
+    color: white;
+}
+
+.primaryBackground > a:hover {
+    background-color: #2D4B73;
+    color: white;
+}
+
+.secondaryBackground{
+    background-color: #FFFFFF;
+    color: black;
+}
+.tertiaryBackground{
+    background-color: #35424E;
+    color: white;
+}
+.quaternaryBackground{
+    background-color: #7E90A1;
+    color: white;
+}
+
+table img {
+    display: block;
+    width: auto;
+    height: auto;
+  }
+
+
+
+
+
+
+
+
+
+.sideMenuContainer {
+    font-size: small;
+    padding-top: 20px;
+    padding-bottom: 200px;
+}
+
+.sideSubMenuButton{
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    margin: 20px auto;
+    border-radius: 10px;
+    text-align: left;
+    white-space: normal;
+    min-height: 75px;
+}
+
+
+
+
+
+.sideSubMenuContainer {
+    border: none;
+}
+
+
+
+.caret {
+    color: black;
+    float: left;
+    margin-right: 20px;
+}
+
+
+
+/******************************* Sidebar ********************************/
+
+
+.openButton {
+    float:left;
+    width:54px;
+    height:54px;
+}
+
+.closeButton {
+    float:left;
+    margin-bottom:10px;
+}
+
+.sidebar {
+    height:54px;
+    width:54px;
+
+    position:relative;
+    transition: width 500ms, height 500ms;
+    border-radius:0 10px 10px 0;
+    overflow:hidden;
+}
+
+.sidebar .menu {
+    width:300px;
+    height:100%;
+    font-size:small;
+    padding-top:10px;
+    padding-bottom:200px;
+    overflow:auto;
+    float:left;
+}
+
+
+/******************************* Expander ********************************/
+
+
+.expander > button:first-child {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    margin: 10px auto;
+
+    text-align: left;
+    white-space: normal;
+    min-height: 75px;
+
+    background-color: #FFFFFF;
+    color: black;
+}

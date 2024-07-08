@@ -73,7 +73,7 @@ class HomeController extends Controller
                 name: 'Welcome to the Jeanne M. Holm Center for Officer Accessions & Citizen Development.', 
                 row1: [
                     $bio = new View(
-                        element1: $bioImage = new Image('../public/resources/BioCantwell.JPG'), 
+                        element1: $bioImage = new Image('resources/media/test_media/BioCantwell.JPG'), 
                         element2: $bioCaption = '<p>Brigadier General Houston R. Cantwell<br><em>Commander, Holm Center </em>&nbsp;</p><br><p><a href="https://www.af.mil/About-Us/Biographies/Display/Article/2298672/houston-r-cantwell/" target="_blank" rel="noopener">Biography</a></p>',
                     ), 
                     new View(

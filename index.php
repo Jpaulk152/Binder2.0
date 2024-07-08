@@ -1,7 +1,17 @@
 <?php
 
-require_once('src/config.php');
+require_once('src/utilities.php');
 
-require_once('src/Autoloader.php');
+utilities::autoLoad();
 
-require 'src/Controllers/RouteController.php';
+// use Controllers\Controller;
+// use Models\DB\DBContext;
+// global $_dbContext;
+// $_dbContext = new DBContext();
+
+$app = new App();
+
+
+// require_once('src/config.php');
+
+// require 'src/Controllers/RouteController.php';

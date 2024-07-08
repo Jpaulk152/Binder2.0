@@ -8,8 +8,8 @@ use \config;
 class Includes
 {
 
-    public static $includePath = '../public/';
-    public static $resourcePath = '../public/resources/';
+    public static $includePath = 'resources/';
+    public static $resourcePath = 'resources/media/';
 
     public static function app()
     {
@@ -42,6 +42,7 @@ class Includes
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
             <link rel="stylesheet" href="'. self::$includePath .'css/w3.css"> <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
             <link rel="stylesheet" href="'. self::$includePath .'css/app.css">
+            <link rel="stylesheet" href="resources/temp.css">
             <link rel="stylesheet" href="resources/app.css">
 
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -49,6 +50,7 @@ class Includes
             <script src="'. self::$includePath .'js/hc.js"></script>
             <script src="'. self::$includePath .'js/debug.js"></script>
             <script src="'. self::$includePath .'js/api.js"></script>
+            <script src="resources/temp.js"></script>
             <script src="resources/app.js"></script>
         ';
 

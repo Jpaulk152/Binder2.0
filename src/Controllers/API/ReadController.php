@@ -12,6 +12,8 @@ use Views\Elements\Panel;
 use Views\Elements\Sidebar;
 use Views\Elements\Table;
 
+use \utilities as u;
+
 class ReadController extends Controller
 {
     public $page;
@@ -40,8 +42,14 @@ class ReadController extends Controller
 
     public function menu($parameters)
     {
+
+
+        // u::writeLog('menu function:', 'ReadController.txt');
+
         if ($parameters)
         {
+            
+
             extract($parameters);
             if(isset($id))
             {
